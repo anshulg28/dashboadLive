@@ -1,0 +1,34 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+ERROR - 2017-04-06 10:15:37 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 10:15:37 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 10:25:37 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 10:25:37 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 12:46:05 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 12:46:05 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 12:46:05 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 14:06:06 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 14:06:06 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 14:06:06 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 14:10:37 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 14:10:37 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 14:16:06 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 14:16:06 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 14:26:06 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 14:26:06 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 14:26:06 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 14:31:08 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 14:31:08 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 14:31:08 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 14:35:37 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 14:35:37 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 14:41:05 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 14:41:05 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 14:41:05 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 15:56:06 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 15:56:06 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 15:56:06 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 16:00:37 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 16:00:37 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 16:05:36 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31
+ERROR - 2017-04-06 16:05:36 --> Severity: Warning --> Invalid argument supplied for foreach() /var/www/html/dashboad/application/helpers/generalfunctions_helper.php 31

@@ -1,0 +1,5 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+ERROR - 2017-02-04 14:50:53 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 - Invalid query: SELECT userId,ifActive FROM doolally_usersmaster where userType IN(0,1,2,3,5,6) AND mobNum = '8291334248' AND userOtp = 
+ERROR - 2017-02-04 14:50:53 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 - Invalid query: SELECT userId,ifActive FROM doolally_usersmaster where userType IN(0,1,2,3,5,6) AND mobNum = '8291334248' AND userOtp = 
+ERROR - 2017-02-04 14:50:55 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 - Invalid query: SELECT userId,ifActive FROM doolally_usersmaster where userType IN(0,1,2,3,5,6) AND mobNum = '8291334248' AND userOtp = 

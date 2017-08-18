@@ -1,0 +1,9 @@
+.androidHome .tabbar-labels span.tabbar-label
+{
+    margin-top:0;
+}
+.androidHome .tabbar
+{
+    bottom:0;
+    top:auto;
+}
