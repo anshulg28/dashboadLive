@@ -337,6 +337,7 @@ class Login extends MY_Controller {
         $this->session->unset_userdata('user_name');
         $this->session->unset_userdata('user_email');
         $this->session->unset_userdata('user_firstname');
+        $this->session->unset_userdata('commSecLoc');
 
         redirect(base_url());
     }

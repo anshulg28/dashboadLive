@@ -38,9 +38,22 @@ class Dashboard extends MY_Controller {
         $data['locations'] = $locArray;
         if($this->userType == EXECUTIVE_USER)
         {
-            //Get assigned location for community manager
+            //Check for Community manager secondary location set
             $userInfo = $this->users_model->getUserDetailsById($this->userId);
-            $allLocs = explode(',',$userInfo['userData'][0]['assignedLoc']);
+            if(($userInfo['status'] === true && isset($userInfo['userData'][0]['secondaryLoc'])) || !isSessionVariableSet($this->commSecLoc))
+            {
+                $this->getCommLocation($userInfo['userData'][0]['secondaryLoc']);
+            }
+
+            if(isSessionVariableSet($this->commSecLoc))
+            {
+                $allLocs = explode(',',$this->commSecLoc);
+            }
+            else
+            {
+                //Get assigned location for community manager
+                $allLocs = explode(',',$userInfo['userData'][0]['assignedLoc']);
+            }
 
             foreach($allLocs as $key)
             {
@@ -173,6 +186,34 @@ class Dashboard extends MY_Controller {
 		$this->load->view('DashboardView', $data);
 	}
 
+    public function getCommLocation($allLocs)
+    {
+        if(isSessionVariableSet($this->isUserSession) === false)
+        {
+            redirect(base_url());
+        }
+        $data = array();
+
+        $data['locData'] = $this->locations_model->getMultiLocs($allLocs);
+        $data['globalStyle'] = $this->dataformatinghtml_library->getGlobalStyleHtml($data);
+        $data['globalJs'] = $this->dataformatinghtml_library->getGlobalJsHtml($data);
+        $data['headerView'] = $this->dataformatinghtml_library->getHeaderHtml($data);
+
+        $this->load->view('SecLocSelectView', $data);
+    }
+
+	public function setCommLocation()
+    {
+        $post = $this->input->post();
+        if(isSessionVariableSet($this->isUserSession) === false)
+        {
+            redirect(base_url());
+        }
+
+        $this->generalfunction_library->setSessionVariable("commSecLoc",$post['currentLoc']);
+
+        redirect(base_url().'dashboard');
+    }
     public function getCustomStats()
     {
         $post = $this->input->post();

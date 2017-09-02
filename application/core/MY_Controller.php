@@ -41,6 +41,7 @@ class MY_Controller extends CI_Controller
     public $instaMojoStatus = '';
     public $instaEventId = '';
 
+    public $commSecLoc = '';
 
 	function __construct()
 	{
@@ -103,6 +104,10 @@ class MY_Controller extends CI_Controller
         {
             $this->instaEventId = $this->session->instaEventId;
             $this->instaMojoStatus = $this->session->instaMojoStatus;
+        }
+        if(isSessionVariableSet($this->session->commSecLoc) === true)
+        {
+            $this->commSecLoc = $this->session->commSecLoc;
         }
 
 		//
