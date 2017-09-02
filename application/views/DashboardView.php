@@ -15,9 +15,19 @@
                 <li class="active"><a data-toggle="pill" class="my-noBorderRadius" href="#mugclub">Mug Club</a></li>
                 <li><a class="my-noBorderRadius" data-toggle="pill" href="#instamojo">Instamojo</a></li>
                 <li><a class="my-noBorderRadius" data-toggle="pill" href="#feedback">Feedback</a></li>
-                <li><a class="my-noBorderRadius" data-toggle="pill" href="#fnbpanel">FnB Data</a></li>
-                <li><a class="my-noBorderRadius" data-toggle="pill" href="#eventpanel">Events</a></li>
-                <li><a class="my-noBorderRadius" data-toggle="pill" href="#beerpanel">Beer Olympics</a></li>
+                <?php
+                if($this->userId == '960' && $this->commSecLoc == '5')
+                {
+                }
+                else
+                {
+                    ?>
+                    <li><a class="my-noBorderRadius" data-toggle="pill" href="#fnbpanel">FnB Data</a></li>
+                    <li><a class="my-noBorderRadius" data-toggle="pill" href="#eventpanel">Events</a></li>
+                    <li><a class="my-noBorderRadius" data-toggle="pill" href="#beerpanel">Beer Olympics</a></li>
+                    <?php
+                }
+                ?>
             </ul>
             <!--<div class="mdl-layout__tab-bar mdl-js-ripple-effect">
                 <a href="#mugclub" class="mdl-layout__tab">Mug Club</a><br>
@@ -515,521 +525,529 @@
                     </div>
                 </div>
             </section>
-            <section class="tab-pane fade" id="fnbpanel">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a data-toggle="tab" href="#beverageView">Beverages</a></li>
-                    <li><a data-toggle="tab" href="#foodView">Food</a></li>
-                    <li><a data-toggle="tab" href="#fnbAdd">Add Fnb</a></li>
-                </ul>
+            <?php
+                if($this->userId == '960' && $this->commSecLoc == '5')
+                {
 
-                <div class="tab-content">
-                    <div id="beverageView" class="tab-pane fade in active">
-                        <?php
-                        if(isset($fnbData) && myIsMultiArray($fnbData))
-                        {
-                            ?>
-                            <div class="mdl-grid table-responsive">
-                                <table id="main-beverage-table" class="table table-hover table-bordered table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>Beverage Id</th>
-                                        <!--<th>Item Type</th>-->
-                                        <th>Name</th>
-                                        <th>Headline</th>
-                                        <th>Description</th>
-                                        <th>Price Full</th>
-                                        <th>Price Half</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php
-                                    foreach($fnbData as $key => $row)
-                                    {
-                                        if($row['fnb']['itemType'] == "2")
-                                        {
-                                            ?>
-                                            <tr>
-                                                <th scope="row"><?php echo $row['fnb']['fnbId'];?></th>
-                                                <!--<td><?php /*echo 'Beverage';*/?></td>-->
-                                                <td><?php echo $row['fnb']['itemName'];?></td>
-                                                <td><?php echo $row['fnb']['itemHeadline'];?></td>
-                                                <td><?php echo strip_tags($row['fnb']['itemDescription']);?></td>
-                                                <td><?php echo $row['fnb']['priceFull'];?></td>
-                                                <td><?php echo $row['fnb']['priceHalf'];?></td>
-                                                <td>
-                                                    <a data-toggle="tooltip" class="beer-tags fnb-tracker" title="Tag Location" href="#" data-fnbId="<?php echo $row['fnb']['fnbId'];?>">
-                                                        <i class="fa fa-15x fa-tags my-success-text"></i></a>
-                                                    <?php
-                                                    if($row['fnb']['ifActive'] == ACTIVE)
-                                                    {
-                                                        ?>
-                                                        <a data-toggle="tooltip" class="fnb-tracker" title="Active" href="<?php echo base_url().'dashboard/setFnbDeActive/'.$row['fnb']['fnbId'];?>">
-                                                            <i class="fa fa-15x fa-lightbulb-o my-success-text"></i></a>
-                                                        <?php
-                                                    }
-                                                    else
-                                                    {
-                                                        ?>
-                                                        <a data-toggle="tooltip" class="fnb-tracker" title="Not Active" href="<?php echo base_url().'dashboard/setFnbActive/'.$row['fnb']['fnbId'];?>">
-                                                            <i class="fa fa-15x fa-lightbulb-o my-error-text"></i></a>
-                                                        <?php
-                                                    }
+                }
+                else
+                {
+                    ?>
+                    <section class="tab-pane fade" id="fnbpanel">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#beverageView">Beverages</a></li>
+                            <li><a data-toggle="tab" href="#foodView">Food</a></li>
+                            <li><a data-toggle="tab" href="#fnbAdd">Add Fnb</a></li>
+                        </ul>
 
-                                                    if(isset($row['fnbAtt']) && myIsMultiArray($row['fnbAtt']))
-                                                    {
-                                                        $imgs = array();
-                                                        foreach($row['fnbAtt'] as $attkey => $attrow)
-                                                        {
-                                                            switch($attrow['attachmentType'])
-                                                            {
-                                                                case "1":
-                                                                    $imgs[] = MOBILE_URL.FOOD_PATH_THUMB.$attrow['filename'];
-                                                                    break;
-                                                                case "2":
-                                                                    $imgs[] = MOBILE_URL.BEVERAGE_PATH_NORMAL.$attrow['filename'];
-                                                                    break;
-                                                                default:
-                                                                    $imgs[] = MOBILE_URL.BEVERAGE_PATH_NORMAL.$attrow['filename'];
-                                                                    break;
-
-                                                            }
-                                                        }
-                                                        ?>
-                                                        <a class="view-photos" data-toggle="tooltip" title="View Photos" href="#" data-imgs="<?php echo implode(',',$imgs);?>">
-                                                            <i class="fa fa-15x fa-file-image-o my-success-text"></i></a>
-                                                        <?php
-                                                    }
-                                                    ?>
-                                                    <a data-toggle="tooltip" title="Edit"
-                                                       href="<?php echo base_url().'dashboard/editFnb/'.$row['fnb']['fnbId']?>">
-                                                        <i class="fa fa-15x fa-pencil-square-o my-black-text"></i></a>
-                                                    <a data-toggle="tooltip" class="fnbDelete-icon" data-fnbId="<?php echo $row['fnb']['fnbId'];?>" title="Delete" href="#">
-                                                        <i class="fa fa-trash-o fa-15x"></i></a>&nbsp;
-                                                </td>
-                                            </tr>
-                                            <?php
-                                        }
-                                    }
+                        <div class="tab-content">
+                            <div id="beverageView" class="tab-pane fade in active">
+                                <?php
+                                if(isset($fnbData) && myIsMultiArray($fnbData))
+                                {
                                     ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <?php
-
-                        }
-                        else
-                        {
-                            echo 'No Records Found!';
-                        }
-                        ?>
-                    </div>
-                    <div id="foodView" class="tab-pane fade">
-                        <?php
-                        if(isset($fnbData) && myIsMultiArray($fnbData))
-                        {
-                            ?>
-                            <div class="mdl-grid table-responsive">
-                                <table id="main-food-table" class="table table-hover table-bordered table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>Food Id</th>
-                                        <!--<th>Item Type</th>-->
-                                        <th>Name</th>
-                                        <th>Headline</th>
-                                        <th>Description</th>
-                                        <th>Price Full</th>
-                                        <th>Price Half</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php
-                                    foreach($fnbData as $key => $row)
-                                    {
-                                        if($row['fnb']['itemType'] == "1")
-                                        {
-                                            ?>
+                                    <div class="mdl-grid table-responsive">
+                                        <table id="main-beverage-table" class="table table-hover table-bordered table-striped">
+                                            <thead>
                                             <tr>
-                                                <th scope="row"><?php echo $row['fnb']['fnbId'];?></th>
-                                                <!--<td><?php /*echo 'Beverage';*/?></td>-->
-                                                <td><?php echo $row['fnb']['itemName'];?></td>
-                                                <td><?php echo $row['fnb']['itemHeadline'];?></td>
-                                                <td><?php echo strip_tags($row['fnb']['itemDescription']);?></td>
-                                                <td><?php echo $row['fnb']['priceFull'];?></td>
-                                                <td><?php echo $row['fnb']['priceHalf'];?></td>
-                                                <td>
-                                                    <?php
-                                                    if($row['fnb']['ifActive'] == ACTIVE)
-                                                    {
-                                                        ?>
-                                                        <a data-toggle="tooltip" class="fnb-tracker" title="Active" href="<?php echo base_url().'dashboard/setFnbDeActive/'.$row['fnb']['fnbId'];?>">
-                                                            <i class="fa fa-15x fa-lightbulb-o my-success-text"></i></a>
-                                                        <?php
-                                                    }
-                                                    else
-                                                    {
-                                                        ?>
-                                                        <a data-toggle="tooltip" class="fnb-tracker" title="Not Active" href="<?php echo base_url().'dashboard/setFnbActive/'.$row['fnb']['fnbId'];?>">
-                                                            <i class="fa fa-15x fa-lightbulb-o my-error-text"></i></a>
-                                                        <?php
-                                                    }
-
-                                                    if(isset($row['fnbAtt']) && myIsMultiArray($row['fnbAtt']))
-                                                    {
-                                                        $imgs = array();
-                                                        foreach($row['fnbAtt'] as $attkey => $attrow)
-                                                        {
-                                                            switch($attrow['attachmentType'])
-                                                            {
-                                                                case "1":
-                                                                    $imgs[] = MOBILE_URL.FOOD_PATH_THUMB.$attrow['filename'];
-                                                                    break;
-                                                                case "2":
-                                                                    $imgs[] = MOBILE_URL.BEVERAGE_PATH_NORMAL.$attrow['filename'];
-                                                                    break;
-                                                                default:
-                                                                    $imgs[] = MOBILE_URL.BEVERAGE_PATH_NORMAL.$attrow['filename'];
-                                                                    break;
-
-                                                            }
-                                                        }
-                                                        ?>
-                                                        <a class="view-photos" data-toggle="tooltip" title="View Photos" href="#" data-imgs="<?php echo implode(',',$imgs);?>">
-                                                            <i class="fa fa-15x fa-file-image-o my-success-text"></i></a>
-                                                        <?php
-                                                    }
-                                                    ?>
-                                                    <a data-toggle="tooltip" title="Edit"
-                                                       href="<?php echo base_url().'dashboard/editFnb/'.$row['fnb']['fnbId']?>">
-                                                        <i class="fa fa-15x fa-pencil-square-o my-black-text"></i></a>
-                                                    <a data-toggle="tooltip" class="fnbDelete-icon" data-fnbId="<?php echo $row['fnb']['fnbId'];?>" title="Delete" href="#">
-                                                        <i class="fa fa-trash-o fa-15x"></i></a>&nbsp;
-                                                </td>
+                                                <th>Beverage Id</th>
+                                                <!--<th>Item Type</th>-->
+                                                <th>Name</th>
+                                                <th>Headline</th>
+                                                <th>Description</th>
+                                                <th>Price Full</th>
+                                                <th>Price Half</th>
+                                                <th>Actions</th>
                                             </tr>
+                                            </thead>
+                                            <tbody>
                                             <?php
-                                        }
-                                    }
-                                    ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <?php
+                                            foreach($fnbData as $key => $row)
+                                            {
+                                                if($row['fnb']['itemType'] == "2")
+                                                {
+                                                    ?>
+                                                    <tr>
+                                                        <th scope="row"><?php echo $row['fnb']['fnbId'];?></th>
+                                                        <!--<td><?php /*echo 'Beverage';*/?></td>-->
+                                                        <td><?php echo $row['fnb']['itemName'];?></td>
+                                                        <td><?php echo $row['fnb']['itemHeadline'];?></td>
+                                                        <td><?php echo strip_tags($row['fnb']['itemDescription']);?></td>
+                                                        <td><?php echo $row['fnb']['priceFull'];?></td>
+                                                        <td><?php echo $row['fnb']['priceHalf'];?></td>
+                                                        <td>
+                                                            <a data-toggle="tooltip" class="beer-tags fnb-tracker" title="Tag Location" href="#" data-fnbId="<?php echo $row['fnb']['fnbId'];?>">
+                                                                <i class="fa fa-15x fa-tags my-success-text"></i></a>
+                                                            <?php
+                                                            if($row['fnb']['ifActive'] == ACTIVE)
+                                                            {
+                                                                ?>
+                                                                <a data-toggle="tooltip" class="fnb-tracker" title="Active" href="<?php echo base_url().'dashboard/setFnbDeActive/'.$row['fnb']['fnbId'];?>">
+                                                                    <i class="fa fa-15x fa-lightbulb-o my-success-text"></i></a>
+                                                                <?php
+                                                            }
+                                                            else
+                                                            {
+                                                                ?>
+                                                                <a data-toggle="tooltip" class="fnb-tracker" title="Not Active" href="<?php echo base_url().'dashboard/setFnbActive/'.$row['fnb']['fnbId'];?>">
+                                                                    <i class="fa fa-15x fa-lightbulb-o my-error-text"></i></a>
+                                                                <?php
+                                                            }
 
-                        }
-                        else
-                        {
-                            echo 'No Records Found!';
-                        }
-                        ?>
-                    </div>
-                    <div id="fnbAdd" class="tab-pane fade">
-                        <div class="mdl-grid">
-                            <div class="mdl-cell mdl-cell--2-col"></div>
-                            <div class="mdl-cell mdl-cell--8-col text-center">
-                                <form action="<?php echo base_url();?>dashboard/savefnb" method="post" enctype="multipart/form-data">
-                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
-                                        <input class="mdl-textfield__input" type="text" name="itemName" id="itemName">
-                                        <label class="mdl-textfield__label" for="itemName">Name</label>
+                                                            if(isset($row['fnbAtt']) && myIsMultiArray($row['fnbAtt']))
+                                                            {
+                                                                $imgs = array();
+                                                                foreach($row['fnbAtt'] as $attkey => $attrow)
+                                                                {
+                                                                    switch($attrow['attachmentType'])
+                                                                    {
+                                                                        case "1":
+                                                                            $imgs[] = MOBILE_URL.FOOD_PATH_THUMB.$attrow['filename'];
+                                                                            break;
+                                                                        case "2":
+                                                                            $imgs[] = MOBILE_URL.BEVERAGE_PATH_NORMAL.$attrow['filename'];
+                                                                            break;
+                                                                        default:
+                                                                            $imgs[] = MOBILE_URL.BEVERAGE_PATH_NORMAL.$attrow['filename'];
+                                                                            break;
+
+                                                                    }
+                                                                }
+                                                                ?>
+                                                                <a class="view-photos" data-toggle="tooltip" title="View Photos" href="#" data-imgs="<?php echo implode(',',$imgs);?>">
+                                                                    <i class="fa fa-15x fa-file-image-o my-success-text"></i></a>
+                                                                <?php
+                                                            }
+                                                            ?>
+                                                            <a data-toggle="tooltip" title="Edit"
+                                                               href="<?php echo base_url().'dashboard/editFnb/'.$row['fnb']['fnbId']?>">
+                                                                <i class="fa fa-15x fa-pencil-square-o my-black-text"></i></a>
+                                                            <a data-toggle="tooltip" class="fnbDelete-icon" data-fnbId="<?php echo $row['fnb']['fnbId'];?>" title="Delete" href="#">
+                                                                <i class="fa fa-trash-o fa-15x"></i></a>&nbsp;
+                                                        </td>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                            }
+                                            ?>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <br>
-                                    <div class="text-left">
-                                        <label>Item Type :</label>
-                                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="itemFood">
-                                            <input type="radio" id="itemFood" class="mdl-radio__button" name="itemType" value="1" checked>
-                                            <span class="mdl-radio__label">Food</span>
-                                        </label>
-                                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="itemBeverage">
-                                            <input type="radio" id="itemBeverage" class="mdl-radio__button" name="itemType" value="2">
-                                            <span class="mdl-radio__label">Beverage</span>
-                                        </label>
+                                    <?php
+
+                                }
+                                else
+                                {
+                                    echo 'No Records Found!';
+                                }
+                                ?>
+                            </div>
+                            <div id="foodView" class="tab-pane fade">
+                                <?php
+                                if(isset($fnbData) && myIsMultiArray($fnbData))
+                                {
+                                    ?>
+                                    <div class="mdl-grid table-responsive">
+                                        <table id="main-food-table" class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th>Food Id</th>
+                                                <!--<th>Item Type</th>-->
+                                                <th>Name</th>
+                                                <th>Headline</th>
+                                                <th>Description</th>
+                                                <th>Price Full</th>
+                                                <th>Price Half</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php
+                                            foreach($fnbData as $key => $row)
+                                            {
+                                                if($row['fnb']['itemType'] == "1")
+                                                {
+                                                    ?>
+                                                    <tr>
+                                                        <th scope="row"><?php echo $row['fnb']['fnbId'];?></th>
+                                                        <!--<td><?php /*echo 'Beverage';*/?></td>-->
+                                                        <td><?php echo $row['fnb']['itemName'];?></td>
+                                                        <td><?php echo $row['fnb']['itemHeadline'];?></td>
+                                                        <td><?php echo strip_tags($row['fnb']['itemDescription']);?></td>
+                                                        <td><?php echo $row['fnb']['priceFull'];?></td>
+                                                        <td><?php echo $row['fnb']['priceHalf'];?></td>
+                                                        <td>
+                                                            <?php
+                                                            if($row['fnb']['ifActive'] == ACTIVE)
+                                                            {
+                                                                ?>
+                                                                <a data-toggle="tooltip" class="fnb-tracker" title="Active" href="<?php echo base_url().'dashboard/setFnbDeActive/'.$row['fnb']['fnbId'];?>">
+                                                                    <i class="fa fa-15x fa-lightbulb-o my-success-text"></i></a>
+                                                                <?php
+                                                            }
+                                                            else
+                                                            {
+                                                                ?>
+                                                                <a data-toggle="tooltip" class="fnb-tracker" title="Not Active" href="<?php echo base_url().'dashboard/setFnbActive/'.$row['fnb']['fnbId'];?>">
+                                                                    <i class="fa fa-15x fa-lightbulb-o my-error-text"></i></a>
+                                                                <?php
+                                                            }
+
+                                                            if(isset($row['fnbAtt']) && myIsMultiArray($row['fnbAtt']))
+                                                            {
+                                                                $imgs = array();
+                                                                foreach($row['fnbAtt'] as $attkey => $attrow)
+                                                                {
+                                                                    switch($attrow['attachmentType'])
+                                                                    {
+                                                                        case "1":
+                                                                            $imgs[] = MOBILE_URL.FOOD_PATH_THUMB.$attrow['filename'];
+                                                                            break;
+                                                                        case "2":
+                                                                            $imgs[] = MOBILE_URL.BEVERAGE_PATH_NORMAL.$attrow['filename'];
+                                                                            break;
+                                                                        default:
+                                                                            $imgs[] = MOBILE_URL.BEVERAGE_PATH_NORMAL.$attrow['filename'];
+                                                                            break;
+
+                                                                    }
+                                                                }
+                                                                ?>
+                                                                <a class="view-photos" data-toggle="tooltip" title="View Photos" href="#" data-imgs="<?php echo implode(',',$imgs);?>">
+                                                                    <i class="fa fa-15x fa-file-image-o my-success-text"></i></a>
+                                                                <?php
+                                                            }
+                                                            ?>
+                                                            <a data-toggle="tooltip" title="Edit"
+                                                               href="<?php echo base_url().'dashboard/editFnb/'.$row['fnb']['fnbId']?>">
+                                                                <i class="fa fa-15x fa-pencil-square-o my-black-text"></i></a>
+                                                            <a data-toggle="tooltip" class="fnbDelete-icon" data-fnbId="<?php echo $row['fnb']['fnbId'];?>" title="Delete" href="#">
+                                                                <i class="fa fa-trash-o fa-15x"></i></a>&nbsp;
+                                                        </td>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                            }
+                                            ?>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <br>
-                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
-                                        <textarea class="mdl-textfield__input" placeholder="Headline" name="itemHeadline" rows="5"></textarea>
+                                    <?php
+
+                                }
+                                else
+                                {
+                                    echo 'No Records Found!';
+                                }
+                                ?>
+                            </div>
+                            <div id="fnbAdd" class="tab-pane fade">
+                                <div class="mdl-grid">
+                                    <div class="mdl-cell mdl-cell--2-col"></div>
+                                    <div class="mdl-cell mdl-cell--8-col text-center">
+                                        <form action="<?php echo base_url();?>dashboard/savefnb" method="post" enctype="multipart/form-data">
+                                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
+                                                <input class="mdl-textfield__input" type="text" name="itemName" id="itemName">
+                                                <label class="mdl-textfield__label" for="itemName">Name</label>
+                                            </div>
+                                            <br>
+                                            <div class="text-left">
+                                                <label>Item Type :</label>
+                                                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="itemFood">
+                                                    <input type="radio" id="itemFood" class="mdl-radio__button" name="itemType" value="1" checked>
+                                                    <span class="mdl-radio__label">Food</span>
+                                                </label>
+                                                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="itemBeverage">
+                                                    <input type="radio" id="itemBeverage" class="mdl-radio__button" name="itemType" value="2">
+                                                    <span class="mdl-radio__label">Beverage</span>
+                                                </label>
+                                            </div>
+                                            <br>
+                                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
+                                                <textarea class="mdl-textfield__input" placeholder="Headline" name="itemHeadline" rows="5"></textarea>
+                                                <br>
+                                                <textarea class="mdl-textfield__input" type="text" name="itemDescription" rows="5" id="itemDesc"></textarea>
+                                            </div>
+                                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
+                                                <input class="mdl-textfield__input" type="text" name="priceFull" pattern="-?[0-9]*(\.[0-9]+)?" id="itemPriceF">
+                                                <label class="mdl-textfield__label" for="itemPriceF">Price (Full)</label>
+                                                <span class="mdl-textfield__error">Input is not a number!</span>
+                                            </div>
+                                            <br>
+                                            <div class="text-left">
+                                                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="priceHalf">
+                                                    <input type="checkbox" id="priceHalf" class="mdl-checkbox__input" onchange="toggleHalf(this)">
+                                                    <span class="mdl-checkbox__label">Half Price?</span>
+                                                </label>
+                                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label priceHalfCls hide my-fullWidth">
+                                                    <input class="mdl-textfield__input" type="text" name="priceHalf" pattern="-?[0-9]*(\.[0-9]+)?" id="itemPriceH">
+                                                    <label class="mdl-textfield__label" for="itemPriceH">Price (Half)</label>
+                                                    <span class="mdl-textfield__error">Input is not a number!</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="myUploadPanel text-left">
+                                                <br>
+                                                <a href="http://www.photoresizer.com/" target="_blank" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent my-noUnderline">Crop Before Upload?</a>
+                                                <br>
+                                                <!--<label>Attachment Type :</label>
+                                                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="attFood">
+                                                    <input type="radio" id="attFood" class="mdl-radio__button" name="attType[0]" value="1" checked>
+                                                    <span class="mdl-radio__label">Food</span>
+                                                </label>
+                                                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="attBeer">
+                                                    <input type="radio" id="attBeer" class="mdl-radio__button" name="attType[0]" value="2">
+                                                    <span class="mdl-radio__label">Beer Digital</span>
+                                                </label>
+                                                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="attBeerW">
+                                                    <input type="radio" id="attBeerW" class="mdl-radio__button" name="attType[0]" value="3">
+                                                    <span class="mdl-radio__label">Beer Woodcut</span>
+                                                </label>-->
+                                                <input type="file" class="form-control" onchange="uploadChange(this)" />
+                                                <br>
+                                                <button onclick="addUploadPanel()" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Add More?</button>
+                                                <input type="hidden" name="attachment" />
+                                            </div>
+                                            <br>
+                                            <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Submit</button>
+                                        </form>
                                         <br>
-                                        <textarea class="mdl-textfield__input" type="text" name="itemDescription" rows="5" id="itemDesc"></textarea>
-                                    </div>
-                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
-                                        <input class="mdl-textfield__input" type="text" name="priceFull" pattern="-?[0-9]*(\.[0-9]+)?" id="itemPriceF">
-                                        <label class="mdl-textfield__label" for="itemPriceF">Price (Full)</label>
-                                        <span class="mdl-textfield__error">Input is not a number!</span>
-                                    </div>
-                                    <br>
-                                    <div class="text-left">
-                                        <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="priceHalf">
-                                            <input type="checkbox" id="priceHalf" class="mdl-checkbox__input" onchange="toggleHalf(this)">
-                                            <span class="mdl-checkbox__label">Half Price?</span>
-                                        </label>
-                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label priceHalfCls hide my-fullWidth">
-                                            <input class="mdl-textfield__input" type="text" name="priceHalf" pattern="-?[0-9]*(\.[0-9]+)?" id="itemPriceH">
-                                            <label class="mdl-textfield__label" for="itemPriceH">Price (Half)</label>
-                                            <span class="mdl-textfield__error">Input is not a number!</span>
+                                        <div class="progress hide">
+                                            <div class="progress-bar progress-bar-striped active" role="progressbar"
+                                                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                            </div>
                                         </div>
                                     </div>
-
-                                    <div class="myUploadPanel text-left">
-                                        <br>
-                                        <a href="http://www.photoresizer.com/" target="_blank" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent my-noUnderline">Crop Before Upload?</a>
-                                        <br>
-                                        <!--<label>Attachment Type :</label>
-                                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="attFood">
-                                            <input type="radio" id="attFood" class="mdl-radio__button" name="attType[0]" value="1" checked>
-                                            <span class="mdl-radio__label">Food</span>
-                                        </label>
-                                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="attBeer">
-                                            <input type="radio" id="attBeer" class="mdl-radio__button" name="attType[0]" value="2">
-                                            <span class="mdl-radio__label">Beer Digital</span>
-                                        </label>
-                                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="attBeerW">
-                                            <input type="radio" id="attBeerW" class="mdl-radio__button" name="attType[0]" value="3">
-                                            <span class="mdl-radio__label">Beer Woodcut</span>
-                                        </label>-->
-                                        <input type="file" class="form-control" onchange="uploadChange(this)" />
-                                        <br>
-                                        <button onclick="addUploadPanel()" type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Add More?</button>
-                                        <input type="hidden" name="attachment" />
-                                    </div>
-                                    <br>
-                                    <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Submit</button>
-                                </form>
-                                <br>
-                                <div class="progress hide">
-                                    <div class="progress-bar progress-bar-striped active" role="progressbar"
-                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                    </div>
+                                    <div class="mdl-cell mdl-cell--2-col"></div>
                                 </div>
                             </div>
-                            <div class="mdl-cell mdl-cell--2-col"></div>
                         </div>
-                    </div>
-                </div>
-            </section>
-            <section class="tab-pane fade" id="eventpanel">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a data-toggle="tab" href="#eventView">Event Records</a></li>
-                    <!--<li><a data-toggle="tab" href="#eventAdd">Add Event</a></li>-->
-                    <li><a data-toggle="tab" href="#compEvents">Completed</a></li>
-                    <li><a data-toggle="tab" href="#canEvents">Cancelled</a></li>
-                    <?php
-                        if($this->userType != SERVER_USER)
-                        {
-                            ?>
-                            <li><a data-toggle="tab" href="#metaTab">Event Sharing</a></li>
+                    </section>
+                    <section class="tab-pane fade" id="eventpanel">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#eventView">Event Records</a></li>
+                            <!--<li><a data-toggle="tab" href="#eventAdd">Add Event</a></li>-->
+                            <li><a data-toggle="tab" href="#compEvents">Completed</a></li>
+                            <li><a data-toggle="tab" href="#canEvents">Cancelled</a></li>
                             <?php
-                        }
-                    ?>
-                </ul>
-
-                <div class="tab-content">
-                    <div id="eventView" class="tab-pane fade in active">
-                        <input type="hidden" id="senderEmail" value="<?php echo $this->userEmail;?>"/>
-                        <?php
-                            if(isset($eventDetails) && myIsMultiArray($eventDetails))
+                            if($this->userType != SERVER_USER)
                             {
                                 ?>
-                                <div class="mdl-grid table-responsive">
-                                    <table id="main-event-table" class="table table-hover table-bordered table-striped">
-                                        <thead>
-                                        <tr>
-                                            <th>Event Id</th>
-                                            <th>Name</th>
-                                            <th>Description</th>
-                                            <!--<th>Type</th>-->
-                                            <th>Date</th>
-                                            <th>Timing</th>
-                                            <th>Cost</th>
-                                            <th>Place</th>
-                                            <th>Organizer Name</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php
+                                <li><a data-toggle="tab" href="#metaTab">Event Sharing</a></li>
+                                <?php
+                            }
+                            ?>
+                        </ul>
 
-                                        foreach($eventDetails as $key => $row)
-                                        {
-                                            if(($row['eventData']['isEventCancel'] == '0' || $row['eventData']['isEventCancel'] == '1') &&
-                                                $row['eventData']['ifApproved'] != EVENT_DECLINED)
+                        <div class="tab-content">
+                            <div id="eventView" class="tab-pane fade in active">
+                                <input type="hidden" id="senderEmail" value="<?php echo $this->userEmail;?>"/>
+                                <?php
+                                if(isset($eventDetails) && myIsMultiArray($eventDetails))
+                                {
+                                    ?>
+                                    <div class="mdl-grid table-responsive">
+                                        <table id="main-event-table" class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th>Event Id</th>
+                                                <th>Name</th>
+                                                <th>Description</th>
+                                                <!--<th>Type</th>-->
+                                                <th>Date</th>
+                                                <th>Timing</th>
+                                                <th>Cost</th>
+                                                <th>Place</th>
+                                                <th>Organizer Name</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php
+
+                                            foreach($eventDetails as $key => $row)
                                             {
-                                                $eveLoc = $row['eventData']['eventPlace'];
-                                                ?>
-                                                <tr>
-                                                    <th scope="row"><?php echo $row['eventData']['eventId'];?></th>
-                                                    <td><?php echo $row['eventData']['eventName'];?></td>
-                                                    <td><?php echo strip_tags($row['eventData']['eventDescription']);?></td>
-                                                    <!--<td><?php /*echo $row['eventData']['eventType'];*/?></td>-->
-                                                    <td><?php $d = date_create($row['eventData']['eventDate']); echo date_format($d,DATE_FORMAT_UI);?></td>
-                                                    <td><?php echo $row['eventData']['startTime'] .' - '.$row['eventData']['endTime'];?></td>
-                                                    <td>
-                                                        <?php
-                                                        switch($row['eventData']['costType'])
-                                                        {
-                                                            case 1:
-                                                                echo 'Free';
-                                                                break;
-                                                            case 2:
-                                                                echo 'Event Fee + Doolally Fee: Rs '.$row['eventData']['eventPrice'];
-                                                                break;
-                                                            case 3:
-                                                                echo 'Event Fee: Rs '.$row['eventData']['eventPrice'];
-                                                                break;
-                                                            case 4:
-                                                                echo 'Doolally Fee: Rs '.$row['eventData']['eventPrice'];
-                                                                break;
-                                                        }
-                                                        ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php
-                                                        if($row['eventData']['isEventEverywhere'] == '1')
-                                                        {
-                                                            echo 'All Taprooms';
-                                                        }
-                                                        else
-                                                        {
-                                                            echo $row['eventData']['locData'][0]['locName'];
-                                                        }
-                                                        ?>
-                                                    </td>
-                                                    <td><?php echo $row['eventData']['creatorName'];?></td>
-                                                    <td class="my-keepRelative"><!--<a data-toggle="tooltip" title="Edit" href="<?php /*echo base_url().'mugclub/edit/'.$row['mugId'];*/?>">
-                                                        <i class="glyphicon glyphicon-edit"></i></a>&nbsp;-->
-                                                        <?php
-                                                        if(isset($commLocs) && !in_array($eveLoc,$commLocs))
-                                                        {
-                                                            ?>
-                                                            <div class="my-td-overlay"></div>
+                                                if(($row['eventData']['isEventCancel'] == '0' || $row['eventData']['isEventCancel'] == '1') &&
+                                                    $row['eventData']['ifApproved'] != EVENT_DECLINED)
+                                                {
+                                                    $eveLoc = $row['eventData']['eventPlace'];
+                                                    ?>
+                                                    <tr>
+                                                        <th scope="row"><?php echo $row['eventData']['eventId'];?></th>
+                                                        <td><?php echo $row['eventData']['eventName'];?></td>
+                                                        <td><?php echo strip_tags($row['eventData']['eventDescription']);?></td>
+                                                        <!--<td><?php /*echo $row['eventData']['eventType'];*/?></td>-->
+                                                        <td><?php $d = date_create($row['eventData']['eventDate']); echo date_format($d,DATE_FORMAT_UI);?></td>
+                                                        <td><?php echo $row['eventData']['startTime'] .' - '.$row['eventData']['endTime'];?></td>
+                                                        <td>
                                                             <?php
-                                                        }
-                                                        ?>
-                                                        <?php
-                                                        if($row['eventData']['ifApproved'] == EVENT_WAITING)
-                                                        {
-                                                            ?>
-                                                            <a data-toggle="tooltip" title="Approve" data-costType="<?php echo $row['eventData']['costType'];?>"
-                                                               data-costPrice="<?php echo $row['eventData']['eventPrice'];?>"
-                                                               class="even-tracker approveThis-event" href="#" data-url="<?php echo base_url().'dashboard/approve/'.$row['eventData']['eventId'];?>">
-                                                                <i class="fa fa-15x fa-check my-success-text"></i></a>
-                                                            <a data-toggle="tooltip" title="Decline" class="declineThis-event" href="#" data-url="<?php echo base_url().'dashboard/decline/'.$row['eventData']['eventId'];?>">
-                                                                <i class="fa fa-15x fa-times my-error-text"></i></a>
-                                                            <?php
-                                                        }
-                                                        elseif($row['eventData']['ifApproved'] == EVENT_APPROVED && $row['eventData']['ifActive'] == ACTIVE)
-                                                        {
-                                                            ?>
-                                                            <a data-toggle="tooltip" title="Active" class="even-tracker" href="<?php echo base_url().'dashboard/setEventDeActive/'.$row['eventData']['eventId'];?>">
-                                                                <i class="fa fa-15x fa-lightbulb-o my-success-text"></i></a>
-                                                            <a class="even-tracker cancel-this-event" data-toggle="tooltip" title="Cancel Event" href="#" data-eventId="<?php echo $row['eventData']['eventId'];?>" >
-                                                                <i class="fa fa-15x fa-times"></i></a>
-                                                            <?php
-                                                        }
-                                                        elseif($row['eventData']['ifApproved'] == EVENT_APPROVED && $row['eventData']['ifActive'] == NOT_ACTIVE)
-                                                        {
-                                                            ?>
-                                                            <a data-toggle="tooltip" title="Not Active" class="even-tracker" href="<?php echo base_url().'dashboard/setEventActive/'.$row['eventData']['eventId'];?>">
-                                                                <i class="fa fa-15x fa-lightbulb-o my-error-text"></i></a>
-                                                            <?php
-                                                        }
-                                                        elseif($row['eventData']['ifApproved'] == EVENT_DECLINED)
-                                                        {
-                                                            ?>
-                                                            <a data-toggle="tooltip" title="Declined" data-costType="<?php echo $row['eventData']['costType'];?>"
-                                                               data-costPrice="<?php echo $row['eventData']['eventPrice'];?>"
-                                                               class="even-tracker approveThis-event" href="#" data-url="<?php echo base_url().'dashboard/approve/'.$row['eventData']['eventId'];?>">
-                                                                <i class="fa fa-15x fa-ban my-error-text"></i></a>
-                                                            <?php
-                                                        }
-                                                        if(isset($row['eventAtt']) && myIsMultiArray($row['eventAtt']))
-                                                        {
-                                                            $imgs = array();
-                                                            foreach($row['eventAtt'] as $attkey => $attrow)
+                                                            switch($row['eventData']['costType'])
                                                             {
-                                                                $imgs[] = MOBILE_URL.EVENT_PATH_THUMB.$attrow['filename'];
+                                                                case 1:
+                                                                    echo 'Free';
+                                                                    break;
+                                                                case 2:
+                                                                    echo 'Event Fee + Doolally Fee: Rs '.$row['eventData']['eventPrice'];
+                                                                    break;
+                                                                case 3:
+                                                                    echo 'Event Fee: Rs '.$row['eventData']['eventPrice'];
+                                                                    break;
+                                                                case 4:
+                                                                    echo 'Doolally Fee: Rs '.$row['eventData']['eventPrice'];
+                                                                    break;
                                                             }
                                                             ?>
-                                                            <a class="view-photos" data-toggle="tooltip" title="View Photos" href="#" data-imgs="<?php echo implode(',',$imgs);?>">
-                                                                <i class="fa fa-15x fa-file-image-o my-success-text"></i></a>
+                                                        </td>
+                                                        <td>
                                                             <?php
-                                                        }
-                                                        ?>
-                                                        <a data-toggle="tooltip" title="Edit" class="even-tracker"
-                                                           href="<?php echo base_url().'dashboard/editEvent/'.$row['eventData']['eventId']?>">
-                                                            <i class="fa fa-15x fa-pencil-square-o my-black-text"></i></a>
-                                                        <!--<a data-toggle="tooltip" class="eventDelete-icon even-tracker" data-eventId="<?php /*echo $row['eventData']['eventId'];*/?>" title="Delete" href="#">
+                                                            if($row['eventData']['isEventEverywhere'] == '1')
+                                                            {
+                                                                echo 'All Taprooms';
+                                                            }
+                                                            else
+                                                            {
+                                                                echo $row['eventData']['locData'][0]['locName'];
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td><?php echo $row['eventData']['creatorName'];?></td>
+                                                        <td class="my-keepRelative"><!--<a data-toggle="tooltip" title="Edit" href="<?php /*echo base_url().'mugclub/edit/'.$row['mugId'];*/?>">
+                                                        <i class="glyphicon glyphicon-edit"></i></a>&nbsp;-->
+                                                            <?php
+                                                            if(isset($commLocs) && !in_array($eveLoc,$commLocs))
+                                                            {
+                                                                ?>
+                                                                <div class="my-td-overlay"></div>
+                                                                <?php
+                                                            }
+                                                            ?>
+                                                            <?php
+                                                            if($row['eventData']['ifApproved'] == EVENT_WAITING)
+                                                            {
+                                                                ?>
+                                                                <a data-toggle="tooltip" title="Approve" data-costType="<?php echo $row['eventData']['costType'];?>"
+                                                                   data-costPrice="<?php echo $row['eventData']['eventPrice'];?>"
+                                                                   class="even-tracker approveThis-event" href="#" data-url="<?php echo base_url().'dashboard/approve/'.$row['eventData']['eventId'];?>">
+                                                                    <i class="fa fa-15x fa-check my-success-text"></i></a>
+                                                                <a data-toggle="tooltip" title="Decline" class="declineThis-event" href="#" data-url="<?php echo base_url().'dashboard/decline/'.$row['eventData']['eventId'];?>">
+                                                                    <i class="fa fa-15x fa-times my-error-text"></i></a>
+                                                                <?php
+                                                            }
+                                                            elseif($row['eventData']['ifApproved'] == EVENT_APPROVED && $row['eventData']['ifActive'] == ACTIVE)
+                                                            {
+                                                                ?>
+                                                                <a data-toggle="tooltip" title="Active" class="even-tracker" href="<?php echo base_url().'dashboard/setEventDeActive/'.$row['eventData']['eventId'];?>">
+                                                                    <i class="fa fa-15x fa-lightbulb-o my-success-text"></i></a>
+                                                                <a class="even-tracker cancel-this-event" data-toggle="tooltip" title="Cancel Event" href="#" data-eventId="<?php echo $row['eventData']['eventId'];?>" >
+                                                                    <i class="fa fa-15x fa-times"></i></a>
+                                                                <?php
+                                                            }
+                                                            elseif($row['eventData']['ifApproved'] == EVENT_APPROVED && $row['eventData']['ifActive'] == NOT_ACTIVE)
+                                                            {
+                                                                ?>
+                                                                <a data-toggle="tooltip" title="Not Active" class="even-tracker" href="<?php echo base_url().'dashboard/setEventActive/'.$row['eventData']['eventId'];?>">
+                                                                    <i class="fa fa-15x fa-lightbulb-o my-error-text"></i></a>
+                                                                <?php
+                                                            }
+                                                            elseif($row['eventData']['ifApproved'] == EVENT_DECLINED)
+                                                            {
+                                                                ?>
+                                                                <a data-toggle="tooltip" title="Declined" data-costType="<?php echo $row['eventData']['costType'];?>"
+                                                                   data-costPrice="<?php echo $row['eventData']['eventPrice'];?>"
+                                                                   class="even-tracker approveThis-event" href="#" data-url="<?php echo base_url().'dashboard/approve/'.$row['eventData']['eventId'];?>">
+                                                                    <i class="fa fa-15x fa-ban my-error-text"></i></a>
+                                                                <?php
+                                                            }
+                                                            if(isset($row['eventAtt']) && myIsMultiArray($row['eventAtt']))
+                                                            {
+                                                                $imgs = array();
+                                                                foreach($row['eventAtt'] as $attkey => $attrow)
+                                                                {
+                                                                    $imgs[] = MOBILE_URL.EVENT_PATH_THUMB.$attrow['filename'];
+                                                                }
+                                                                ?>
+                                                                <a class="view-photos" data-toggle="tooltip" title="View Photos" href="#" data-imgs="<?php echo implode(',',$imgs);?>">
+                                                                    <i class="fa fa-15x fa-file-image-o my-success-text"></i></a>
+                                                                <?php
+                                                            }
+                                                            ?>
+                                                            <a data-toggle="tooltip" title="Edit" class="even-tracker"
+                                                               href="<?php echo base_url().'dashboard/editEvent/'.$row['eventData']['eventId']?>">
+                                                                <i class="fa fa-15x fa-pencil-square-o my-black-text"></i></a>
+                                                            <!--<a data-toggle="tooltip" class="eventDelete-icon even-tracker" data-eventId="<?php /*echo $row['eventData']['eventId'];*/?>" title="Delete" href="#">
                                                             <i class="fa fa-trash-o fa-15x"></i></a>&nbsp;-->
-                                                        <?php
-                                                        if($row['eventData']['isRegFull'] == '1')
-                                                        {
-                                                            ?>
-                                                            <a data-toggle="tooltip" title="Open Registration" class="even-tracker"
-                                                               href="<?php echo base_url().'dashboard/openReg/'.$row['eventData']['eventId'];?>">
-                                                                <i class="fa fa-15x fa-check-circle-o"></i></a>&nbsp;
                                                             <?php
-                                                        }
-                                                        else
-                                                        {
+                                                            if($row['eventData']['isRegFull'] == '1')
+                                                            {
+                                                                ?>
+                                                                <a data-toggle="tooltip" title="Open Registration" class="even-tracker"
+                                                                   href="<?php echo base_url().'dashboard/openReg/'.$row['eventData']['eventId'];?>">
+                                                                    <i class="fa fa-15x fa-check-circle-o"></i></a>&nbsp;
+                                                                <?php
+                                                            }
+                                                            else
+                                                            {
+                                                                ?>
+                                                                <a data-toggle="tooltip" title="Close Registration" class="even-tracker"
+                                                                   href="<?php echo base_url().'dashboard/closeReg/'.$row['eventData']['eventId'];?>">
+                                                                    <i class="fa fa-15x fa-times-circle-o"></i></a>&nbsp;
+                                                                <?php
+                                                            }
                                                             ?>
-                                                            <a data-toggle="tooltip" title="Close Registration" class="even-tracker"
-                                                               href="<?php echo base_url().'dashboard/closeReg/'.$row['eventData']['eventId'];?>">
-                                                                <i class="fa fa-15x fa-times-circle-o"></i></a>&nbsp;
-                                                            <?php
-                                                        }
-                                                        ?>
 
-                                                        <a data-toggle="tooltip" class="eventCostChange-icon even-tracker"
-                                                           data-costType="<?php echo $row['eventData']['costType'];?>"
-                                                           data-costPrice="<?php echo $row['eventData']['eventPrice'];?>"
-                                                           data-url="<?php echo base_url().'dashboard/changeCostType/'.$row['eventData']['eventId'];?>"
-                                                           data-doolallyFee="<?php echo $row['eventData']['doolallyFee'];?>"
-                                                           title="Change Cost Option" href="#">
-                                                            <i class="fa fa-inr fa-15x"></i></a>&nbsp;
+                                                            <a data-toggle="tooltip" class="eventCostChange-icon even-tracker"
+                                                               data-costType="<?php echo $row['eventData']['costType'];?>"
+                                                               data-costPrice="<?php echo $row['eventData']['eventPrice'];?>"
+                                                               data-url="<?php echo base_url().'dashboard/changeCostType/'.$row['eventData']['eventId'];?>"
+                                                               data-doolallyFee="<?php echo $row['eventData']['doolallyFee'];?>"
+                                                               title="Change Cost Option" href="#">
+                                                                <i class="fa fa-inr fa-15x"></i></a>&nbsp;
 
-                                                        <a data-toggle="tooltip" class="eventSignups-icon even-tracker" data-eventName="<?php echo $row['eventData']['eventName'];?>" data-eventId="<?php echo $row['eventData']['eventId'];?>" title="Signup List" href="#">
-                                                            <i class="fa fa-users fa-15x"></i></a>&nbsp;
-                                                        <a data-toggle="tooltip" class="eventShareImg-icon even-tracker" data-hasShareImg="<?php echo $row['eventData']['hasShareImg'];?>" data-eventName="<?php echo $row['eventData']['eventName'];?>" data-eventId="<?php echo $row['eventData']['eventId'];?>" title="Event Share Images" href="#">
-                                                            <i class="fa fa-share-alt fa-15x"></i></a>
-                                                    </td>
-                                                </tr>
-                                                <?php
+                                                            <a data-toggle="tooltip" class="eventSignups-icon even-tracker" data-eventName="<?php echo $row['eventData']['eventName'];?>" data-eventId="<?php echo $row['eventData']['eventId'];?>" title="Signup List" href="#">
+                                                                <i class="fa fa-users fa-15x"></i></a>&nbsp;
+                                                            <a data-toggle="tooltip" class="eventShareImg-icon even-tracker" data-hasShareImg="<?php echo $row['eventData']['hasShareImg'];?>" data-eventName="<?php echo $row['eventData']['eventName'];?>" data-eventId="<?php echo $row['eventData']['eventId'];?>" title="Event Share Images" href="#">
+                                                                <i class="fa fa-share-alt fa-15x"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                    <?php
+                                                }
                                             }
-                                        }
-                                        ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <?php
-
-                            }
-                            else
-                            {
-                                echo 'No Records Found!';
-                            }
-                        ?>
-                    </div>
-                    <div id="eventAdd" class="tab-pane fade">
-                        <div class="mdl-grid">
-                            <div class="mdl-cell mdl-cell--2-col"></div>
-                            <div class="mdl-cell mdl-cell--8-col text-center">
-                                <form id="dashboardEventAdd" action="<?php echo base_url();?>dashboard/saveEvent" method="post" enctype="multipart/form-data">
-                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
-                                        <input class="mdl-textfield__input" type="text" name="eventName" id="eventName">
-                                        <label class="mdl-textfield__label" for="eventName">Event Name</label>
+                                            ?>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <input type="hidden" name="senderEmail" id="senderEmail" value="<?php echo $this->userEmail;?>" />
-                                    <input type="hidden" name="senderPass" id="senderPass" />
-                                    <br>
-                                    <!--<div class="text-left">
+                                    <?php
+
+                                }
+                                else
+                                {
+                                    echo 'No Records Found!';
+                                }
+                                ?>
+                            </div>
+                            <div id="eventAdd" class="tab-pane fade">
+                                <div class="mdl-grid">
+                                    <div class="mdl-cell mdl-cell--2-col"></div>
+                                    <div class="mdl-cell mdl-cell--8-col text-center">
+                                        <form id="dashboardEventAdd" action="<?php echo base_url();?>dashboard/saveEvent" method="post" enctype="multipart/form-data">
+                                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
+                                                <input class="mdl-textfield__input" type="text" name="eventName" id="eventName">
+                                                <label class="mdl-textfield__label" for="eventName">Event Name</label>
+                                            </div>
+                                            <input type="hidden" name="senderEmail" id="senderEmail" value="<?php echo $this->userEmail;?>" />
+                                            <input type="hidden" name="senderPass" id="senderPass" />
+                                            <br>
+                                            <!--<div class="text-left">
                                         <label for="eventType">Event Type :</label>
                                         <select name="eventType" id="eventType" class="form-control">
                                             <?php
-/*                                                foreach($this->config->item('eventTypes') as $key => $row)
-                                                {
-                                                    */?>
+                                            /*                                                foreach($this->config->item('eventTypes') as $key => $row)
+                                                                                            {
+                                                                                                */?>
                                                     <option value="<?php /*echo $row;*/?>"><?php /*echo $row;*/?></option>
                                                     <?php
-/*                                                }
-                                            */?>
+                                            /*                                                }
+                                                                                        */?>
                                         </select>
                                         <div class="mdl-textfield mdl-js-textfield other-event hide">
                                             <input class="mdl-textfield__input" type="text" id="otherType">
@@ -1037,419 +1055,419 @@
                                         </div>
                                     </div>
                                     <br>-->
-                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth text-left">
-                                        <label for="eventDescription">Event Description: </label>
-                                        <textarea class="mdl-textfield__input my-singleBorder" type="text" name="eventDescription" rows="5" id="eventDescription"></textarea>
-                                    </div>
-                                    <ul class="list-inline text-left">
-                                        <li>
-                                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                                <input class="mdl-textfield__input" type="text" name="eventDate" id="eventDate" placeholder="">
-                                                <label class="mdl-textfield__label" for="eventDate">Event Date</label>
+                                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth text-left">
+                                                <label for="eventDescription">Event Description: </label>
+                                                <textarea class="mdl-textfield__input my-singleBorder" type="text" name="eventDescription" rows="5" id="eventDescription"></textarea>
                                             </div>
-                                        </li>
-                                        <li>
-                                            <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="showEventDate">
-                                                <input type="checkbox" name="showEventDate" value="2" id="showEventDate" class="mdl-checkbox__input">
-                                                <span class="mdl-checkbox__label">Hide Event Date?</span>
-                                            </label>
-                                        </li>
-                                        <li>
-                                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                                <input class="mdl-textfield__input" type="text" name="startTime" id="startTime" placeholder="">
-                                                <label class="mdl-textfield__label" for="startTime">Start Time</label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                                <input class="mdl-textfield__input" type="text" name="endTime" id="endTime" placeholder="">
-                                                <label class="mdl-textfield__label" for="endTime">End Time</label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="showEventTime">
-                                                <input type="checkbox" name="showEventTime" value="2" id="showEventTime" class="mdl-checkbox__input">
-                                                <span class="mdl-checkbox__label">Hide Event Time?</span>
-                                            </label>
-                                        </li>
-                                        <li>
-                                            <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="showEventPrice">
-                                                <input type="checkbox" name="showEventPrice" value="2" id="showEventPrice" class="mdl-checkbox__input">
-                                                <span class="mdl-checkbox__label">Hide Event Price?</span>
-                                            </label>
-                                        </li>
-                                    </ul>
-                                    <br>
-                                    <div class="text-left">
-                                        <label>Event Cost (<a href="#" data-toggle="modal" data-target="#costModal">?</a>):</label><br>
-                                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="freeType">
-                                            <input type="radio" id="freeType" class="mdl-radio__button" name="costType" value="1" checked>
-                                            <span class="mdl-radio__label">Free</span>
-                                        </label><br>
-                                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="paidType">
-                                            <input type="radio" id="paidType" class="mdl-radio__button" name="costType" value="2">
-                                            <span class="mdl-radio__label">Event Fee + Doolally Fee</span>
-                                        </label>
-                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label custom-price">
-                                            <input class="mdl-textfield__input" type="text" name="doolallyFee" value="<?php echo (int)NEW_DOOLALLY_FEE;?>" pattern="-?[0-9]*(\.[0-9]+)?" id="customPrice">
-                                            <label class="mdl-textfield__label" for="customPrice">Custom Price</label>
-                                            <span class="mdl-textfield__error">Input is not a number!</span>
-                                        </div><br>
-                                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="paid2Type">
-                                            <input type="radio" id="paid2Type" class="mdl-radio__button" name="costType" value="3">
-                                            <span class="mdl-radio__label">Event Fee</span>
-                                        </label><br>
-                                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="paid3Type">
-                                            <input type="radio" id="paid3Type" class="mdl-radio__button" name="costType" value="4">
-                                            <span class="mdl-radio__label">Doolally Fee</span>
-                                        </label><br>
+                                            <ul class="list-inline text-left">
+                                                <li>
+                                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                                        <input class="mdl-textfield__input" type="text" name="eventDate" id="eventDate" placeholder="">
+                                                        <label class="mdl-textfield__label" for="eventDate">Event Date</label>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="showEventDate">
+                                                        <input type="checkbox" name="showEventDate" value="2" id="showEventDate" class="mdl-checkbox__input">
+                                                        <span class="mdl-checkbox__label">Hide Event Date?</span>
+                                                    </label>
+                                                </li>
+                                                <li>
+                                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                                        <input class="mdl-textfield__input" type="text" name="startTime" id="startTime" placeholder="">
+                                                        <label class="mdl-textfield__label" for="startTime">Start Time</label>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                                        <input class="mdl-textfield__input" type="text" name="endTime" id="endTime" placeholder="">
+                                                        <label class="mdl-textfield__label" for="endTime">End Time</label>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="showEventTime">
+                                                        <input type="checkbox" name="showEventTime" value="2" id="showEventTime" class="mdl-checkbox__input">
+                                                        <span class="mdl-checkbox__label">Hide Event Time?</span>
+                                                    </label>
+                                                </li>
+                                                <li>
+                                                    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="showEventPrice">
+                                                        <input type="checkbox" name="showEventPrice" value="2" id="showEventPrice" class="mdl-checkbox__input">
+                                                        <span class="mdl-checkbox__label">Hide Event Price?</span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                            <br>
+                                            <div class="text-left">
+                                                <label>Event Cost (<a href="#" data-toggle="modal" data-target="#costModal">?</a>):</label><br>
+                                                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="freeType">
+                                                    <input type="radio" id="freeType" class="mdl-radio__button" name="costType" value="1" checked>
+                                                    <span class="mdl-radio__label">Free</span>
+                                                </label><br>
+                                                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="paidType">
+                                                    <input type="radio" id="paidType" class="mdl-radio__button" name="costType" value="2">
+                                                    <span class="mdl-radio__label">Event Fee + Doolally Fee</span>
+                                                </label>
+                                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label custom-price">
+                                                    <input class="mdl-textfield__input" type="text" name="doolallyFee" value="<?php echo (int)NEW_DOOLALLY_FEE;?>" pattern="-?[0-9]*(\.[0-9]+)?" id="customPrice">
+                                                    <label class="mdl-textfield__label" for="customPrice">Custom Price</label>
+                                                    <span class="mdl-textfield__error">Input is not a number!</span>
+                                                </div><br>
+                                                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="paid2Type">
+                                                    <input type="radio" id="paid2Type" class="mdl-radio__button" name="costType" value="3">
+                                                    <span class="mdl-radio__label">Event Fee</span>
+                                                </label><br>
+                                                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="paid3Type">
+                                                    <input type="radio" id="paid3Type" class="mdl-radio__button" name="costType" value="4">
+                                                    <span class="mdl-radio__label">Doolally Fee</span>
+                                                </label><br>
 
-                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label event-price hide">
-                                            <input class="mdl-textfield__input" type="text" name="eventPrice" pattern="-?[0-9]*(\.[0-9]+)?" id="eventPrice">
-                                            <label class="mdl-textfield__label" for="eventPrice">Price</label>
-                                            <span class="mdl-textfield__error">Input is not a number!</span>
-                                        </div>
+                                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label event-price hide">
+                                                    <input class="mdl-textfield__input" type="text" name="eventPrice" pattern="-?[0-9]*(\.[0-9]+)?" id="eventPrice">
+                                                    <label class="mdl-textfield__label" for="eventPrice">Price</label>
+                                                    <span class="mdl-textfield__error">Input is not a number!</span>
+                                                </div>
 
-                                        <input type="hidden" name="priceFreeStuff" value=""/>
-                                        <!--<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label special-offer hide">
-                                            <input class="mdl-textfield__input" type="text" name="priceFreeStuff" id="priceFreeStuff" placeholder="">
-                                            <label class="mdl-textfield__label" for="priceFreeStuff">Special Offer With Price?</label>
-                                        </div>-->
-                                    </div>
-                                    <br>
-                                    <div class="text-left">
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <label>Event Place: </label>
-                                                <select id="eventPlace" name="eventPlace" class="form-control">
-                                                    <?php
-                                                    if(isset($locations))
-                                                    {
-                                                        foreach($locations as $key => $row)
-                                                        {
-                                                            if(isset($row['id']))
+                                                <input type="hidden" name="priceFreeStuff" value=""/>
+                                                <!--<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label special-offer hide">
+                                                    <input class="mdl-textfield__input" type="text" name="priceFreeStuff" id="priceFreeStuff" placeholder="">
+                                                    <label class="mdl-textfield__label" for="priceFreeStuff">Special Offer With Price?</label>
+                                                </div>-->
+                                            </div>
+                                            <br>
+                                            <div class="text-left">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label>Event Place: </label>
+                                                        <select id="eventPlace" name="eventPlace" class="form-control">
+                                                            <?php
+                                                            if(isset($locations))
                                                             {
-                                                                ?>
-                                                                <option value="<?php echo $row['id'];?>"><?php echo $row['locName'];?></option>
-                                                                <?php
+                                                                foreach($locations as $key => $row)
+                                                                {
+                                                                    if(isset($row['id']))
+                                                                    {
+                                                                        ?>
+                                                                        <option value="<?php echo $row['id'];?>"><?php echo $row['locName'];?></option>
+                                                                        <?php
+                                                                    }
+                                                                }
                                                             }
-                                                        }
-                                                    }
-                                                    ?>
-                                                </select>
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-6 all-loc-block">
+                                                        <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="isEventEverywhere">
+                                                            <input type="checkbox" name="isEventEverywhere" value="1" id="isEventEverywhere" class="mdl-checkbox__input">
+                                                            <span class="mdl-checkbox__label">Available At All Locations?</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="col-sm-6 all-loc-block">
-                                                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="isEventEverywhere">
-                                                    <input type="checkbox" name="isEventEverywhere" value="1" id="isEventEverywhere" class="mdl-checkbox__input">
-                                                    <span class="mdl-checkbox__label">Available At All Locations?</span>
+                                            <br>
+                                            <div class="text-left">
+                                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                                    <input class="mdl-textfield__input" type="text" name="eventCapacity" id="eventCapacity" placeholder="">
+                                                    <label class="mdl-textfield__label" for="eventCapacity">Event Capacity</label>
+                                                </div>
+                                                <br>
+                                                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="ifMicRequired">
+                                                    <input type="checkbox" name="ifMicRequired" value="1" id="ifMicRequired" class="mdl-checkbox__input">
+                                                    <span class="mdl-checkbox__label">Do you need a mic?</span>
+                                                </label>
+                                                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="ifProjectorRequired">
+                                                    <input type="checkbox" id="ifProjectorRequired" name="ifProjectorRequired" value="1" class="mdl-checkbox__input">
+                                                    <span class="mdl-checkbox__label">Do you need a projector?</span>
                                                 </label>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="text-left">
-                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                            <input class="mdl-textfield__input" type="text" name="eventCapacity" id="eventCapacity" placeholder="">
-                                            <label class="mdl-textfield__label" for="eventCapacity">Event Capacity</label>
-                                        </div>
-                                        <br>
-                                        <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="ifMicRequired">
-                                            <input type="checkbox" name="ifMicRequired" value="1" id="ifMicRequired" class="mdl-checkbox__input">
-                                            <span class="mdl-checkbox__label">Do you need a mic?</span>
-                                        </label>
-                                        <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="ifProjectorRequired">
-                                            <input type="checkbox" id="ifProjectorRequired" name="ifProjectorRequired" value="1" class="mdl-checkbox__input">
-                                            <span class="mdl-checkbox__label">Do you need a projector?</span>
-                                        </label>
-                                    </div>
-                                    <br>
-                                    <div class="text-left">
-                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                            <input class="mdl-textfield__input" type="text" name="creatorName" id="creatorName" placeholder="" required>
-                                            <label class="mdl-textfield__label" for="creatorName">Organizer Name</label>
-                                        </div>
-                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                            <input class="mdl-textfield__input" type="number" name="creatorPhone" id="creatorPhone" placeholder="" required>
-                                            <label class="mdl-textfield__label" for="creatorPhone">Organizer Phone</label>
-                                        </div>
-                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                            <input class="mdl-textfield__input" type="email" name="creatorEmail" id="creatorEmail" placeholder="" required>
-                                            <label class="mdl-textfield__label" for="creatorEmail">Organizer Email</label>
-                                        </div>
-                                        <br>
-                                        <label for="eventDescription">Organizer Description: </label>
-                                        <textarea class="mdl-textfield__input my-singleBorder" type="text" name="aboutCreator" rows="5" id="aboutCreator"></textarea>
-                                    </div>
-                                    <br>
-                                    <div class="myUploadPanel text-left">
-                                        <input type="file" multiple class="form-control" onchange="eventUploadChange(this)" />
-                                        <input type="hidden" name="attachment" />
-                                    </div>
+                                            <br>
+                                            <div class="text-left">
+                                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                                    <input class="mdl-textfield__input" type="text" name="creatorName" id="creatorName" placeholder="" required>
+                                                    <label class="mdl-textfield__label" for="creatorName">Organizer Name</label>
+                                                </div>
+                                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                                    <input class="mdl-textfield__input" type="number" name="creatorPhone" id="creatorPhone" placeholder="" required>
+                                                    <label class="mdl-textfield__label" for="creatorPhone">Organizer Phone</label>
+                                                </div>
+                                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                                    <input class="mdl-textfield__input" type="email" name="creatorEmail" id="creatorEmail" placeholder="" required>
+                                                    <label class="mdl-textfield__label" for="creatorEmail">Organizer Email</label>
+                                                </div>
+                                                <br>
+                                                <label for="eventDescription">Organizer Description: </label>
+                                                <textarea class="mdl-textfield__input my-singleBorder" type="text" name="aboutCreator" rows="5" id="aboutCreator"></textarea>
+                                            </div>
+                                            <br>
+                                            <div class="myUploadPanel text-left">
+                                                <input type="file" multiple class="form-control" onchange="eventUploadChange(this)" />
+                                                <input type="hidden" name="attachment" />
+                                            </div>
 
-                                    <br>
-                                    <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Submit</button>
-                                </form>
-                                <br>
-                                <div class="progress hide">
-                                    <div class="progress-bar progress-bar-striped active" role="progressbar"
-                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                            <br>
+                                            <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Submit</button>
+                                        </form>
+                                        <br>
+                                        <div class="progress hide">
+                                            <div class="progress-bar progress-bar-striped active" role="progressbar"
+                                                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                            </div>
+                                        </div>
                                     </div>
+                                    <div class="mdl-cell mdl-cell--2-col"></div>
                                 </div>
                             </div>
-                            <div class="mdl-cell mdl-cell--2-col"></div>
-                        </div>
-                    </div>
-                    <div id="compEvents" class="tab-pane fade">
-                        <?php
-                        if(isset($completedEvents) && myIsMultiArray($completedEvents))
-                        {
-                            ?>
-                            <div class="mdl-grid table-responsive">
-                                <table id="main-comp-event-table" class="table table-hover table-bordered table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>Event Id</th>
-                                        <th>Name</th>
-                                        <th>Description</th>
-                                        <!--<th>Type</th>-->
-                                        <th>Date</th>
-                                        <th>Timing</th>
-                                        <th>Cost</th>
-                                        <th>Place</th>
-                                        <th>Organizer Name</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php
-                                    foreach($completedEvents as $key => $row)
-                                    {
-                                        ?>
-                                        <tr>
-                                            <th scope="row"><?php echo $row['eventId'];?></th>
-                                            <td><?php echo $row['eventName'];?></td>
-                                            <td><?php echo strip_tags($row['eventDescription']);?></td>
-                                            <!--<td><?php /*echo $row['eventType'];*/?></td>-->
-                                            <td><?php $d = date_create($row['eventDate']); echo date_format($d,DATE_FORMAT_UI);?></td>
-                                            <td><?php echo $row['startTime'] .' - '.$row['endTime'];?></td>
-                                            <td>
-                                                <?php
-                                                switch($row['costType'])
-                                                {
-                                                    case 1:
-                                                        echo 'Free';
-                                                        break;
-                                                    case 2:
-                                                        echo 'Event Fee + Doolally Fee: Rs '.$row['eventPrice'];
-                                                        break;
-                                                    case 3:
-                                                        echo 'Event Fee: Rs '.$row['eventPrice'];
-                                                        break;
-                                                    case 4:
-                                                        echo 'Doolally Fee: Rs '.$row['eventPrice'];
-                                                        break;
-                                                }
-                                                ?>
-                                            </td>
-                                            <td><?php echo $row['locName'];?></td>
-                                            <td><?php echo $row['creatorName'];?></td>
-                                            <td><!--<a data-toggle="tooltip" title="Edit" href="<?php /*echo base_url().'mugclub/edit/'.$row['mugId'];*/?>">
-                                                        <i class="glyphicon glyphicon-edit"></i></a>&nbsp;-->
-                                                <?php
-                                                if(isset($row['filename']))
-                                                {
-                                                    $imgs = array();
-                                                    $imgs[] = MOBILE_URL.EVENT_PATH_THUMB.$row['filename'];
-                                                    ?>
-                                                    <a class="view-photos" data-toggle="tooltip" title="View Photos" href="#" data-imgs="<?php echo implode(',',$imgs);?>">
-                                                        <i class="fa fa-15x fa-file-image-o my-success-text"></i></a>
-                                                    <?php
-                                                }
-                                                ?>
-                                                <!--<a data-toggle="tooltip" title="Edit"
-                                                   href="<?php /*echo base_url().'dashboard/editEvent/'.$row['eventId']*/?>">
-                                                    <i class="fa fa-15x fa-pencil-square-o my-black-text"></i></a>-->
-                                                <!--<a data-toggle="tooltip" class="eventCompletedDelete-icon" data-eventId="<?php /*echo $row['eventId'];*/?>" title="Delete" href="#">
-                                                    <i class="fa fa-trash-o fa-15x"></i></a>&nbsp;-->
-                                                <a data-toggle="tooltip" class="eventSignups-icon even-tracker" data-eventName="<?php echo $row['eventName'];?>" data-eventId="<?php echo $row['eventId'];?>" title="Signup List" href="#">
-                                                    <i class="fa fa-users fa-15x"></i></a>&nbsp;
-                                            </td>
-                                        </tr>
-                                        <?php
-                                    }
+                            <div id="compEvents" class="tab-pane fade">
+                                <?php
+                                if(isset($completedEvents) && myIsMultiArray($completedEvents))
+                                {
                                     ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <?php
-
-                        }
-                        else
-                        {
-                            echo 'No Records Found!';
-                        }
-                        ?>
-                    </div>
-                    <div id="canEvents" class="tab-pane fade">
-                        <?php
-                        if(isset($eventDetails) && myIsMultiArray($eventDetails))
-                        {
-                            ?>
-                            <div class="mdl-grid table-responsive">
-                                <table id="main-comp-event-table" class="table table-hover table-bordered table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>Event Id</th>
-                                        <th>Name</th>
-                                        <th>Description</th>
-                                        <!--<th>Type</th>-->
-                                        <th>Date</th>
-                                        <th>Timing</th>
-                                        <th>Cost</th>
-                                        <th>Place</th>
-                                        <th>Organizer Name</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php
-                                    foreach($eventDetails as $key => $row)
-                                    {
-                                        if($row['eventData']['isEventCancel'] == '2' || $row['eventData']['ifApproved'] == EVENT_DECLINED)
-                                        {
-                                            ?>
+                                    <div class="mdl-grid table-responsive">
+                                        <table id="main-comp-event-table" class="table table-hover table-bordered table-striped">
+                                            <thead>
                                             <tr>
-                                                <th scope="row"><?php echo $row['eventData']['eventId'];?></th>
-                                                <td><?php echo $row['eventData']['eventName'];?></td>
-                                                <td><?php echo strip_tags($row['eventData']['eventDescription']);?></td>
-                                                <!--<td><?php /*echo $row['eventType'];*/?></td>-->
-                                                <td><?php $d = date_create($row['eventData']['eventDate']); echo date_format($d,DATE_FORMAT_UI);?></td>
-                                                <td><?php echo $row['eventData']['startTime'] .' - '.$row['eventData']['endTime'];?></td>
-                                                <td>
-                                                    <?php
-                                                    switch($row['eventData']['costType'])
-                                                    {
-                                                        case 1:
-                                                            echo 'Free';
-                                                            break;
-                                                        case 2:
-                                                            echo 'Event Fee + Doolally Fee: Rs '.$row['eventData']['eventPrice'];
-                                                            break;
-                                                        case 3:
-                                                            echo 'Event Fee: Rs '.$row['eventData']['eventPrice'];
-                                                            break;
-                                                        case 4:
-                                                            echo 'Doolally Fee: Rs '.$row['eventData']['eventPrice'];
-                                                            break;
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                    if($row['eventData']['isEventEverywhere'] == '1')
-                                                    {
-                                                        echo 'All Taprooms';
-                                                    }
-                                                    else
-                                                    {
-                                                        echo $row['eventData']['locData'][0]['locName'];
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td><?php echo $row['eventData']['creatorName'];?></td>
-                                                <td><!--<a data-toggle="tooltip" title="Edit" href="<?php /*echo base_url().'mugclub/edit/'.$row['mugId'];*/?>">
-                                                        <i class="glyphicon glyphicon-edit"></i></a>&nbsp;-->
-                                                    <?php
-                                                    if(isset($row['eventAtt']) && myIsMultiArray($row['eventAtt']))
-                                                    {
-                                                        $imgs = array();
-                                                        foreach($row['eventAtt'] as $attkey => $attrow)
+                                                <th>Event Id</th>
+                                                <th>Name</th>
+                                                <th>Description</th>
+                                                <!--<th>Type</th>-->
+                                                <th>Date</th>
+                                                <th>Timing</th>
+                                                <th>Cost</th>
+                                                <th>Place</th>
+                                                <th>Organizer Name</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php
+                                            foreach($completedEvents as $key => $row)
+                                            {
+                                                ?>
+                                                <tr>
+                                                    <th scope="row"><?php echo $row['eventId'];?></th>
+                                                    <td><?php echo $row['eventName'];?></td>
+                                                    <td><?php echo strip_tags($row['eventDescription']);?></td>
+                                                    <!--<td><?php /*echo $row['eventType'];*/?></td>-->
+                                                    <td><?php $d = date_create($row['eventDate']); echo date_format($d,DATE_FORMAT_UI);?></td>
+                                                    <td><?php echo $row['startTime'] .' - '.$row['endTime'];?></td>
+                                                    <td>
+                                                        <?php
+                                                        switch($row['costType'])
                                                         {
-                                                            $imgs[] = MOBILE_URL.EVENT_PATH_THUMB.$attrow['filename'];
+                                                            case 1:
+                                                                echo 'Free';
+                                                                break;
+                                                            case 2:
+                                                                echo 'Event Fee + Doolally Fee: Rs '.$row['eventPrice'];
+                                                                break;
+                                                            case 3:
+                                                                echo 'Event Fee: Rs '.$row['eventPrice'];
+                                                                break;
+                                                            case 4:
+                                                                echo 'Doolally Fee: Rs '.$row['eventPrice'];
+                                                                break;
                                                         }
                                                         ?>
-                                                        <a class="view-photos" data-toggle="tooltip" title="View Photos" href="#" data-imgs="<?php echo implode(',',$imgs);?>">
-                                                            <i class="fa fa-15x fa-file-image-o my-success-text"></i></a>
+                                                    </td>
+                                                    <td><?php echo $row['locName'];?></td>
+                                                    <td><?php echo $row['creatorName'];?></td>
+                                                    <td><!--<a data-toggle="tooltip" title="Edit" href="<?php /*echo base_url().'mugclub/edit/'.$row['mugId'];*/?>">
+                                                        <i class="glyphicon glyphicon-edit"></i></a>&nbsp;-->
                                                         <?php
-                                                    }
-                                                    ?>
-                                                    <a data-toggle="tooltip" class="eventSignups-icon even-tracker" data-eventName="<?php echo $row['eventData']['eventName'];?>" data-eventId="<?php echo $row['eventData']['eventId'];?>" title="Signup List" href="#">
-                                                        <i class="fa fa-users fa-15x"></i></a>&nbsp;
-                                                </td>
-                                            </tr>
-                                            <?php
-                                        }
-                                    }
+                                                        if(isset($row['filename']))
+                                                        {
+                                                            $imgs = array();
+                                                            $imgs[] = MOBILE_URL.EVENT_PATH_THUMB.$row['filename'];
+                                                            ?>
+                                                            <a class="view-photos" data-toggle="tooltip" title="View Photos" href="#" data-imgs="<?php echo implode(',',$imgs);?>">
+                                                                <i class="fa fa-15x fa-file-image-o my-success-text"></i></a>
+                                                            <?php
+                                                        }
+                                                        ?>
+                                                        <!--<a data-toggle="tooltip" title="Edit"
+                                                   href="<?php /*echo base_url().'dashboard/editEvent/'.$row['eventId']*/?>">
+                                                    <i class="fa fa-15x fa-pencil-square-o my-black-text"></i></a>-->
+                                                        <!--<a data-toggle="tooltip" class="eventCompletedDelete-icon" data-eventId="<?php /*echo $row['eventId'];*/?>" title="Delete" href="#">
+                                                    <i class="fa fa-trash-o fa-15x"></i></a>&nbsp;-->
+                                                        <a data-toggle="tooltip" class="eventSignups-icon even-tracker" data-eventName="<?php echo $row['eventName'];?>" data-eventId="<?php echo $row['eventId'];?>" title="Signup List" href="#">
+                                                            <i class="fa fa-users fa-15x"></i></a>&nbsp;
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            }
+                                            ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <?php
+
+                                }
+                                else
+                                {
+                                    echo 'No Records Found!';
+                                }
+                                ?>
+                            </div>
+                            <div id="canEvents" class="tab-pane fade">
+                                <?php
+                                if(isset($eventDetails) && myIsMultiArray($eventDetails))
+                                {
                                     ?>
-                                    </tbody>
-                                </table>
+                                    <div class="mdl-grid table-responsive">
+                                        <table id="main-comp-event-table" class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th>Event Id</th>
+                                                <th>Name</th>
+                                                <th>Description</th>
+                                                <!--<th>Type</th>-->
+                                                <th>Date</th>
+                                                <th>Timing</th>
+                                                <th>Cost</th>
+                                                <th>Place</th>
+                                                <th>Organizer Name</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php
+                                            foreach($eventDetails as $key => $row)
+                                            {
+                                                if($row['eventData']['isEventCancel'] == '2' || $row['eventData']['ifApproved'] == EVENT_DECLINED)
+                                                {
+                                                    ?>
+                                                    <tr>
+                                                        <th scope="row"><?php echo $row['eventData']['eventId'];?></th>
+                                                        <td><?php echo $row['eventData']['eventName'];?></td>
+                                                        <td><?php echo strip_tags($row['eventData']['eventDescription']);?></td>
+                                                        <!--<td><?php /*echo $row['eventType'];*/?></td>-->
+                                                        <td><?php $d = date_create($row['eventData']['eventDate']); echo date_format($d,DATE_FORMAT_UI);?></td>
+                                                        <td><?php echo $row['eventData']['startTime'] .' - '.$row['eventData']['endTime'];?></td>
+                                                        <td>
+                                                            <?php
+                                                            switch($row['eventData']['costType'])
+                                                            {
+                                                                case 1:
+                                                                    echo 'Free';
+                                                                    break;
+                                                                case 2:
+                                                                    echo 'Event Fee + Doolally Fee: Rs '.$row['eventData']['eventPrice'];
+                                                                    break;
+                                                                case 3:
+                                                                    echo 'Event Fee: Rs '.$row['eventData']['eventPrice'];
+                                                                    break;
+                                                                case 4:
+                                                                    echo 'Doolally Fee: Rs '.$row['eventData']['eventPrice'];
+                                                                    break;
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php
+                                                            if($row['eventData']['isEventEverywhere'] == '1')
+                                                            {
+                                                                echo 'All Taprooms';
+                                                            }
+                                                            else
+                                                            {
+                                                                echo $row['eventData']['locData'][0]['locName'];
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td><?php echo $row['eventData']['creatorName'];?></td>
+                                                        <td><!--<a data-toggle="tooltip" title="Edit" href="<?php /*echo base_url().'mugclub/edit/'.$row['mugId'];*/?>">
+                                                        <i class="glyphicon glyphicon-edit"></i></a>&nbsp;-->
+                                                            <?php
+                                                            if(isset($row['eventAtt']) && myIsMultiArray($row['eventAtt']))
+                                                            {
+                                                                $imgs = array();
+                                                                foreach($row['eventAtt'] as $attkey => $attrow)
+                                                                {
+                                                                    $imgs[] = MOBILE_URL.EVENT_PATH_THUMB.$attrow['filename'];
+                                                                }
+                                                                ?>
+                                                                <a class="view-photos" data-toggle="tooltip" title="View Photos" href="#" data-imgs="<?php echo implode(',',$imgs);?>">
+                                                                    <i class="fa fa-15x fa-file-image-o my-success-text"></i></a>
+                                                                <?php
+                                                            }
+                                                            ?>
+                                                            <a data-toggle="tooltip" class="eventSignups-icon even-tracker" data-eventName="<?php echo $row['eventData']['eventName'];?>" data-eventId="<?php echo $row['eventData']['eventId'];?>" title="Signup List" href="#">
+                                                                <i class="fa fa-users fa-15x"></i></a>&nbsp;
+                                                        </td>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                            }
+                                            ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <?php
+
+                                }
+                                else
+                                {
+                                    echo 'No Records Found!';
+                                }
+                                ?>
                             </div>
                             <?php
-
-                        }
-                        else
-                        {
-                            echo 'No Records Found!';
-                        }
-                        ?>
-                    </div>
-                    <?php
-                    if($this->userType != SERVER_USER)
-                    {
-                        ?>
-                        <div id="metaTab" class="tab-pane fade">
-                            <div class="mdl-grid">
-                                <div class="mdl-cell mdl-cell--2-col"></div>
-                                <div class="mdl-cell mdl-cell--8-col">
-                                    <form id="meta-event-form" action="<?php echo base_url();?>dashboard/saveEventMeta" method="post" enctype="multipart/form-data">
-                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
-                                            <input class="mdl-textfield__input" type="text" name="metaTitle" id="shareTitle">
-                                            <label class="mdl-textfield__label" for="shareTitle">Sharing Title</label>
-                                        </div>
-                                        <br>
-                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
-                                            <label class="mdl-textfield__label" for="shareDesc">Sharing Description</label>
-                                            <textarea class="mdl-textfield__input my-singleBorder" rows="5" name="metaDescription" id="shareDesc"></textarea>
-                                        </div>
-                                        <br>
-                                        <div class="myUploadPanel text-left">
-                                            <input type="file" class="form-control" onchange="metaUploadChange(this)" />
-                                            <input type="hidden" name="metaImg" />
-                                        </div>
-                                        <br>
-                                        <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Save</button>
-                                    </form>
-                                    <br>
-                                    <div class="progress hide">
-                                        <div class="progress-bar progress-bar-striped active" role="progressbar"
-                                             aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <?php
-                                        if(isset($shareMeta) && myIsArray($shareMeta))
-                                        {
-                                            ?>
-                                            <div class="mdl-grid table-responsive">
-                                                <table class="table table-hover table-bordered table-striped">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>Id</th>
-                                                        <th>Title</th>
-                                                        <th>Description</th>
-                                                        <th>Image</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <?php
-                                                    foreach($shareMeta as $key => $row)
-                                                    {
-                                                        ?>
+                            if($this->userType != SERVER_USER)
+                            {
+                                ?>
+                                <div id="metaTab" class="tab-pane fade">
+                                    <div class="mdl-grid">
+                                        <div class="mdl-cell mdl-cell--2-col"></div>
+                                        <div class="mdl-cell mdl-cell--8-col">
+                                            <form id="meta-event-form" action="<?php echo base_url();?>dashboard/saveEventMeta" method="post" enctype="multipart/form-data">
+                                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
+                                                    <input class="mdl-textfield__input" type="text" name="metaTitle" id="shareTitle">
+                                                    <label class="mdl-textfield__label" for="shareTitle">Sharing Title</label>
+                                                </div>
+                                                <br>
+                                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
+                                                    <label class="mdl-textfield__label" for="shareDesc">Sharing Description</label>
+                                                    <textarea class="mdl-textfield__input my-singleBorder" rows="5" name="metaDescription" id="shareDesc"></textarea>
+                                                </div>
+                                                <br>
+                                                <div class="myUploadPanel text-left">
+                                                    <input type="file" class="form-control" onchange="metaUploadChange(this)" />
+                                                    <input type="hidden" name="metaImg" />
+                                                </div>
+                                                <br>
+                                                <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Save</button>
+                                            </form>
+                                            <br>
+                                            <div class="progress hide">
+                                                <div class="progress-bar progress-bar-striped active" role="progressbar"
+                                                     aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <?php
+                                            if(isset($shareMeta) && myIsArray($shareMeta))
+                                            {
+                                                ?>
+                                                <div class="mdl-grid table-responsive">
+                                                    <table class="table table-hover table-bordered table-striped">
+                                                        <thead>
                                                         <tr>
-                                                            <th scope="row"><?php echo $row['id'];?></th>
-                                                            <td><?php echo $row['metaTitle'];?></td>
-                                                            <td><?php echo $row['metaDescription'];?></td>
-                                                            <?php
+                                                            <th>Id</th>
+                                                            <th>Title</th>
+                                                            <th>Description</th>
+                                                            <th>Image</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <?php
+                                                        foreach($shareMeta as $key => $row)
+                                                        {
+                                                            ?>
+                                                            <tr>
+                                                                <th scope="row"><?php echo $row['id'];?></th>
+                                                                <td><?php echo $row['metaTitle'];?></td>
+                                                                <td><?php echo $row['metaDescription'];?></td>
+                                                                <?php
                                                                 if(isset($row['metaImg']) && $row['metaImg'] != '')
                                                                 {
                                                                     $imgs = array(MOBILE_URL.'asset/images/thumb/'.$row['metaImg']);
@@ -1461,122 +1479,125 @@
                                                                     <?php
 
                                                                 }
-                                                            ?>
-                                                        </tr>
-                                                        <?php
-                                                    }
-                                                    ?>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <?php
-
-                                        }
-                                    ?>
-                                </div>
-                                <div class="mdl-cell mdl-cell--2-col"></div>
-                            </div>
-                        </div>
-                        <?php
-                    }
-                    ?>
-                </div>
-            </section>
-            <section class="tab-pane fade" id="beerpanel">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a data-toggle="tab" href="#beerTab">Olympics Sharing</a></li>
-                </ul>
-
-                <div class="tab-content">
-                    <?php
-                    if($this->userType != SERVER_USER)
-                    {
-                        ?>
-                        <div id="beerTab" class="tab-pane fade in active">
-                            <div class="mdl-grid">
-                                <div class="mdl-cell mdl-cell--2-col"></div>
-                                <div class="mdl-cell mdl-cell--8-col">
-                                    <form id="beer-olympics-form" action="<?php echo base_url();?>dashboard/saveBeerMeta" method="post" enctype="multipart/form-data">
-                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
-                                            <input class="mdl-textfield__input" type="text" name="olympicsTitle" id="olympicsTitle">
-                                            <label class="mdl-textfield__label" for="olympicsTitle">Sharing Title</label>
-                                        </div>
-                                        <br>
-                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
-                                            <label class="mdl-textfield__label" for="olympicsDesc">Sharing Description</label>
-                                            <textarea class="mdl-textfield__input my-singleBorder" rows="5" name="olympicsDescription" id="olympicsDesc"></textarea>
-                                        </div>
-                                        <br>
-                                        <div class="myUploadPanel text-left">
-                                            <input type="file" class="form-control" onchange="beerUploadChange(this)" />
-                                            <input type="hidden" name="olympicsImg" />
-                                        </div>
-                                        <br>
-                                        <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Save</button>
-                                    </form>
-                                    <br>
-                                    <div class="progress hide">
-                                        <div class="progress-bar progress-bar-striped active" role="progressbar"
-                                             aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <?php
-                                    if(isset($olympicsMeta) && myIsArray($olympicsMeta))
-                                    {
-                                        ?>
-                                        <div class="mdl-grid table-responsive">
-                                            <table class="table table-hover table-bordered table-striped">
-                                                <thead>
-                                                <tr>
-                                                    <th>Id</th>
-                                                    <th>Title</th>
-                                                    <th>Description</th>
-                                                    <th>Image</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <?php
-                                                foreach($olympicsMeta as $key => $row)
-                                                {
-                                                    ?>
-                                                    <tr>
-                                                        <th scope="row"><?php echo $row['id'];?></th>
-                                                        <td><?php echo $row['metaTitle'];?></td>
-                                                        <td><?php echo $row['metaDescription'];?></td>
-                                                        <?php
-                                                        if(isset($row['metaImg']) && $row['metaImg'] != '')
-                                                        {
-                                                            $imgs = array(MOBILE_URL.'asset/images/thumb/'.$row['metaImg']);
-                                                            ?>
-                                                            <td>
-                                                                <a class="view-photos" data-toggle="tooltip" title="View Photo" href="#" data-imgs="<?php echo implode(',',$imgs);?>">
-                                                                    <i class="fa fa-15x fa-file-image-o my-success-text"></i></a>
-                                                            </td>
+                                                                ?>
+                                                            </tr>
                                                             <?php
-
                                                         }
                                                         ?>
-                                                    </tr>
-                                                    <?php
-                                                }
-                                                ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <?php
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <?php
 
-                                    }
-                                    ?>
+                                            }
+                                            ?>
+                                        </div>
+                                        <div class="mdl-cell mdl-cell--2-col"></div>
+                                    </div>
                                 </div>
-                                <div class="mdl-cell mdl-cell--2-col"></div>
-                            </div>
+                                <?php
+                            }
+                            ?>
                         </div>
-                        <?php
-                    }
-                    ?>
-                </div>
-            </section>
+                    </section>
+                    <section class="tab-pane fade" id="beerpanel">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#beerTab">Olympics Sharing</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <?php
+                            if($this->userType != SERVER_USER)
+                            {
+                                ?>
+                                <div id="beerTab" class="tab-pane fade in active">
+                                    <div class="mdl-grid">
+                                        <div class="mdl-cell mdl-cell--2-col"></div>
+                                        <div class="mdl-cell mdl-cell--8-col">
+                                            <form id="beer-olympics-form" action="<?php echo base_url();?>dashboard/saveBeerMeta" method="post" enctype="multipart/form-data">
+                                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
+                                                    <input class="mdl-textfield__input" type="text" name="olympicsTitle" id="olympicsTitle">
+                                                    <label class="mdl-textfield__label" for="olympicsTitle">Sharing Title</label>
+                                                </div>
+                                                <br>
+                                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
+                                                    <label class="mdl-textfield__label" for="olympicsDesc">Sharing Description</label>
+                                                    <textarea class="mdl-textfield__input my-singleBorder" rows="5" name="olympicsDescription" id="olympicsDesc"></textarea>
+                                                </div>
+                                                <br>
+                                                <div class="myUploadPanel text-left">
+                                                    <input type="file" class="form-control" onchange="beerUploadChange(this)" />
+                                                    <input type="hidden" name="olympicsImg" />
+                                                </div>
+                                                <br>
+                                                <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Save</button>
+                                            </form>
+                                            <br>
+                                            <div class="progress hide">
+                                                <div class="progress-bar progress-bar-striped active" role="progressbar"
+                                                     aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <?php
+                                            if(isset($olympicsMeta) && myIsArray($olympicsMeta))
+                                            {
+                                                ?>
+                                                <div class="mdl-grid table-responsive">
+                                                    <table class="table table-hover table-bordered table-striped">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>Id</th>
+                                                            <th>Title</th>
+                                                            <th>Description</th>
+                                                            <th>Image</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <?php
+                                                        foreach($olympicsMeta as $key => $row)
+                                                        {
+                                                            ?>
+                                                            <tr>
+                                                                <th scope="row"><?php echo $row['id'];?></th>
+                                                                <td><?php echo $row['metaTitle'];?></td>
+                                                                <td><?php echo $row['metaDescription'];?></td>
+                                                                <?php
+                                                                if(isset($row['metaImg']) && $row['metaImg'] != '')
+                                                                {
+                                                                    $imgs = array(MOBILE_URL.'asset/images/thumb/'.$row['metaImg']);
+                                                                    ?>
+                                                                    <td>
+                                                                        <a class="view-photos" data-toggle="tooltip" title="View Photo" href="#" data-imgs="<?php echo implode(',',$imgs);?>">
+                                                                            <i class="fa fa-15x fa-file-image-o my-success-text"></i></a>
+                                                                    </td>
+                                                                    <?php
+
+                                                                }
+                                                                ?>
+                                                            </tr>
+                                                            <?php
+                                                        }
+                                                        ?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <?php
+
+                                            }
+                                            ?>
+                                        </div>
+                                        <div class="mdl-cell mdl-cell--2-col"></div>
+                                    </div>
+                                </div>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                    </section>
+                    <?php
+                }
+            ?>
         </main>
     </div>
     <div id="feedback-modal" class="modal fade" role="dialog">

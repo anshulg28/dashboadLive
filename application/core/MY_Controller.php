@@ -109,6 +109,10 @@ class MY_Controller extends CI_Controller
         {
             $this->commSecLoc = $this->session->commSecLoc;
         }
+        else
+        {
+            $this->commSecLoc = '';
+        }
 
 		//
 		$this->currentUrl = str_replace('/index.php', '', current_url());

@@ -39,13 +39,17 @@ class Dashboard extends MY_Controller {
         if($this->userType == EXECUTIVE_USER)
         {
             //Check for Community manager secondary location set
-            $userInfo = $this->users_model->getUserDetailsById($this->userId);
-            if(($userInfo['status'] === true && isset($userInfo['userData'][0]['secondaryLoc'])) || !isSessionVariableSet($this->commSecLoc))
-            {
-                $this->getCommLocation($userInfo['userData'][0]['secondaryLoc']);
-            }
 
-            if(isSessionVariableSet($this->commSecLoc))
+            $userInfo = $this->users_model->getUserDetailsById($this->userId);
+            if( !isSession($this->commSecLoc) || !isSessionVariableSet($this->commSecLoc))
+            {
+                if($userInfo['status'] === true && isset($userInfo['userData'][0]['secondaryLoc']))
+                {
+                    $this->getCommLocation($userInfo['userData'][0]['secondaryLoc']);
+                    return false;
+                }
+            }
+            if(isSession($this->commSecLoc) && isSessionVariableSet($this->commSecLoc))
             {
                 $allLocs = explode(',',$this->commSecLoc);
             }
