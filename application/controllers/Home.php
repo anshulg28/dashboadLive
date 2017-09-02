@@ -545,11 +545,12 @@ class Home extends MY_Controller {
         }
         /*$checkinDetail = $this->dashboard_model->getCheckinById($id);
         if (isset($checkinDetail) && myIsMultiArray($checkinDetail))
-        {
+        4{
             $data['billDetails'] = $this->dashboard_model->getBalanceByEmp($checkinDetail[0]['empId']);
         }*/
 
         //$data['checkinId'] = $id;
+        $data['locArray'] = $this->locations_model->getAllLocations();
         $data['globalStyle'] = $this->dataformatinghtml_library->getGlobalStyleHtml($data);
         $data['globalJs'] = $this->dataformatinghtml_library->getGlobalJsHtml($data);
         $data['headerView'] = $this->dataformatinghtml_library->getHeaderHtml($data);
@@ -1002,7 +1003,7 @@ class Home extends MY_Controller {
                             'userOtp' => null
                         );
                         $this->dashboard_model->updateStaffRecord($userOtp['id'],$details);
-                        $billCheck = $this->dashboard_model->checkBillNum($post['billNum']);
+                        $billCheck = $this->dashboard_model->checkBillNum($post['billNum'],$post['billLoc']);
                         if(!myIsArray($billCheck))
                         {
                             $postBillNum = $post['billNum'];
@@ -1022,6 +1023,7 @@ class Home extends MY_Controller {
                                 //$this->dashboard_model->setCouponUsed($coupon['id']);
                                 $billLog = array(
                                     'billNum' => $postBillNum,
+                                    'billLoc' => $post['billLoc'],
                                     'offerId' => null,
                                     'staffId' => $staffDetails['id'],
                                     'billAmount' => $postBillAmt,
@@ -1076,6 +1078,7 @@ class Home extends MY_Controller {
                         {
                             $billLog = array(
                                 'billNum' => $post['billNum'],
+                                'billLoc' => $post['billLoc'],
                                 'offerId' => null,
                                 'staffId' => $staffDetails['id'],
                                 'billAmount' => $post['billAmount'],

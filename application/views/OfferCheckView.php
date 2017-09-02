@@ -110,6 +110,7 @@
             offerPrifix = 'TW';
         }
 
+        var errUrl = offerUrl+'/0';
         //Checking offer Code valid
         showCustomLoader();
         $.ajax({
@@ -162,7 +163,7 @@
             error: function(xhr, status, error){
                 hideCustomLoader();
                 bootbox.alert('Unable To Connect To Server!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -174,6 +175,7 @@
         bootbox.confirm("Would you like to redeem "+offerPrifix+"-"+finalCode+" now?", function(result) {
             if(result === true)
             {
+                var errUrl = offerUrl+'/1';
                 showCustomLoader();
                 //send ajax request to check mobile number
                 $.ajax({
@@ -217,7 +219,7 @@
                     {
                         hideCustomLoader();
                         bootbox.alert('Unable To Connect To Server!');
-                        var err = '<pre>'+xhr.responseText+'</pre>';
+                        var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                         saveErrorLog(err);
                     }
                 });

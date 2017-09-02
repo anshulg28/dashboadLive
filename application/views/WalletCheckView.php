@@ -129,6 +129,7 @@
             //$('.walletPage .wallet-otp-view').addClass('hide');
             $('.walletBalance-view').empty();
             //$('#checkinBtn').addClass('hide');
+            var errUrl = $(this).attr('action');
             showCustomLoader();
             $.ajax({
                 url: $(this).attr('action'),
@@ -227,7 +228,7 @@
                     hideCustomLoader();
                     bootbox.alert('Some Error Occurred!');
                     $('#checkinBtn').addClass('hide');
-                    var err = '<pre>'+xhr.responseText+'</pre>';
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                     saveErrorLog(err);
                 }
             });

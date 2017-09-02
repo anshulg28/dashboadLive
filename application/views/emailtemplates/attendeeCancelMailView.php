@@ -15,13 +15,30 @@
             if(isset($mailData['refundId']))
             {
                 ?>
-                 For paid events, the money will be fully refunded to you. The coupon code that we sent you in the earlier mail is now invalid.<br><br>
-                Here are the refund details: <br>
+                Your payment will be fully refunded to you within 7 days.<br><br>
                 Refund Id: <?php echo $mailData['refundId'];?><br>
-                <b>
-                    <a href="https://www.instamojo.com/resolutioncenter/cases/<?php echo $mailData['refundId'];?>/?from=email"
-                       target="_blank">Click here to track Refund status</a>
-                </b><br><br>
+                <?php
+                if($mailData['couponAmt'] != 0)
+                {
+                    ?>
+                    Refund details: We have initiated partial refund for Rs. <?php echo $mailData['refundAmt'];?> (Rs. <?php echo $mailData['couponAmt'];?>
+                    deducted against event code(s) redemption at the Taproom) against your booking
+                    for <?php echo $mailData['quantity'];?> for <?php echo $mailData['eventName'];?>.
+                    It should be transferred into your account within 7 bank working days.
+                    <br><br>
+                    <?php
+                }
+                else
+                {
+                    ?>
+                    Refund details: We have initiated the refund for Rs. <?php echo $mailData['refundAmt'];?> against your booking
+                    for <?php echo $mailData['quantity'];?> for <?php echo $mailData['eventName'];?>.
+                    It should be transferred into your account within 7 bank working days.
+                    <br><br>
+                    <?php
+                }
+                ?>
+                <br><br>
                 <?php
             }
             else
@@ -32,7 +49,7 @@
             }
         ?>
         In case you have any questions/queries please don't hesitate to write to me at
-        this mail address <!--or you can reach me at --><?php /*echo $mailData['senderPhone'];*/?><br><br>
+        this (<?php echo $mailData['senderEmail'];?>) mail address <!--or you can reach me at --><?php /*echo $mailData['senderPhone'];*/?><br><br>
 
         Thanks,<br>
         <?php echo ucfirst($mailData['senderName']);?>

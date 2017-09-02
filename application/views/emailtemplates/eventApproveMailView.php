@@ -15,18 +15,33 @@
         &nbsp;&nbsp;To have visited the venue prior to the event.<br>
         &nbsp;&nbsp;To arrive at the venue at least 45 minutes before the scheduled time of the event.<br><br>
 
-        3. For paid events, we will collect money from the customer on your behalf. This is to ensure complete refund in case of cancelled events.
-        Instamojo is our payment partner. Please check out their credentials here - www.instamojo.com<br><br>
+        3. You will also be given access to a dashboard. This is a place where information on the number of sign ups, fees collected,
+        payout details will be available to you. You can also edit your event from this dashboard.<br><br>
 
-        4. You can access your events from your <a href="<?php echo MOBILE_URL.'?page/event_dash';?>" target="_blank">My Events</a>. Your dashboard is a place where information on the number of sign ups, fees collected, payout details will be available to you. You can also edit your event or cancel your event from this dashboard.<br><br>
+        4. Doolally will also list and promote your event on the following platforms - zomato, eventshigh.com, meetup, and Doolally social media profiles.<br><br>
 
-        5. For paid events, we will hand over a cheque in the name of organiser, once the event is over.<br><br>
+        5. Cancellation Policy:<br>
+        If you need to cancel an event, you will need to get in touch with the venue's community manager.<br><br>
 
-        In case you have any questions/queries please don't hesitate to write to me at this mail address<!-- or you can reach me at
+        If you cancel your event, we will refund the full amount to the attendees. However, the payment fee of 2.24% per attendee will be borne by you.<br><br>
+
+        If an attendee cancels their attendance to your event, the transaction fee of 2.24% will be borne by the attendee.<br><br>
+
+        6. Pay Outs to Organisers:<br>
+        For paid events, we will collect money from the customer on your behalf. This is to ensure a refund in case of cancelled events.<br><br>
+
+        Doolally will bear the 2.24% payment gateway fees except during cancellations by either the organiser or attendee.<br><br>
+
+        Eventshigh is our payment partner. Please check out their credentials here - www.eventshigh.com<br><br>
+
+        For events below 5000, organisers will be reimbursed by cash on the day of the event. For events greater than 5000, we will hand over a cheque in the name of organiser.
+        As an organiser, once you have crossed Rs 30,000 in earnings, Doolally will deduct 10% TDS.<br><br>
+
+        In case you have any questions/queries please don't hesitate to write to me at this (<?php echo $mailData['senderEmail'];?>) mail address<!-- or you can reach me at
         --><?php /*echo $mailData['senderPhone'] .' ('.$mailData['senderName'].')';*/?><br><br>
 
         Cheers!<br>
-        <?php echo ucfirst($mailData['senderName']); ?>
+        <?php echo ucfirst($mailData['senderName']); ?>, Doolally
     </p>
 
 </body>

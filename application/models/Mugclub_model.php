@@ -533,6 +533,7 @@ class Mugclub_Model extends CI_Model
             $query .= ' AND homeBase IN('.$locArray.')';
         }
         $query .= " ORDER BY DATE_FORMAT( birthDate, '%m-%d' ) DESC ";
+
         $result = $this->db->query($query)->result_array();
 
         $data['expiryMugList'] = $result;

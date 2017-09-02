@@ -42,10 +42,10 @@
                                     </button>
                                 </li>
                                 <li>
-                                    <!--<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
                                             id="subBtn">
                                         Withdraw Amount
-                                    </button>-->
+                                    </button>
                                 </li>
                             </ul>
                             <form id="walletUpdateForm" action="<?php echo base_url();?>updateWallet/<?php echo $walletId;?>" method="post">
@@ -171,6 +171,7 @@
         e.preventDefault();
         if($('#addAmt').val() != '' || $('#subAmt').val() != '')
         {
+            var errUrl = $(this).attr('action');
             showCustomLoader();
             $.ajax({
                 url: $(this).attr('action'),
@@ -188,7 +189,7 @@
                 error: function(xhr, status, error){
                     hideCustomLoader();
                     bootbox.alert('Some Error Occurred!');
-                    var err = '<pre>'+xhr.responseText+'</pre>';
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                     saveErrorLog(err);
                 }
             });

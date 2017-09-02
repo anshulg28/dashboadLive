@@ -110,6 +110,7 @@
 
         $(this).find('.login-error-block').empty();
         $(this).find('button[type="submit"]').attr('disabled','disabled');
+        var errUrl = $(this).attr('action');
         $.ajax({
             type:"POST",
             dataType:"json",
@@ -131,7 +132,7 @@
             {
                 $('#mainLoginForm button[type="submit"]').removeAttr("disabled");
                 $('#mainLoginForm .login-error-block').html('Some Error Occurred, Try Again!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });

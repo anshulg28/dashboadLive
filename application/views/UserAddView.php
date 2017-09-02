@@ -128,6 +128,7 @@
             var userName = $(this).val();
             $('.username-status').empty();
 
+            var errUrl = '<?php echo base_url();?>users/checkUserByUsername/'+userName;
             $.ajax({
                 type:'get',
                 dataType:'json',
@@ -146,7 +147,7 @@
                 },
                 error: function(xhr, status, error){
                     $('.username-status').css('color','red').html('Some Error Occurred');
-                    var err = '<pre>'+xhr.responseText+'</pre>';
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                     saveErrorLog(err);
                 }
             });

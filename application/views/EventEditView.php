@@ -330,6 +330,7 @@
         var picId = $(this).attr('data-picId');
         var parent = $(this).parent();
         bootbox.confirm("Remove Image?", function(result) {
+            var errUrl = base_url+'dashboard/deleteEventAtt';
             if(result === true)
             {
                 $.ajax({
@@ -347,7 +348,7 @@
                     },
                     error: function(xhr, status, error){
                         bootbox.alert('Some Error Occurred!');
-                        var err = '<pre>'+xhr.responseText+'</pre>';
+                        var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                         saveErrorLog(err);
                     }
                 });
@@ -588,6 +589,7 @@
             bootbox.confirm("Sure want to modify timings?", function(result) {
                 if(result === true)
                 {
+                    var errUrl = $(ele).attr('action');
                     showCustomLoader();
                     $.ajax({
                         type:"POST",
@@ -619,7 +621,7 @@
                         error: function(xhr, status, error){
                             hideCustomLoader();
                             bootbox.alert('Some Error Occurred!');
-                            var err = '<pre>'+xhr.responseText+'</pre>';
+                            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                             saveErrorLog(err);
                         }
                     });
@@ -628,6 +630,7 @@
         }
         else
         {
+            var errUrl = $(this).attr('action');
             showCustomLoader();
             $.ajax({
                 type:"POST",
@@ -659,7 +662,7 @@
                 error: function(xhr, status, error){
                     hideCustomLoader();
                     bootbox.alert('Some Error Occurred!');
-                    var err = '<pre>'+xhr.responseText+'</pre>';
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                     saveErrorLog(err);
                 }
             });

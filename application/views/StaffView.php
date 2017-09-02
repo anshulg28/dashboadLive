@@ -153,6 +153,7 @@
                         showCustomLoader();
                         var senderPass = result;
 
+                        var errUrl = staffLink;
                         $.ajax({
                             type:'POST',
                             dataType:'json',
@@ -173,7 +174,7 @@
                             error: function(xhr,status, error){
                                 hideCustomLoader();
                                 bootbox.alert('Some Error Occurred!');
-                                var err = '<pre>'+xhr.responseText+'</pre>';
+                                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                                 saveErrorLog(err);
                             }
                         });

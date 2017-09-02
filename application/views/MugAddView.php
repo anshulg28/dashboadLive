@@ -156,6 +156,7 @@
             var mugNo = $(this).val();
             $('.mugNumber-status').empty();
 
+            var errUrl = '<?php echo base_url();?>mugclub/MugAvailability/json/1/'+mugNo;
             $.ajax({
                 type:'get',
                 dataType:'json',
@@ -182,7 +183,7 @@
                 },
                 error: function(xhr, status, error){
                     $('.mugNumber-status').css('color','red').html('Some Error Occurred');
-                    var err = '<pre>'+xhr.responseText+'</pre>';
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                     saveErrorLog(err);
                 }
             });
@@ -199,6 +200,7 @@
             var mobNo = $(this).val();
             $('.mobile-verification-holder').empty();
 
+            var errUrl = '<?php echo base_url();?>mugclub/CheckMobileNumber/json/'+mobNo;
             $.ajax({
                 type:'get',
                 dataType:'json',
@@ -225,7 +227,7 @@
                 },
                 error: function(xhr, status, error){
                     $('.mobile-verification-holder  ').css('color','red').html('Some Error Occurred');
-                    var err = '<pre>'+xhr.responseText+'</pre>';
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                     saveErrorLog(err);
                 }
             });
@@ -275,6 +277,7 @@
                 callback: function (result) {
                     if(result != null && result != '')
                     {
+                        var errUrl = base_url+'mailers/checkGmailLogin';
                         showCustomLoader();
                         var senderPass = result;
                         $.ajax({
@@ -299,7 +302,7 @@
                             error: function(xhr, status, error){
                                 hideCustomLoader();
                                 bootbox.alert('Some Error Occurred!');
-                                var err = '<pre>'+xhr.responseText+'</pre>';
+                                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                                 saveErrorLog(err);
                             }
                         });

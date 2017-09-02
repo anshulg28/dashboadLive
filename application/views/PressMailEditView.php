@@ -143,6 +143,7 @@
         }
 
         showCustomLoader();
+        var errUrl = $(this).attr('action');
         $.ajax({
             type:'POST',
             dataType:'json',
@@ -163,7 +164,7 @@
             error: function(xhr, status, error){
                 hideCustomLoader();
                 bootbox.alert('Some Error Occurred!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -171,6 +172,7 @@
 
     $(document).on('click','.press-type-refresh', function(){
         showCustomLoader();
+        var errUrl = base_url+'mailers/refreshMailTypes';
         $.ajax({
             type:'GET',
             dataType:'json',
@@ -197,7 +199,7 @@
             error: function(xhr, status, error){
                 hideCustomLoader();
                 bootbox.alert('Error in refreshing list!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });

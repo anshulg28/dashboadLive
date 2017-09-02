@@ -121,7 +121,7 @@ class Offers_Model extends CI_Model
 
     public function checkOfferCode($offerCode)
     {
-        $query = "SELECT offerType, isRedeemed"
+        $query = "SELECT offerType, isRedeemed, validFromDate"
                 ." FROM offersmaster "
                 ."WHERE ifActive = 1 AND offerCode = ".$offerCode;
 
@@ -188,6 +188,8 @@ class Offers_Model extends CI_Model
         $data['isRedeemed'] = 0;
         $data['offerLoc'] = null;
         $data['useDateTime'] = null;
+        $data['usedTimeSpan'] = null;
+        $data['dayOfferUsed'] = null;
         $this->db->where('id', $id);
         $this->db->update('offersmaster', $data);
         return true;

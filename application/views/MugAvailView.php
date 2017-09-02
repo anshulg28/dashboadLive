@@ -57,6 +57,7 @@
     if(mugNum != '')
     {
         showCustomLoader();
+        var errUrl = base_url+'mugclub/MugAvailability/json/0/'+mugNum;
         //send ajax request to check mobile number
         $.ajax({
             type:"GET",
@@ -100,7 +101,7 @@
             {
                 hideCustomLoader();
                 bootbox.alert('Unable To Connect To Server!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });

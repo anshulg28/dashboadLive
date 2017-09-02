@@ -310,6 +310,7 @@
                     var mugNum = $('#mobNumCheck').val();
                     if(mugNum != '')
                     {
+                        var errUrl = base_url+'mugclub/MugAvailability/json/0/'+mugNum;
                         showCustomLoader();
                         //send ajax request to check mobile number
                         $.ajax({
@@ -354,7 +355,7 @@
                             {
                                 hideCustomLoader();
                                 bootbox.alert('Unable To Connect To Server!');
-                                var err = '<pre>'+xhr.responseText+'</pre>';
+                                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                                 saveErrorLog(err);
                             }
                         });

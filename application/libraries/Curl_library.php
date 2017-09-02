@@ -43,6 +43,27 @@ class curl_library
 		curl_close ($curl);
 		return $result;
 	}
+    public function getApiJSONDataByPost($url, $data, $time_out, $optHeaders)
+    {
+        $curl = curl_init();
+        curl_setopt ($curl, CURLOPT_URL, $url);
+        if($time_out != 0)
+        {
+            curl_setopt($curl, CURLOPT_TIMEOUT, $time_out);
+        }
+        if($optHeaders != '')
+        {
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $optHeaders);
+        }
+        curl_setopt($curl, CURLOPT_POST, true);  // tell curl you want to post something
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        $result = curl_exec($curl);
+        curl_close ($curl);
+        return $result;
+    }
+
     public function getApiDataByDelete($url, $data, $time_out, $optHeaders)
     {
         $curl = curl_init();
@@ -77,6 +98,13 @@ class curl_library
 		$details = json_decode($detailsTemp, true);
 		return $details;
 	}
+
+    private function getJSONDataByPost($url, $parameters, $timeOut = 0, $headers = '')
+    {
+        $detailsTemp = $this->getApiJSONDataByPost($url, $parameters, $timeOut, $headers);
+        $details = json_decode($detailsTemp, true);
+        return $details;
+    }
 
     private function getDataByDelete($url, $parameters, $timeOut = 0, $headers = '')
     {
@@ -231,5 +259,13 @@ class curl_library
     {
         $url = 'https://developer.eventshigh.com/get_event_attendees/'.$eventsHighId.'?key='.EVENT_HIGH_KEY;
         return $this->getDataByGet($url,0, array());
+    }
+    public function refundEventsHigh($details)
+    {
+        $url = 'https://developer.eventshigh.com/refund_booking?key='.EVENT_HIGH_KEY;
+        $headers = array(
+            'Content-Type: application/json'
+        );
+        return $this->getJSONDataByPost($url,$details,0,$headers);
     }
 }

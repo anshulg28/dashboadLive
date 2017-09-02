@@ -8,12 +8,15 @@
 <body>
 <p>Dear <?php echo trim($mailData[0]['creatorName'])?>,</p>
 <p>
-    Your event <?php echo $mailData[0]['eventName'];?> has been cancelled. Fees collected will be refunded to participants within 7 days.<br><br>
+    Your event <?php echo $mailData[0]['eventName'];?> has been cancelled. Fees collected will be refunded to participants within 7 days.
+    However, the payment gateway fee of 2.24 % per attendee will be borne by you.<br><br>
 
+    We will deduct this from the next workshop/activity you do with us.<br><br>
+    In case you have any questions/queries please don't hesitate to write to me at this (<?php echo $mailData['senderEmail'];?>) mail address.
     <!--For queries, contact <?php /*echo $mailData['senderPhone'] .' ('.$mailData['senderName'].')';*/?><br><br>-->
 
     Thanks,<br>
-    <?php echo ucfirst($mailData['senderName']); ?>
+    <?php echo ucfirst($mailData['senderName']); ?>, Doolally
 </p>
 
 </body>

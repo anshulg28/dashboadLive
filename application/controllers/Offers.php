@@ -331,7 +331,6 @@ class Offers extends MY_Controller {
         }
         $data = array();
         $offerStatus = $this->offers_model->checkOfferCode($offerCode);
-
         if($offerStatus['status'] === false)
         {
             $data['status'] = false;
@@ -355,7 +354,6 @@ class Offers extends MY_Controller {
                 $offerData['isRedeemed'] = 1;
                 $offerData['useDateTime'] = date('Y-m-d H:i:s');
                 $offerTimes = $this->config->item('offerTimes');
-
                 foreach($offerTimes as $key)
                 {
                     $keySplit = explode('-',$key);
@@ -376,11 +374,28 @@ class Offers extends MY_Controller {
             }
             else
             {
-                $data['status'] = true;
-                $data['offerType'] = $offerStatus['codeCheck']['offerType'];
+                if(isset($offerStatus['codeCheck']['validFromDate']))
+                {
+                    $toDay = date('Y-m-d');
+                    $d = date_create($offerStatus['codeCheck']['validFromDate']);
+                    if(strtotime($toDay) >= strtotime($offerStatus['codeCheck']['validFromDate']))
+                    {
+                        $data['status'] = true;
+                        $data['offerType'] = $offerStatus['codeCheck']['offerType'];
+                    }
+                    else
+                    {
+                        $data['status'] = false;
+                        $data['errorMsg'] = 'This code isn\'t active yet. Will be active on '.date_format($d,DATE_MAIL_FORMAT_UI);
+                    }
+                }
+                else
+                {
+                    $data['status'] = true;
+                    $data['offerType'] = $offerStatus['codeCheck']['offerType'];
+                }
             }
         }
-
         echo json_encode($data);
     }
 

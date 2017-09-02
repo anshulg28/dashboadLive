@@ -190,6 +190,7 @@
                 callback: function (result) {
                     if(result != null && result != '')
                     {
+                        var errUrl = base_url+'mailers/checkGmailLogin';
                         showCustomLoader();
                         var senderPass = result;
                         $.ajax({
@@ -214,7 +215,7 @@
                             error: function(xhr, status, error){
                                 hideCustomLoader();
                                 bootbox.alert('Some Error Occurred!');
-                                var err = '<pre>'+xhr.responseText+'</pre>';
+                                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                                 saveErrorLog(err);
                             }
                         });

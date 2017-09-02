@@ -345,6 +345,7 @@
         m_data.append('senderPass',senderPass);
         var lastMailCount,updateInterval;
         showCustomLoader();
+        var errUrl = $(form).attr('action');
         $.ajax({
             type:"POST",
             url:$(form).attr('action'),
@@ -378,7 +379,7 @@
                 hideCustomLoader();
                 //clearInterval(updateInterval);
                 bootbox.alert('<span class="my-danger-text">Some Error occurred</span>');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });

@@ -56,6 +56,7 @@
         $(this).find('.login-error-block').empty();
         $(this).find('button[type="submit"]').attr('disabled','disabled');
         showCustomLoader();
+        var errUrl = $(this).attr('action');
         $.ajax({
             type:"POST",
             dataType:"json",
@@ -79,7 +80,7 @@
                 hideCustomLoader();
                 $('#mainLoginForm button[type="submit"]').removeAttr("disabled");
                 $('.login-error-block').css('color','red').html('Some Error Occurred, Try Again!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -148,33 +149,41 @@
         && ($this->userType == ROOT_USER || $this->userType == ADMIN_USER || $this->userType == EXECUTIVE_USER) )
     {
         ?>
+            var expiredFlag = false;
+            var birthFlag = false;
             function checkExpiredMugs()
             {
-                $.ajax({
-                    type:"GET",
-                    dataType:"json",
-                    async: true,
-                    url:base_url+'mugclub/getAllExpiredMugs/json',
-                    success: function(data){
-                        if(data.status === true)
-                        {
-                            localStorageUtil.setLocal('foundM1','1',(23 * 60 * 60 * 1000));
-                            if(!$('.notification-indicator').hasClass('notification-animate-cls'))
+                if(!expiredFlag)
+                {
+                    expiredFlag = true;
+                    $.ajax({
+                        type:"GET",
+                        dataType:"json",
+                        async: true,
+                        url:base_url+'mugclub/getAllExpiredMugs/json',
+                        success: function(data){
+                            if(data.status === true)
                             {
-                                $('.notification-indicator').addClass('notification-animate-cls');
-                                $('.notification-indicator-mobile').addClass('notification-animate-cls');
-                                $('.notification-indicator-big').addClass('notification-animate-cls');
+                                localStorageUtil.setLocal('foundM1','1',(23 * 60 * 60 * 1000));
+                                if(!$('.notification-indicator').hasClass('notification-animate-cls'))
+                                {
+                                    $('.notification-indicator').addClass('notification-animate-cls');
+                                    $('.notification-indicator-mobile').addClass('notification-animate-cls');
+                                    $('.notification-indicator-big').addClass('notification-animate-cls');
+                                }
                             }
+                            else
+                            {
+                                localStorageUtil.setLocal('foundM1','0',(23 * 60 * 60 * 1000));
+                            }
+                            expiredFlag = false;
+                        },
+                        error: function(){
+                            expiredFlag = false;
                         }
-                        else
-                        {
-                            localStorageUtil.setLocal('foundM1','0',(23 * 60 * 60 * 1000));
-                        }
-                    },
-                    error: function(){
+                    });
+                }
 
-                    }
-                });
             }
 
             function checkExpiringMugs()
@@ -207,92 +216,68 @@
             }
             function checkBirthdayMugs()
             {
-                $.ajax({
-                    type:"GET",
-                    dataType:"json",
-                    async: true,
-                    url:base_url+'mugclub/getAllBirthdayMugs/json',
-                    success: function(data){
-                        console.log(data);
-                        if(data.status === true)
-                        {
-                            localStorageUtil.setLocal('foundM3','1',(23 * 60 * 60 * 1000));
-                            if(!$('.notification-indicator').hasClass('notification-animate-cls'))
+                if(!birthFlag)
+                {
+                    birthFlag = true;
+                    $.ajax({
+                        type:"GET",
+                        dataType:"json",
+                        async: true,
+                        url:base_url+'mugclub/getAllBirthdayMugs/json',
+                        success: function(data){
+                            console.log(data);
+                            if(data.status === true)
                             {
-                                $('.notification-indicator').addClass('notification-animate-cls');
-                                $('.notification-indicator-mobile').addClass('notification-animate-cls');
-                                $('.notification-indicator-big').addClass('notification-animate-cls');
+                                localStorageUtil.setLocal('foundM3','1',(23 * 60 * 60 * 1000));
+                                if(!$('.notification-indicator').hasClass('notification-animate-cls'))
+                                {
+                                    $('.notification-indicator').addClass('notification-animate-cls');
+                                    $('.notification-indicator-mobile').addClass('notification-animate-cls');
+                                    $('.notification-indicator-big').addClass('notification-animate-cls');
+                                }
                             }
+                            else
+                            {
+                                localStorageUtil.setLocal('foundM3','0',(23 * 60 * 60 * 1000));
+                            }
+                            birthFlag = false;
+                        },
+                        error: function(){
+                            birthFlag = false;
                         }
-                        else
-                        {
-                            localStorageUtil.setLocal('foundM3','0',(23 * 60 * 60 * 1000));
-                        }
-                    },
-                    error: function(){
+                    });
+                }
 
-                    }
-                });
             }
 
             /*checkExpiredMugs();
-            checkExpiringMugs();
-            checkBirthdayMugs();*/
-            if(localStorageUtil.getLocal('mailCheckDone') == null)
-            {
-                localStorageUtil.setLocal('foundM2','0',(23 * 60 * 60 * 1000));
-                localStorageUtil.setLocal('mailCheckDone','1',(23 * 60 * 60 * 1000));
+             checkExpiringMugs();
+             checkBirthdayMugs();*/
+            $(document).ready(function(){
                 checkExpiredMugs();
-                //checkExpiringMugs();
                 checkBirthdayMugs();
-                //write for recurring expired mugs
-            }
-            else if(localStorageUtil.getLocal('mailCheckDone') == '0') {
-                localStorageUtil.setLocal('foundM2','0',(23 * 60 * 60 * 1000));
-                localStorageUtil.setLocal('mailCheckDone','1',(23 * 60 * 60 * 1000));
-                checkExpiredMugs();
-                //checkExpiringMugs();
-                checkBirthdayMugs();
-            }
-            else if(localStorageUtil.getLocal('foundM1') == '1' ||
-                    localStorageUtil.getLocal('foundM3') == '1')
-            {
-                checkExpiredMugs();
-                //checkExpiringMugs();
-                checkBirthdayMugs();
-                if(localStorageUtil.getLocal('foundM1') == '0' && localStorageUtil.getLocal('foundM3') == '0')
-                {
-                    $('.notification-indicator').removeClass('notification-animate-cls');
-                    $('.notification-indicator-mobile').removeClass('notification-animate-cls');
-                    $('.notification-indicator-big').removeClass('notification-animate-cls');
-                }
-                else
-                {
-                    $('.notification-indicator').addClass('notification-animate-cls');
-                    $('.notification-indicator-mobile').addClass('notification-animate-cls');
-                    $('.notification-indicator-big').addClass('notification-animate-cls');
-                }
-                localStorageUtil.setLocal('foundM2','0',(23 * 60 * 60 * 1000));
-            }
-            else
-            {
-                localStorageUtil.setLocal('foundM2','0',(23 * 60 * 60 * 1000));
-                $('.notification-indicator').removeClass('notification-animate-cls');
-                $('.notification-indicator-mobile').removeClass('notification-animate-cls');
-                $('.notification-indicator-big').removeClass('notification-animate-cls');
-            }
-
-            function removeNotifications()
-            {
-                if(localStorageUtil.getLocal('foundMails') != null)
-                {
-                    localStorageUtil.delLocal('foundMails');
-                }
-                if(localStorageUtil.getLocal('mailCheckDone') != null)
-                {
-                    localStorageUtil.delLocal('mailCheckDone');
-                }
-            }
+                var mailCheck = setInterval(function(){
+                    if(!expiredFlag && !birthFlag)
+                    {
+                        clearInterval(mailCheck);
+                        if(localStorageUtil.getLocal('foundM1') == '1' ||
+                            localStorageUtil.getLocal('foundM3') == '1')
+                        {
+                            $('.notification-indicator').addClass('notification-animate-cls');
+                            $('.notification-indicator-mobile').addClass('notification-animate-cls');
+                            $('.notification-indicator-big').addClass('notification-animate-cls');
+                            localStorageUtil.setLocal('foundM2','0',(23 * 60 * 60 * 1000));
+                        }
+                        else
+                        {
+                            localStorageUtil.setLocal('foundM2','0',(23 * 60 * 60 * 1000));
+                            $('.notification-indicator').removeClass('notification-animate-cls');
+                            $('.notification-indicator-mobile').removeClass('notification-animate-cls');
+                            $('.notification-indicator-big').removeClass('notification-animate-cls');
+                        }
+                    }
+                },100);
+            });
 
         <?php
     }
@@ -306,6 +291,7 @@ $(document).on('click','.homePage .request-otp', function(){
         bootbox.alert('Please Select A Location!');
         return false;
     }
+    var errUrl = base_url+'generateOtp';
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -358,7 +344,7 @@ $(document).on('click','.homePage .request-otp', function(){
         },
         error: function(xhr, status, error){
             bootbox.alert('Some Error Occurred!');
-            var err = '<pre>'+xhr.responseText+'</pre>';
+            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
             saveErrorLog(err);
         }
     });
@@ -375,6 +361,7 @@ $(document).on('click','.homePage .request-otp', function(){
             bootbox.alert('Email Invalid!');
             return false;
         }
+        var errUrl = base_url+'getOtp';
         $.ajax({
             type: 'POST',
             dataType: 'json',
@@ -426,7 +413,7 @@ $(document).on('click','.homePage .request-otp', function(){
             },
             error: function(xhr, status, error){
                 bootbox.alert('Some Error Occurred!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -462,7 +449,7 @@ $(document).on('click','.homePage .request-otp', function(){
             'end_date' : eventData.eventDate,
             'end_time' : eventData.endTime+":00",
             'prices_data' : [price_data],
-            'organizer_account_name' : 'events@brewcraftsindia.com',
+            'organizer_account_name' : '<?php echo EVENT_HIGH_ACCOUNT;?>',
             'organizer_name' : 'Doolally',
             'organizer_email' : 'events@brewcraftsindia.com',
             'organizer_phone' : eventData.mobNum
@@ -474,6 +461,7 @@ $(document).on('click','.homePage .request-otp', function(){
 
         var ifError = '';
         showCustomLoader();
+        var errUrl = 'https://developer.eventshigh.com/add_or_edit_event?key=D00la11y@ppKey';
         $.ajax({
             type:'POST',
             dataType: 'json',
@@ -492,6 +480,7 @@ $(document).on('click','.homePage .request-otp', function(){
                 }
                 if(typeof eventData.highId !== 'undefined')
                 {
+                    var errUrl = base_url+'dashboard/enableEventHigh';
                     $.ajax({
                         type:'POST',
                         dataType:'json',
@@ -507,13 +496,14 @@ $(document).on('click','.homePage .request-otp', function(){
                         error: function(xhr, status, error){
                             hideCustomLoader();
                             bootbox.alert('Some Error Occurred!');
-                            var err = '<pre>'+xhr.responseText+'</pre>';
+                            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                             saveErrorLog(err);
                         }
                     });
                 }
                 else
                 {
+                    errUrl = base_url+'dashboard/saveEventHighData/'+eventData.eventId;
                     $.ajax({
                         type:'POST',
                         dataType:'json',
@@ -538,7 +528,7 @@ $(document).on('click','.homePage .request-otp', function(){
                         error: function(xhr, status, error){
                             hideCustomLoader();
                             bootbox.alert('Some Error Occurred!');
-                            var err = '<pre>'+xhr.responseText+'</pre>';
+                            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                             saveErrorLog(err);
                         }
                     });
@@ -547,7 +537,7 @@ $(document).on('click','.homePage .request-otp', function(){
             error: function(xhr, status, error){
                 hideCustomLoader();
                 bootbox.alert('Some Error Occurred!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });

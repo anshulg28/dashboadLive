@@ -80,6 +80,7 @@
         }
         if($('#locName').val() != '')
         {
+            var errUrl = '<?php echo base_url();?>locations/checkLocationByUniqueLink/'+$('#locName').val();
             showCustomLoader();
             $.ajax({
                 type:'get',
@@ -110,7 +111,7 @@
                 error: function(xhr, status, error){
                     hideCustomLoader();
                     $('.location-status').css('color','red').html('Some Error Occurred');
-                    var err = '<pre>'+xhr.responseText+'</pre>';
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                     saveErrorLog(err);
                 }
             });

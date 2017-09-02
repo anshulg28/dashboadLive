@@ -2382,6 +2382,7 @@
             bootbox.alert('Start Date cannot be greater or equal to End Date');
             return false;
         }
+        var errUrl = $(this).attr('action');
         showCustomLoader();
         $.ajax({
             type:'POST',
@@ -2487,7 +2488,7 @@
             {
                 hideCustomLoader();
                 bootbox.alert('Some Error Occurred!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -2689,6 +2690,7 @@
             ifMail = '1';
         }
 
+        var errUrl = base_url+'mugclub/addInstaMug';
         $.ajax({
             type:'POST',
             dataType:'json',
@@ -2708,7 +2710,7 @@
             error: function(xhr, status, error)
             {
                 bootbox.alert('Some Error Occurred!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -2734,6 +2736,7 @@
                     showCustomLoader();
                     var senderPass = result;
 
+                    var errUrl = base_url+'mailers/checkGmaillogin';
                     $.ajax({
                         type:'POST',
                         dataType:'json',
@@ -2756,7 +2759,7 @@
                         error: function(xhr,status, error){
                             hideCustomLoader();
                             bootbox.alert('Some Error Occurred!');
-                            var err = '<pre>'+xhr.responseText+'</pre>';
+                            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                             saveErrorLog(err);
                         }
                     });
@@ -2769,6 +2772,7 @@
 
     function renewThisMug(postData,selectedCard)
     {
+        var errUrl = base_url+'mugclub/mugRenew/json';
         $.ajax({
             type:"POST",
             dataType:"json",
@@ -2778,6 +2782,7 @@
             {
                 if(data.status === true)
                 {
+                    var errUrl = base_url+'dashboard/instadone/json/'+selectedCard;
                     $.ajax({
                         type:"GET",
                         dataType: "json",
@@ -2794,7 +2799,7 @@
                         },
                         error: function(xhr, status, error){
                             bootbox.alert('Some Error Occurred!');
-                            var err = '<pre>'+xhr.responseText+'</pre>';
+                            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                             saveErrorLog(err);
                         }
                     });
@@ -2815,7 +2820,7 @@
             error: function(xhr, status, error)
             {
                 bootbox.alert('Some Error Occurred!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -2827,6 +2832,7 @@
 <script>
     var lastFormNumber = 0;
     var feedbacks = {};
+    var errUrl = $(this).attr('action');
     $(document).on('submit','#feedback-form', function(e){
         e.preventDefault();
         showCustomLoader();
@@ -2852,7 +2858,7 @@
             error: function(xhr, status, error){
                 hideCustomLoader();
                 bootbox.alert('Some Error Occurred!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -3043,6 +3049,7 @@
         beerLocs = [];
         var fnbId = $(this).attr('data-fnbId');
         $('#beerLoc-modal #fnbId').val(fnbId);
+        var errUrl = base_url+'dashboard/beerLocation/'+fnbId;
         showCustomLoader();
         $.ajax({
             type:'GET',
@@ -3077,7 +3084,7 @@
             error: function(xhr, status, error){
                 hideCustomLoader();
                 bootbox.alert('Some Error Occurred!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -3127,6 +3134,7 @@
         }
         showCustomLoader();
 
+        var errUrl = base_url+'dashboard/fnbTagSet/'+$('#beerLoc-modal #fnbId').val();
         $.ajax({
             type:'POST',
             dataType:'json',
@@ -3147,7 +3155,7 @@
             error: function(xhr, status, error){
                 hideCustomLoader();
                 bootbox.alert('Some Error Occurred!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -3447,6 +3455,7 @@
                 {
                     showCustomLoader();
                     var senderPass = result;
+                    var errUrl = base_url+'mailers/checkGmailLogin';
                     $.ajax({
                         type:'POST',
                         dataType:'json',
@@ -3461,6 +3470,7 @@
                             }
                             else
                             {
+                                var errUrl = $(eventVar).attr('action');
                                 $(eventVar).find('#senderPass').val(senderPass);
                                 showCustomLoader();
                                 $.ajax({
@@ -3482,7 +3492,7 @@
                                     error: function(xhr, status, error){
                                         hideCustomLoader();
                                         bootbox.alert('Some Error Occurred!');
-                                        var err = '<pre>'+xhr.responseText+'</pre>';
+                                        var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                                         saveErrorLog(err);
                                     }
                                 });
@@ -3491,7 +3501,7 @@
                         error: function(xhr, status, error){
                             hideCustomLoader();
                             bootbox.alert('Some Error Occurred!');
-                            var err = '<pre>'+xhr.responseText+'</pre>';
+                            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                             saveErrorLog(err);
                         }
                     });
@@ -3520,6 +3530,7 @@
     $(document).on('click','.eventSignups-icon', function(){
         var eventId = $(this).attr('data-eventId');
         var eventName = $(this).attr('data-eventName');
+        var errUrl = base_url+'dashboard/getSignupList/'+eventId;
         showCustomLoader();
         $.ajax({
             type:'GET',
@@ -3532,7 +3543,7 @@
                     $('#peopleView-modal .modal-body').html('');
                     $('#peopleView-modal .eventName').html(eventName);
                     $('#peopleView-modal .modal-body').append('<p class="alert-success">Doolally Signups</p>');
-                    if(typeof data.joinData != 'undefined' && data.joinData != null && data.joinData.length != 0)
+                    if(typeof data.joinData !== 'undefined' && data.joinData != null && data.joinData.length != 0)
                     {
                         var downTbl = '<table>';
                         var tblHtml = '<table class="table table-striped">';
@@ -3542,24 +3553,21 @@
                         tblHtml += '</tr></thead><tbody>';
                         for(var i=0;i<data.joinData.length;i++)
                         {
-                            if(data.joinData[i].paymentId.indexOf('MOJO') != -1)
-                            {
-                                downTbl += '<tr>';
-                                downTbl += '<td>'+data.joinData[i].firstName+' '+data.joinData[i].lastName+'</td>';
-                                downTbl += '<td>'+data.joinData[i].emailId+'</td>';
-                                downTbl += '<td>'+data.joinData[i].mobNum+'</td>';
-                                downTbl += '<td>'+data.joinData[i].quantity+'</td>';
-                                downTbl += '<td>'+formatJsDate(data.joinData[i].createdDT)+'</td>';
-                                downTbl += '</tr>';
+                            downTbl += '<tr>';
+                            downTbl += '<td>'+data.joinData[i].firstName+' '+data.joinData[i].lastName+'</td>';
+                            downTbl += '<td>'+data.joinData[i].emailId+'</td>';
+                            downTbl += '<td>'+data.joinData[i].mobNum+'</td>';
+                            downTbl += '<td>'+data.joinData[i].quantity+'</td>';
+                            downTbl += '<td>'+formatJsDate(data.joinData[i].createdDT)+'</td>';
+                            downTbl += '</tr>';
 
-                                tblHtml += '<tr>';
-                                tblHtml += '<td>'+data.joinData[i].firstName+' '+data.joinData[i].lastName+'</td>';
-                                tblHtml += '<td>'+data.joinData[i].emailId+'</td>';
-                                tblHtml += '<td>'+data.joinData[i].mobNum+'</td>';
-                                tblHtml += '<td>'+data.joinData[i].quantity+'</td>';
-                                tblHtml += '<td>'+formatJsDate(data.joinData[i].createdDT)+'</td>';
-                                tblHtml += '</tr>';
-                            }
+                            tblHtml += '<tr>';
+                            tblHtml += '<td>'+data.joinData[i].firstName+' '+data.joinData[i].lastName+'</td>';
+                            tblHtml += '<td>'+data.joinData[i].emailId+'</td>';
+                            tblHtml += '<td>'+data.joinData[i].mobNum+'</td>';
+                            tblHtml += '<td>'+data.joinData[i].quantity+'</td>';
+                            tblHtml += '<td>'+formatJsDate(data.joinData[i].createdDT)+'</td>';
+                            tblHtml += '</tr>';
                         }
                         if(typeof data.EHData === 'undefined')
                         {
@@ -3577,7 +3585,7 @@
                     }
 
                     $('#peopleView-modal .modal-body').append('<p class="alert-info">EventsHigh Signups</p>');
-                    if(typeof data.EHData !== 'undefined')
+                    if(typeof data.EHData !== 'undefined' && data.EHData != null && data.EHData.length != 0)
                     {
                         var tblHtml1 = '<table class="table table-striped">';
                         downTbl += '<tr><th>EventsHigh Signups</th></tr>';
@@ -3586,19 +3594,19 @@
                         for(var j=0;j<data.EHData.length;j++)
                         {
                             downTbl += '<tr>';
-                            downTbl += '<td>'+data.EHData[j].name+'</td>';
-                            downTbl += '<td>'+data.EHData[j].email+'</td>';
-                            downTbl += '<td>'+data.EHData[j].mobile+'</td>';
-                            downTbl += '<td>'+data.EHData[j].numTickets+'</td>';
-                            downTbl += '<td>'+formatJsDate(data.EHData[j].bookedOn)+'</td>';
+                            downTbl += '<td>'+data.EHData[j].firstName+' '+data.EHData[j].lastName+'</td>';
+                            downTbl += '<td>'+data.EHData[j].emailId+'</td>';
+                            downTbl += '<td>'+data.EHData[j].mobNum+'</td>';
+                            downTbl += '<td>'+data.EHData[j].quantity+'</td>';
+                            downTbl += '<td>'+formatJsDate(data.EHData[j].createdDT)+'</td>';
                             downTbl += '</tr>';
 
                             tblHtml1 += '<tr>';
-                            tblHtml1 += '<td>'+data.EHData[j].name+'</td>';
-                            tblHtml1 += '<td>'+data.EHData[j].email+'</td>';
-                            tblHtml1 += '<td>'+data.EHData[j].mobile+'</td>';
-                            tblHtml1 += '<td>'+data.EHData[j].numTickets+'</td>';
-                            tblHtml1 += '<td>'+formatJsDate(data.EHData[j].bookedOn)+'</td>';
+                            tblHtml1 += '<td>'+data.EHData[j].firstName+' '+data.EHData[j].lastName+'</td>';
+                            tblHtml1 += '<td>'+data.EHData[j].emailId+'</td>';
+                            tblHtml1 += '<td>'+data.EHData[j].mobNum+'</td>';
+                            tblHtml1 += '<td>'+data.EHData[j].quantity+'</td>';
+                            tblHtml1 += '<td>'+formatJsDate(data.EHData[j].createdDT)+'</td>';
                             tblHtml1 += '</tr>';
                         }
                         downTbl += '</tbody></table>';
@@ -3618,7 +3626,7 @@
             error: function(xhr, status, error){
                 hideCustomLoader();
                 bootbox.alert('Some Error Occurred!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -3642,6 +3650,7 @@
             return false;
         }
         showCustomLoader();
+        var errUrl = $(this).attr('action');
         $.ajax({
             type:"POST",
             dataType:'json',
@@ -3661,7 +3670,7 @@
             error: function(xhr, status, error){
                 hideCustomLoader();
                 bootbox.alert('Some Error Occurred!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -3685,6 +3694,7 @@
             return false;
         }
         showCustomLoader();
+        var errUrl = $(this).attr('action');
         $.ajax({
             type:"POST",
             dataType:'json',
@@ -3704,7 +3714,7 @@
             error: function(xhr, status, error){
                 hideCustomLoader();
                 bootbox.alert('Some Error Occurred!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -3765,6 +3775,7 @@
             callback: function (result) {
                 if(result != null && result != '')
                 {
+                    var errUrl = base_url+'mailers/checkGmailLogin';
                     showCustomLoader();
                     var senderPass = result;
                     $.ajax({
@@ -3781,6 +3792,7 @@
                             }
                             else
                             {
+                                var errUrl = declineUrl;
                                 showCustomLoader();
                                 $.ajax({
                                     type:'POST',
@@ -3803,7 +3815,7 @@
                                     error: function(xhr, status, error){
                                         hideCustomLoader();
                                         bootbox.alert('Some Error Occurred!');
-                                        var err = '<pre>'+xhr.responseText+'</pre>';
+                                        var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                                         saveErrorLog(err);
                                     }
                                 });
@@ -3812,7 +3824,7 @@
                         error: function(xhr, status, error){
                             hideCustomLoader();
                             bootbox.alert('Some Error Occurred!');
-                            var err = '<pre>'+xhr.responseText+'</pre>';
+                            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                             saveErrorLog(err);
                         }
                     });
@@ -3835,6 +3847,7 @@
         }
         if(isDirectCostChange)
         {
+            var errUrl = eveApprovUrl;
             showCustomLoader();
             $.ajax({
                 type:'POST',
@@ -3870,7 +3883,7 @@
                 error: function(xhr, status, error){
                     hideCustomLoader();
                     bootbox.alert('Some Error Occurred!');
-                    var err = '<pre>'+xhr.responseText+'</pre>';
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                     saveErrorLog(err);
                 }
             });
@@ -3884,6 +3897,7 @@
                 callback: function (result) {
                     if(result != null && result != '')
                     {
+                        var errUrl = base_url+'mailers/checkGmailLogin';
                         showCustomLoader();
                         var senderPass = result;
                         $.ajax({
@@ -3900,6 +3914,7 @@
                                 }
                                 else
                                 {
+                                    var errUrl = eveApprovUrl;
                                     showCustomLoader();
                                     $.ajax({
                                         type:'POST',
@@ -3936,7 +3951,7 @@
                                         error: function(xhr, status, error){
                                             hideCustomLoader();
                                             bootbox.alert('Some Error Occurred!');
-                                            var err = '<pre>'+xhr.responseText+'</pre>';
+                                            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                                             saveErrorLog(err);
                                         }
                                     });
@@ -3945,7 +3960,7 @@
                             error: function(xhr, status, error){
                                 hideCustomLoader();
                                 bootbox.alert('Some Error Occurred!');
-                                var err = '<pre>'+xhr.responseText+'</pre>';
+                                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                                 saveErrorLog(err);
                             }
                         });
@@ -4138,6 +4153,7 @@
             callback: function (result) {
                 if(result != null && result != '')
                 {
+                    var errUrl = base_url+'mailers/checkGmailLogin';
                     showCustomLoader();
                     var senderPass = result;
                     $.ajax({
@@ -4157,6 +4173,7 @@
                                 bootbox.confirm("Are you sure you want to Cancel Event?", function(result) {
                                     if(result === true)
                                     {
+                                        var errUrl = base_url+'dashboard/cancelEvent/'+eveId;
                                         showCustomLoader();
                                         $.ajax({
                                             type:'POST',
@@ -4177,7 +4194,7 @@
                                             error: function(xhr, status, error){
                                                 hideCustomLoader();
                                                 bootbox.alert('Some Error Occurred!');
-                                                var err = '<pre>'+xhr.responseText+'</pre>';
+                                                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                                                 saveErrorLog(err);
                                             }
                                         });
@@ -4188,7 +4205,7 @@
                         error: function(xhr, status, error){
                             hideCustomLoader();
                             bootbox.alert('Some Error Occurred!');
-                            var err = '<pre>'+xhr.responseText+'</pre>';
+                            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                             saveErrorLog(err);
                         }
                     });
@@ -4239,6 +4256,7 @@
 
     function fetchAllShareImgs(eventId)
     {
+        var errUrl = base_url='dashboard/getShareImgs/'+eventId;
         //Get All the sharing images
         showCustomLoader();
         $.ajax({
@@ -4283,7 +4301,7 @@
             error: function(xhr, status, error){
                 hideCustomLoader();
                 bootbox.alert('Some Error Occurred!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -4353,6 +4371,7 @@
         }
         var imgId = $('#shareImg-modal input[name="isUsing"]:checked').val();
 
+        var errUrl = base_url+'dashboard/saveAltShareImg';
         $.ajax({
             type:'post',
             dataType:'json',
@@ -4374,7 +4393,7 @@
             error: function(xhr, status, error){
                 hideCustomLoader();
                 bootbox.alert('Some Error Occurred!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });

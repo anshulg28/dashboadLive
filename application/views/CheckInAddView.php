@@ -367,6 +367,7 @@
 
     function ajaxCheckIn(inputData)
     {
+        var errUrl = base_url+'check-ins/verify';
         $.ajax({
             type:"POST",
             dataType:"json",
@@ -504,6 +505,12 @@
                 }
                 else
                 {
+                    if(typeof data.pageUrl !== 'undefined')
+                    {
+                        bootbox.alert('Session Timed Out! Login Again!', function(){
+                            window.location.href= data.pageUrl;
+                        });
+                    }
                     checkedInMugNum = '';
                     $('.mugCheckIn .final-checkIn-row').addClass('hide');
                     $('.visual-status-icons').addClass('hide');
@@ -517,7 +524,7 @@
                 $('.visual-status-icons').addClass('hide');
                 hideCustomLoader();
                 bootbox.alert('Some Error Occurred!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -647,7 +654,8 @@
             data: {mugNum: $(selectedRow).find('.mugNumber-info')[0].innerText},
             success: function (data) {
                 hideCustomLoader();
-                if (data.status === true) {
+                if (data.status === true)
+                {
                     var mugList = data.mugList;
 
                     fillMugData(mugList[0]);
@@ -743,6 +751,7 @@
     $(document).on('click','.final-checkin-btn', function(){
         if(checkedInMugNum != '')
         {
+            var errUrl = base_url+'check-ins/save/json';
             showCustomLoader();
             $.ajax({
                 type:"post",
@@ -773,7 +782,7 @@
                 {
                     hideCustomLoader();
                     bootbox.alert('Some Error Occurred!');
-                    var err = '<pre>'+xhr.responseText+'</pre>';
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                     saveErrorLog(err);
                 }
             });
@@ -840,6 +849,7 @@
     $(document).on('submit','#saveMissingInfo', function(e){
         e.preventDefault();
         showCustomLoader();
+        var errUrl = $(this).attr('action');
         $.ajax({
             type:"POST",
             dataType:"json",
@@ -860,7 +870,7 @@
             error: function(xhr, status, error){
                 hideCustomLoader();
                 bootbox.alert("Some Error Occurred!");
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });

@@ -239,7 +239,10 @@ class Checkin extends MY_Controller {
         $post = $this->input->post();
         if(isSessionVariableSet($this->isUserSession) === false)
         {
-            redirect(base_url());
+            $data['status'] = false;
+            $data['pageUrl'] = base_url();
+            echo json_encode($data);
+            return false;
         }
 
         if(isset($post['mugNum']))

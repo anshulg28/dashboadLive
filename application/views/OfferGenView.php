@@ -251,6 +251,7 @@
                 return false;
             }
         }
+        var errUrl = $(this).attr('action');
         showCustomLoader();
         $.ajax({
             type:'POST',
@@ -304,7 +305,7 @@
             error: function(xhr, status, error){
                 hideCustomLoader();
                 $('.location-status').css('color','red').html('Some Error Occurred');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });

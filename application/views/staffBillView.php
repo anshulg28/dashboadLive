@@ -26,6 +26,26 @@
                                     <label class="mdl-textfield__label" for="empId">Employee Id Or Mobile No.</label>
                                 </div>
                                 <br>
+                                <div class="mdl-textfield mdl-js-textfield">
+                                    <select id="location" name="billLoc" class="form-control">
+                                        <option value="">Select Location</option>
+                                        <?php
+                                        if(isset($locArray))
+                                        {
+                                            foreach($locArray as $key => $row)
+                                            {
+                                                if(isset($row['id']))
+                                                {
+                                                    ?>
+                                                    <option value="<?php echo $row['id'];?>"><?php echo $row['locName'];?></option>
+                                                    <?php
+                                                }
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label add-wallet">
                                     <input class="mdl-textfield__input" type="text" id="billNum" name="billNum">
                                     <label class="mdl-textfield__label" for="billNum">Bill Number</label>
@@ -76,7 +96,8 @@
 
     $(document).on('submit','#staffBillForm', function(e){
         e.preventDefault();
-        if($('#billNum').val() != '' && $('#billAmount').val() != '' && $('#userOtp').val() != '')
+        var loc = $('#location option:selected').val();
+        if($('#billNum').val() != '' && $('#billAmount').val() != '' && $('#userOtp').val() != '' && loc != '')
         {
             showCustomLoader();
             $.ajax({
