@@ -17,58 +17,116 @@
                 </div>
                 <div class="mdl-card__supporting-text tbl-responsive">
                    <!-- --><?php
-/*                        if(isset($billDetails) && myIsMultiArray($billDetails))
-                        {
-                            */?>
-                            <form id="staffBillForm" action="<?php echo base_url();?>getCoupon" method="post">
-                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label add-wallet">
-                                    <input class="mdl-textfield__input" type="text" id="empId" name="empId">
-                                    <label class="mdl-textfield__label" for="empId">Employee Id Or Mobile No.</label>
-                                </div>
-                                <br>
-                                <div class="mdl-textfield mdl-js-textfield">
-                                    <select id="location" name="billLoc" class="form-control">
-                                        <option value="">Select Location</option>
-                                        <?php
-                                        if(isset($locArray))
-                                        {
-                                            foreach($locArray as $key => $row)
-                                            {
-                                                if(isset($row['id']))
+                                if(isset($isAdmin) && $isAdmin === true)
+                                {
+                                    ?>
+                                    <form id="staffBillForm" action="<?php echo base_url();?>adminBillSettle" method="post">
+                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label add-wallet">
+                                            <input class="mdl-textfield__input" type="text" id="empId" name="empId">
+                                            <label class="mdl-textfield__label" for="empId">Employee Id Or Mobile No.</label>
+                                        </div>
+                                        <br>
+                                        <div class="mdl-textfield mdl-js-textfield">
+                                            <select id="location" name="billLoc" class="form-control">
+                                                <option value="">Select Location</option>
+                                                <?php
+                                                if(isset($locArray))
                                                 {
-                                                    ?>
-                                                    <option value="<?php echo $row['id'];?>"><?php echo $row['locName'];?></option>
-                                                    <?php
+                                                    foreach($locArray as $key => $row)
+                                                    {
+                                                        if(isset($row['id']))
+                                                        {
+                                                            ?>
+                                                            <option value="<?php echo $row['id'];?>"><?php echo $row['locName'];?></option>
+                                                            <?php
+                                                        }
+                                                    }
                                                 }
-                                            }
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                                <br>
-                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label add-wallet">
-                                    <input class="mdl-textfield__input" type="text" id="billNum" name="billNum">
-                                    <label class="mdl-textfield__label" for="billNum">Bill Number</label>
-                                </div>
-                                <br>
-                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label add-wallet">
-                                    <input class="mdl-textfield__input" type="number" id="billAmount" name="billAmount">
-                                    <label class="mdl-textfield__label" for="billAmount">Amount</label>
-                                </div>
-                                <br>
-                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label add-wallet">
-                                    <input class="mdl-textfield__input" type="number" id="userOtp" name="userOtp">
-                                    <label class="mdl-textfield__label" for="userOtp">Enter OTP</label>
-                                </div>
-                                <div class="timer fa-15x"></div>
-                                <br>
-                                <button type="button" id="gen-bill-otp" class="mdl-button mdl-js-button mdl-button--primary mdl-js-ripple-effect">
-                                    Generate OTP
-                                </button>
-                                <button type="submit" class="mdl-button mdl-js-button mdl-button--primary mdl-js-ripple-effect hide">
-                                    Clear Bill
-                                </button>
-                            </form>
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <br>
+                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label add-wallet">
+                                            <input class="mdl-textfield__input" type="text" id="billNum" name="billNum">
+                                            <label class="mdl-textfield__label" for="billNum">Bill Number</label>
+                                        </div>
+                                        <br>
+                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label add-wallet">
+                                            <input class="mdl-textfield__input" type="number" id="billAmount" name="billAmount">
+                                            <label class="mdl-textfield__label" for="billAmount">Amount</label>
+                                        </div>
+                                        <!--<br>
+                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label add-wallet">
+                                            <input class="mdl-textfield__input" type="number" id="userOtp" name="userOtp">
+                                            <label class="mdl-textfield__label" for="userOtp">Enter OTP</label>
+                                        </div>
+                                        <div class="timer fa-15x"></div>
+                                        <br>
+                                        <button type="button" id="gen-bill-otp" class="mdl-button mdl-js-button mdl-button--primary mdl-js-ripple-effect">
+                                            Generate OTP
+                                        </button>-->
+                                        <br>
+                                        <button type="submit" class="mdl-button mdl-js-button mdl-button--primary mdl-js-ripple-effect">
+                                            Clear Bill
+                                        </button>
+                                    </form>
+                                    <?php
+                                }
+                                else
+                                {
+                                    ?>
+                                    <form id="staffBillForm" action="<?php echo base_url();?>getCoupon" method="post">
+                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label add-wallet">
+                                            <input class="mdl-textfield__input" type="text" id="empId" name="empId">
+                                            <label class="mdl-textfield__label" for="empId">Employee Id Or Mobile No.</label>
+                                        </div>
+                                        <br>
+                                        <div class="mdl-textfield mdl-js-textfield">
+                                            <select id="location" name="billLoc" class="form-control">
+                                                <option value="">Select Location</option>
+                                                <?php
+                                                if(isset($locArray))
+                                                {
+                                                    foreach($locArray as $key => $row)
+                                                    {
+                                                        if(isset($row['id']))
+                                                        {
+                                                            ?>
+                                                            <option value="<?php echo $row['id'];?>"><?php echo $row['locName'];?></option>
+                                                            <?php
+                                                        }
+                                                    }
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <br>
+                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label add-wallet">
+                                            <input class="mdl-textfield__input" type="text" id="billNum" name="billNum">
+                                            <label class="mdl-textfield__label" for="billNum">Bill Number</label>
+                                        </div>
+                                        <br>
+                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label add-wallet">
+                                            <input class="mdl-textfield__input" type="number" id="billAmount" name="billAmount">
+                                            <label class="mdl-textfield__label" for="billAmount">Amount</label>
+                                        </div>
+                                        <br>
+                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label add-wallet">
+                                            <input class="mdl-textfield__input" type="number" id="userOtp" name="userOtp">
+                                            <label class="mdl-textfield__label" for="userOtp">Enter OTP</label>
+                                        </div>
+                                        <div class="timer fa-15x"></div>
+                                        <br>
+                                        <button type="button" id="gen-bill-otp" class="mdl-button mdl-js-button mdl-button--primary mdl-js-ripple-effect">
+                                            Generate OTP
+                                        </button>
+                                        <button type="submit" class="mdl-button mdl-js-button mdl-button--primary mdl-js-ripple-effect hide">
+                                            Clear Bill
+                                        </button>
+                                    </form>
+                                    <?php
+                                }
+                            ?>
                             <!--<button type="button" id="viewCoupon" class="mdl-button mdl-js-button mdl-button--primary mdl-js-ripple-effect hide">
                                 Didn't Got SMS? View Coupon
                             </button>

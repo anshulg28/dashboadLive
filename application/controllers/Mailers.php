@@ -36,6 +36,18 @@ class Mailers extends MY_Controller {
         if($this->userType == EXECUTIVE_USER)
         {
             $userInfo = $this->users_model->getUserDetailsById($this->userId);
+            if(!isset($userInfo['userData'][0]['assignedLoc']))
+            {
+                if(isset($userInfo['userData'][0]['secondaryLoc']))
+                {
+                    $userInfo['userData'][0]['assignedLoc'] = $userInfo['userData'][0]['secondaryLoc'];
+                }
+                else
+                {
+                    echo 'Location Not Set, Please Contact Admin!';
+                    return false;
+                }
+            }
             $data['expiredMugs'] = $this->mugclub_model->getExpiredMugsList(true,$userInfo['userData'][0]['assignedLoc']);
             $data['expiringMugs'] = $this->mugclub_model->getExpiringMugsList(1,'week',true,$userInfo['userData'][0]['assignedLoc']);
             $data['birthdayMugs'] = $this->mugclub_model->getBirthdayMugsList(true,$userInfo['userData'][0]['assignedLoc']);

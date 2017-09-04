@@ -1042,11 +1042,11 @@ class Dashboard_Model extends CI_Model
 
         return $result;
     }
-    public function checkBillNum($billNum)
+    public function checkBillNum($billNum,$locId)
     {
         $query = "SELECT *"
             ." FROM staffbillingmaster"
-            ." WHERE billNum LIKE '".$billNum."'";
+            ." WHERE billNum LIKE '".$billNum."' AND billLoc = ".$locId;
 
         $result = $this->db->query($query)->result_array();
 

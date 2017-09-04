@@ -773,6 +773,13 @@ class Mugclub extends MY_Controller {
             if($this->userType == EXECUTIVE_USER)
             {
                 $userInfo = $this->users_model->getUserDetailsById($this->userId);
+                if(!isset($userInfo['userData'][0]['assignedLoc']))
+                {
+                    if(isset($userInfo['userData'][0]['secondaryLoc']))
+                    {
+                        $userInfo['userData'][0]['assignedLoc'] = $userInfo['userData'][0]['secondaryLoc'];
+                    }
+                }
                 $mugData = $this->mugclub_model->getExpiringMugsList($intervalNum, $intervalSpan,true,$userInfo['userData'][0]['assignedLoc']);
             }
             else
@@ -815,6 +822,13 @@ class Mugclub extends MY_Controller {
             if($this->userType == EXECUTIVE_USER)
             {
                 $userInfo = $this->users_model->getUserDetailsById($this->userId);
+                if(!isset($userInfo['userData'][0]['assignedLoc']))
+                {
+                    if(isset($userInfo['userData'][0]['secondaryLoc']))
+                    {
+                        $userInfo['userData'][0]['assignedLoc'] = $userInfo['userData'][0]['secondaryLoc'];
+                    }
+                }
                 $mugData = $this->mugclub_model->getExpiredMugsList(true,$userInfo['userData'][0]['assignedLoc']);
             }
             else
@@ -857,6 +871,13 @@ class Mugclub extends MY_Controller {
             if($this->userType == EXECUTIVE_USER)
             {
                 $userInfo = $this->users_model->getUserDetailsById($this->userId);
+                if(!isset($userInfo['userData'][0]['assignedLoc']))
+                {
+                    if(isset($userInfo['userData'][0]['secondaryLoc']))
+                    {
+                        $userInfo['userData'][0]['assignedLoc'] = $userInfo['userData'][0]['secondaryLoc'];
+                    }
+                }
                 $mugData = $this->mugclub_model->getBirthdayMugsList(true,$userInfo['userData'][0]['assignedLoc']);
             }
             else
