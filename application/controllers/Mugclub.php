@@ -175,6 +175,7 @@ class Mugclub extends MY_Controller {
                 $post['membershipEnd'] = date('Y-m-d', strtotime($post['membershipStart'].' +12 month'));
             }*/
             $post['invoiceDate'] = date('Y-m-d');
+            $post['invoiceAmt'] = 3000;
             $post['mailStatus'] = 0;
             $post['birthdayMailStatus'] = 0;
 

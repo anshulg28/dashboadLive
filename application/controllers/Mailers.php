@@ -306,7 +306,7 @@ class Mailers extends MY_Controller {
                     $mainBody .= $body .'</body></html>';
                     $newBody = $mainBody;
                 }
-                $cc        = implode(',',$this->config->item('ccList'));
+
                 $fromName  = 'Doolally';
                 if(isset($this->userFirstName))
                 {
@@ -333,6 +333,13 @@ class Mailers extends MY_Controller {
                 {
                     $fromEmail = $post['senderEmail'];
                     $fromPass = $post['senderPass'];
+                }
+
+                $cc        = implode(',',$this->config->item('ccList'));
+                $extraCc = getExtraCCEmail($fromEmail);
+                if(isStringSet($extraCc))
+                {
+                    $cc = $cc.','.$extraCc;
                 }
 
                 $this->sendemail_library->sendEmail($mugInfo['mugList'][0]['emailId'],$cc,$fromEmail, $fromPass,$fromName,$replyTo,$newSubject,$newBody);

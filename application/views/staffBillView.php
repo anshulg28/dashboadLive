@@ -20,7 +20,7 @@
                                 if(isset($isAdmin) && $isAdmin === true)
                                 {
                                     ?>
-                                    <form id="staffBillForm" action="<?php echo base_url();?>adminBillSettle" method="post">
+                                    <form id="staffBillForm" action="<?php echo base_url();?>home/adminBillSettle" method="post">
                                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label add-wallet">
                                             <input class="mdl-textfield__input" type="text" id="empId" name="empId">
                                             <label class="mdl-textfield__label" for="empId">Employee Id Or Mobile No.</label>

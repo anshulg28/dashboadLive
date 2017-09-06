@@ -37,6 +37,11 @@ class Sendemail_library
         }
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
+        $extraCc = getExtraCCEmail($fromEmail);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
         $fromName  = 'Doolally';
         if(isset($this->CI->userFirstName))
         {
@@ -211,7 +216,12 @@ class Sendemail_library
         {
             $fromPass = $mailRecord['userData']['gmailPass'];
         }*/
-        $cc        = implode(',',$this->CI->config->item('ccList'));
+        $cc = implode(',',$this->CI->config->item('ccList'));
+        $extraCc = getExtraCCEmail($fromEmail);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
         $fromName  = 'Doolally';
         if(isset($senderName) && isStringSet($senderName))
         {
@@ -268,6 +278,11 @@ class Sendemail_library
         }
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
+        $extraCc = getExtraCCEmail($fromEmail);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
         $fromName  = $senderName;
 
         $subject = $userData['eventName'].' has been cancelled by the organiser';
@@ -321,6 +336,11 @@ class Sendemail_library
         }
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
+        $extraCc = getExtraCCEmail($fromEmail);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
         $fromName  = $senderName;
 
         $subject = $userData['eventName'].' has been cancelled by the organiser';
@@ -368,6 +388,11 @@ class Sendemail_library
             }
         }*/
         $cc        = implode(',',$this->CI->config->item('ccList'));
+        $extraCc = getExtraCCEmail($fromEmail);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
         $fromName  = 'Doolally';
         if(isset($userData['senderName']) && isStringSet($userData['senderName']))
         {
@@ -424,6 +449,11 @@ class Sendemail_library
         }*/
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
+        $extraCc = getExtraCCEmail($fromEmail);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
         $fromName  = 'Doolally';
         if(isset($userData['senderName']) && isStringSet($userData['senderName']))
         {
@@ -484,6 +514,11 @@ class Sendemail_library
         }
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
+        $extraCc = getExtraCCEmail($fromEmail);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
         $fromName  = $senderName;
 
         $subject = 'Event Details';
@@ -522,6 +557,11 @@ class Sendemail_library
             }
         }*/
         $cc        = implode(',',$this->CI->config->item('ccList'));
+        $extraCc = getExtraCCEmail($fromEmail);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
         $fromName  = 'Doolally';
         if(isset($this->CI->userFirstName))
         {
@@ -651,6 +691,11 @@ class Sendemail_library
         $fromEmail = $senderEmail;
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
+        $extraCc = getExtraCCEmail($fromEmail);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
         $fromName  = $senderName;
 
         $subject = 'Mug #'.$userData['mugId'].' has missing info';
@@ -679,6 +724,11 @@ class Sendemail_library
         $fromEmail = $senderEmail;
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
+        $extraCc = getExtraCCEmail($fromEmail);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
         $fromName  = $senderName;
 
         $subject = 'Mug #'.$userData['mugId'].' has missing info';
@@ -750,6 +800,11 @@ class Sendemail_library
         }
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
+        $extraCc = getExtraCCEmail($fromEmail);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
         $fromName  = $senderName;
 
         $subject = $userData['eventName'].' has been Rescheduled';
@@ -911,5 +966,6 @@ class Sendemail_library
         $this->CI->offers_model->setSingleCode($toBeInserted);
         return 'BR-'.$newCode;
     }
+
 }
 /* End of file */

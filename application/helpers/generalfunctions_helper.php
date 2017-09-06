@@ -290,3 +290,28 @@ if(!function_exists('isValidEmail'))
         return $validEmail;
     }
 }
+
+if(!function_exists('getExtraCCEmail'))
+{
+    function getExtraCCEmail($email)
+    {
+        $ccMail = '';
+
+        switch($email)
+        {
+            case 'priyanka@brewcraftsindia.com':
+                $ccMail = 'anuja@brewcraftsindia.com';
+                break;
+            case 'anuja@brewcraftsindia.com':
+                $ccMail = 'priyanka@brewcraftsindia.com';
+                break;
+            case 'shweta@brewcraftsindia.com':
+                $ccMail = 'neha@brewcraftsindia.com';
+                break;
+            case 'neha@brewcraftsindia.com':
+                $ccMail = 'shweta@brewcraftsindia.com';
+                break;
+        }
+        return $ccMail;
+    }
+}

@@ -66,20 +66,20 @@
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="mobNum">Mobile No. :</label>
                         <div class="col-sm-10">
-                            <input type="number" name="mobNum" maxlength="10" oninput="maxLengthCheck(this)" class="form-control" id="mobNum" placeholder="Eg. 9876543210" required>
+                            <input type="number" name="mobNum" maxlength="10" oninput="maxLengthCheck(this)" class="form-control" id="mobNum" placeholder="If not provided use default (9999999999)" required>
                             <div class="mobile-verification-holder"></div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="email">Email:</label>
                         <div class="col-sm-10">
-                            <input type="email" name="emailId" class="form-control" id="email" placeholder="Eg. abc@gmail.com" required>
+                            <input type="email" name="emailId" class="form-control" id="email" placeholder="Eg. abc@gmail.com (default: Community Manager's Email)" required>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="bdate">BirthDate:</label>
                         <div class="col-sm-10">
-                            <input type="text" name="birthdate" class="form-control" id="bdate" placeholder="Eg. 12 June 1990">
+                            <input type="text" name="birthdate" class="form-control" id="bdate" placeholder="Eg. 12 June 1990 (default: 1 jan 1970)">
                             <div class="birthday-verification-holder"></div>
                         </div>
                     </div>
@@ -100,7 +100,7 @@
                         <label class="control-label col-sm-2" for="invoiceAmt">Invoice Amount:</label>
                         <div class="col-sm-10">
                             <input type="number" name="invoiceAmt"
-                                   class="form-control" id="invoiceAmt" placeholder="Eg. 3000">
+                                   class="form-control" id="invoiceAmt" placeholder="Eg. 3000" min="1" required>
                         </div>
                     </div>
                     <div class="form-group">
