@@ -21,7 +21,8 @@
                                 {
                                     ?>
                                     <li>
-                                        <input type="radio" name="currentLoc" onchange="submitLocation()" id="<?php echo $row['locUniqueLink'];?>" value="<?php echo $row['id'];?>" />
+                                        <input type="radio" name="currentLoc" onchange="submitLocation()" id="<?php echo $row['locUniqueLink'];?>" value="<?php echo $row['id'];?>"
+                                        <?php if($this->commSecLoc == $row['id']){echo 'checked';}?>/>
                                         <label for="<?php echo $row['locUniqueLink'];?>">
                                             <i class="glyphicon glyphicon-map-marker fa-5x"></i>
                                             <br>
