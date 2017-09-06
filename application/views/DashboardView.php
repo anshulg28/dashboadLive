@@ -10,6 +10,18 @@
     <!-- No header, and the drawer stays open on larger screens (fixed drawer). -->
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
         <div class="mdl-layout__drawer">
+            <?php
+                if(isset($secLocs))
+                {
+                    $tempLocs = explode(',',$secLocs);
+                    if(count($tempLocs) > 1)
+                    {
+                        ?>
+                        <a href="<?php echo base_url().'dashboard/getCommLocation/'.base64_encode($secLocs);?>" id="change-sec-loc">(Change Location)</a>
+                        <?php
+                    }
+                }
+            ?>
             <span class="mdl-layout-title">Dashboard</span>
             <ul class="nav nav-pills nav-stacked">
                 <li class="active"><a data-toggle="pill" class="my-noBorderRadius" href="#mugclub">Mug Club</a></li>

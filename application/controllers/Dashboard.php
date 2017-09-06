@@ -41,11 +41,15 @@ class Dashboard extends MY_Controller {
             //Check for Community manager secondary location set
 
             $userInfo = $this->users_model->getUserDetailsById($this->userId);
+            if(isset($userInfo['userData'][0]['secondaryLoc']))
+            {
+                $data['secLocs'] = $userInfo['userData'][0]['secondaryLoc'];
+            }
             if( !isSession($this->commSecLoc) || !isSessionVariableSet($this->commSecLoc))
             {
                 if($userInfo['status'] === true && isset($userInfo['userData'][0]['secondaryLoc']))
                 {
-                    $this->getCommLocation($userInfo['userData'][0]['secondaryLoc']);
+                    $this->getCommLocation(base64_encode($userInfo['userData'][0]['secondaryLoc']));
                     return false;
                 }
             }
@@ -198,6 +202,7 @@ class Dashboard extends MY_Controller {
         }
         $data = array();
 
+        $allLocs = base64_decode($allLocs);
         $data['locData'] = $this->locations_model->getMultiLocs($allLocs);
         $data['globalStyle'] = $this->dataformatinghtml_library->getGlobalStyleHtml($data);
         $data['globalJs'] = $this->dataformatinghtml_library->getGlobalJsHtml($data);

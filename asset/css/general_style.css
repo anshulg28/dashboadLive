@@ -478,6 +478,11 @@ input::-webkit-inner-spin-button {
 {
     display:block !important;
 }
+.dashboard #change-sec-loc
+{
+    text-align:center;
+    margin-top:5px;
+}
 .dashboard .custom-filter
 {
     width:150px;
