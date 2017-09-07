@@ -34,7 +34,7 @@
 
         Eventshigh is our payment partner. Please check out their credentials here - www.eventshigh.com<br><br>
 
-        For events below 5000, organisers will be reimbursed by cash on the day of the event. For events greater than 5000, we will hand over a cheque in the name of organiser.
+        For payment for events, we will hand over a cheque in the name of organiser.
         As an organiser, once you have crossed Rs 30,000 in earnings, Doolally will deduct 10% TDS.<br><br>
 
         In case you have any questions/queries please don't hesitate to write to me at this (<?php echo $mailData['senderEmail'];?>) mail address<!-- or you can reach me at
