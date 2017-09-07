@@ -54,6 +54,13 @@ class Users_Model extends CI_Model
 
         return $data;
     }
+    public function getSenderUsername($emailId)
+    {
+        $query = "SELECT firstName, mobNum FROM doolally_usersmaster WHERE userType IN(0,1,2) AND emailId LIKE '".$emailId."'";
+
+        $result = $this->db->query($query)->row_array();
+        return $result;
+    }
     public function searchUserByLoc($locId)
     {
         $query = "SELECT * "

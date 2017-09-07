@@ -170,43 +170,47 @@ class Sendemail_library
     //Done
     public function eventCancelUserMail($userData)
     {
-        $phons = $this->CI->config->item('phons');
-        $mailRecord = $this->CI->users_model->searchUserByLoc($userData[0]['eventPlace']);
-        if($mailRecord['status'] === true)
+        $fromEmail = DEFAULT_SENDER_EMAIL;
+        $fromPass = DEFAULT_SENDER_PASS;
+        $replyTo = $fromEmail;
+        $senderPhone = '9999999999';
+        if(isset($userData['fromEmail']) && isset($userData['fromPass']))
         {
-            $senderName = $mailRecord['userData']['firstName'];
-            $senderEmail = $mailRecord['userData']['emailId'];
+            $fromEmail = $userData['fromEmail'];
+            $fromPass = $userData['fromPass'];
+            $senderName = 'Doolally';
+            $senderEmail = $fromEmail;
+            $senderUser = $this->CI->users_model->getSenderUsername($userData['fromEmail']);
+            if(isset($senderUser) && myIsArray($senderUser))
+            {
+                $senderName = $senderUser['firstName'];
+                $senderPhone = $senderUser['mobNum'];
+            }
         }
         else
         {
-            $senderName = 'Doolally';
-            $senderEmail = DEFAULT_SENDER_EMAIL;
+            $mailRecord = $this->CI->users_model->searchUserByLoc($userData[0]['eventPlace']);
+            if($mailRecord['status'] === true)
+            {
+                $senderName = $mailRecord['userData']['firstName'];
+                $senderEmail = $mailRecord['userData']['emailId'];
+            }
+            else
+            {
+                $senderName = 'Doolally';
+                $senderEmail = DEFAULT_SENDER_EMAIL;
+            }
+
         }
+
         $userData['senderName'] = $senderName;
         $userData['senderEmail'] = $senderEmail;
-        if(isset($phons[ucfirst($senderName)]))
-        {
-            $userData['senderPhone'] = $phons[ucfirst($senderName)];
-        }
-        else
-        {
-            $userData['senderPhone'] = '9999999999';
-        }
+        $userData['senderPhone'] = $senderPhone;
 
         $data['mailData'] = $userData;
 
         $content = $this->CI->load->view('emailtemplates/eventCancelUserMailView', $data, true);
 
-        $fromEmail = DEFAULT_SENDER_EMAIL;
-        $fromPass = DEFAULT_SENDER_PASS;
-        $replyTo = $fromEmail;
-
-        if(isset($userData['fromEmail']) && isset($userData['fromPass']))
-        {
-            $fromEmail = $userData['fromEmail'];
-            $fromPass = $userData['fromPass'];
-            $replyTo = $userData['fromEmail'];
-        }
 
         /*if(isset($mailRecord['userData']['emailId']) && isStringSet($mailRecord['userData']['emailId']))
         {
@@ -236,46 +240,46 @@ class Sendemail_library
 
     public function attendeeMojoCancelMail($userData)
     {
-        $phons = $this->CI->config->item('phons');
-        $mailRecord = $this->CI->users_model->searchUserByLoc($userData['eventPlace']);
-        $senderName = 'Doolally';
-        $senderEmail = DEFAULT_SENDER_EMAIL;
+        $fromEmail = DEFAULT_SENDER_EMAIL;
         $fromPass = DEFAULT_SENDER_PASS;
-        $replyTo = $senderEmail;
-
-        $senderPhone = $phons['Tresha'];
-
-        if($mailRecord['status'] === true)
-        {
-            $senderName = $mailRecord['userData']['firstName'];
-            $replyTo = $mailRecord['userData']['emailId'];
-            //$senderEmail = $mailRecord['userData']['emailId'];
-            if(isset($phons[ucfirst($senderName)]))
-            {
-                $senderPhone = $phons[ucfirst($senderName)];
-            }
-            else
-            {
-                $senderPhone = '9999999999';
-            }
-            //$senderPhone = $phons[$senderName];
-            //$fromPass = $mailRecord['userData']['gmailPass'];
-        }
-        $userData['senderName'] = $senderName;
-        $userData['senderEmail'] = $replyTo;
-        $userData['senderPhone'] = $senderPhone;
-        $data['mailData'] = $userData;
-
-        $content = $this->CI->load->view('emailtemplates/attendeeMojoCancelMailView', $data, true);
-
-        $fromEmail = $senderEmail;
-
+        $replyTo = $fromEmail;
+        $senderPhone = '9999999999';
         if(isset($userData['fromEmail']) && isset($userData['fromPass']))
         {
             $fromEmail = $userData['fromEmail'];
             $fromPass = $userData['fromPass'];
-            $replyTo = $userData['fromEmail'];
+            $senderName = 'Doolally';
+            $senderEmail = $fromEmail;
+            $senderUser = $this->CI->users_model->getSenderUsername($userData['fromEmail']);
+            if(isset($senderUser) && myIsArray($senderUser))
+            {
+                $senderName = $senderUser['firstName'];
+                $senderPhone = $senderUser['mobNum'];
+            }
         }
+        else
+        {
+            $mailRecord = $this->CI->users_model->searchUserByLoc($userData['eventPlace']);
+            if($mailRecord['status'] === true)
+            {
+                $senderName = $mailRecord['userData']['firstName'];
+                $senderEmail = $mailRecord['userData']['emailId'];
+            }
+            else
+            {
+                $senderName = 'Doolally';
+                $senderEmail = DEFAULT_SENDER_EMAIL;
+            }
+
+        }
+
+        $userData['senderName'] = $senderName;
+        $userData['senderEmail'] = $senderEmail;
+        $userData['senderPhone'] = $senderPhone;
+
+        $data['mailData'] = $userData;
+
+        $content = $this->CI->load->view('emailtemplates/attendeeMojoCancelMailView', $data, true);
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
         $extraCc = getExtraCCEmail($fromEmail);
@@ -294,46 +298,46 @@ class Sendemail_library
     //Done Will change after getting text
     public function attendeeCancelMail($userData)
     {
-        $phons = $this->CI->config->item('phons');
-        $mailRecord = $this->CI->users_model->searchUserByLoc($userData['eventPlace']);
-        $senderName = 'Doolally';
-        $senderEmail = DEFAULT_SENDER_EMAIL;
+        $fromEmail = DEFAULT_SENDER_EMAIL;
         $fromPass = DEFAULT_SENDER_PASS;
-        $replyTo = $senderEmail;
-
-        $senderPhone = $phons['Tresha'];
-
-        if($mailRecord['status'] === true)
-        {
-            $senderName = $mailRecord['userData']['firstName'];
-            $replyTo = $mailRecord['userData']['emailId'];
-            //$senderEmail = $mailRecord['userData']['emailId'];
-            if(isset($phons[ucfirst($senderName)]))
-            {
-                $senderPhone = $phons[ucfirst($senderName)];
-            }
-            else
-            {
-                $senderPhone = '9999999999';
-            }
-            //$senderPhone = $phons[$senderName];
-            //$fromPass = $mailRecord['userData']['gmailPass'];
-        }
-        $userData['senderName'] = $senderName;
-        $userData['senderEmail'] = $replyTo;
-        $userData['senderPhone'] = $senderPhone;
-        $data['mailData'] = $userData;
-
-        $content = $this->CI->load->view('emailtemplates/attendeeCancelMailView', $data, true);
-
-        $fromEmail = $senderEmail;
-
+        $replyTo = $fromEmail;
+        $senderPhone = '9999999999';
         if(isset($userData['fromEmail']) && isset($userData['fromPass']))
         {
             $fromEmail = $userData['fromEmail'];
             $fromPass = $userData['fromPass'];
-            $replyTo = $userData['fromEmail'];
+            $senderName = 'Doolally';
+            $senderEmail = $fromEmail;
+            $senderUser = $this->CI->users_model->getSenderUsername($userData['fromEmail']);
+            if(isset($senderUser) && myIsArray($senderUser))
+            {
+                $senderName = $senderUser['firstName'];
+                $senderPhone = $senderUser['mobNum'];
+            }
         }
+        else
+        {
+            $mailRecord = $this->CI->users_model->searchUserByLoc($userData['eventPlace']);
+            if($mailRecord['status'] === true)
+            {
+                $senderName = $mailRecord['userData']['firstName'];
+                $senderEmail = $mailRecord['userData']['emailId'];
+            }
+            else
+            {
+                $senderName = 'Doolally';
+                $senderEmail = DEFAULT_SENDER_EMAIL;
+            }
+
+        }
+
+        $userData['senderName'] = $senderName;
+        $userData['senderEmail'] = $senderEmail;
+        $userData['senderPhone'] = $senderPhone;
+
+        $data['mailData'] = $userData;
+
+        $content = $this->CI->load->view('emailtemplates/attendeeCancelMailView', $data, true);
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
         $extraCc = getExtraCCEmail($fromEmail);
@@ -352,10 +356,10 @@ class Sendemail_library
     //Done
     public function eventApproveMail($userData)
     {
-        $phons = $this->CI->config->item('phons');
-        if(isset($phons[ucfirst($userData['senderName'])]))
+        $senderUser = $this->CI->users_model->getSenderUsername($userData['senderEmail']);
+        if(isset($senderUser) && myIsArray($senderUser))
         {
-            $userData['senderPhone'] = $phons[ucfirst($userData['senderName'])];
+            $userData['senderPhone'] = $senderUser['mobNum'];
         }
         else
         {
@@ -412,14 +416,14 @@ class Sendemail_library
     //Done
     public function eventDeclineMail($userData)
     {
-        $phons = $this->CI->config->item('phons');
-        if(isset($phons[ucfirst($userData['senderName'])]))
+        $senderUser = $this->CI->users_model->getSenderUsername($userData['senderEmail']);
+        if(isset($senderUser) && myIsArray($senderUser))
         {
-            $userData['senderPhone'] = $phons[ucfirst($userData['senderName'])];
+            $userData['senderPhone'] = $senderUser['mobNum'];
         }
         else
         {
-            $userData['senderPhone'] = '';
+            $userData['senderPhone'] = '9999999999';
         }
         //$userData['senderPhone'] = $phons[$userData['senderName']];
         $data['mailData'] = $userData;
@@ -469,49 +473,46 @@ class Sendemail_library
     //Done
     public function newEventMail($userData)
     {
-        $phons = $this->CI->config->item('phons');
-        $mailRecord = $this->CI->users_model->searchUserByLoc($userData['eventPlace']);
-        $senderName = 'Doolally';
-        $senderEmail = DEFAULT_SENDER_EMAIL;
+        $fromEmail = DEFAULT_SENDER_EMAIL;
         $fromPass = DEFAULT_SENDER_PASS;
-        $replyTo = $senderEmail;
-        $senderPhone = $phons['Tresha'];
-
-        if($mailRecord['status'] === true)
-        {
-            /*$userInfo = $this->CI->login_model->checkEmailSender($mailRecord['userData']['emailId']);
-            if(isset($userInfo) && myIsArray($userInfo))
-            {
-                $fromPass = $userInfo['gmailPass'];
-                $senderEmail = $userData['senderEmail'];
-            }*/
-            $senderName = $mailRecord['userData']['firstName'];
-            //$senderEmail = $mailRecord['userData']['emailId'];
-            if(isset($phons[ucfirst($senderName)]))
-            {
-                $senderPhone = $phons[ucfirst($senderName)];
-            }
-            else
-            {
-                $senderPhone = '9999999999';
-            }
-            //$senderPhone = $phons[$senderName];
-        }
-        $userData['senderName'] = $senderName;
-        $userData['senderEmail'] = $replyTo;
-        $userData['senderPhone'] = $senderPhone;
-        $data['mailData'] = $userData;
-
-        $content = $this->CI->load->view('emailtemplates/newEventMailView', $data, true);
-
-        $fromEmail = $senderEmail;
-
+        $replyTo = $fromEmail;
+        $senderPhone = '9999999999';
         if(isset($userData['fromEmail']) && isset($userData['fromPass']))
         {
             $fromEmail = $userData['fromEmail'];
             $fromPass = $userData['fromPass'];
-            $replyTo = $userData['fromEmail'];
+            $senderName = 'Doolally';
+            $senderEmail = $fromEmail;
+            $senderUser = $this->CI->users_model->getSenderUsername($userData['fromEmail']);
+            if(isset($senderUser) && myIsArray($senderUser))
+            {
+                $senderName = $senderUser['firstName'];
+                $senderPhone = $senderUser['mobNum'];
+            }
         }
+        else
+        {
+            $mailRecord = $this->CI->users_model->searchUserByLoc($userData['eventPlace']);
+            if($mailRecord['status'] === true)
+            {
+                $senderName = $mailRecord['userData']['firstName'];
+                $senderEmail = $mailRecord['userData']['emailId'];
+            }
+            else
+            {
+                $senderName = 'Doolally';
+                $senderEmail = DEFAULT_SENDER_EMAIL;
+            }
+
+        }
+
+        $userData['senderName'] = $senderName;
+        $userData['senderEmail'] = $senderEmail;
+        $userData['senderPhone'] = $senderPhone;
+
+        $data['mailData'] = $userData;
+
+        $content = $this->CI->load->view('emailtemplates/newEventMailView', $data, true);
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
         $extraCc = getExtraCCEmail($fromEmail);
