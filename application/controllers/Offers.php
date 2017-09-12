@@ -370,7 +370,18 @@ class Offers extends MY_Controller {
                 $offerData['dayOfferUsed'] = date('D');
                 $this->offers_model->setOfferUsed($offerData);
                 $data['status'] = true;
-                $data['offerType'] = $offerStatus['codeCheck']['offerType'];
+                if($offerStatus['codeCheck']['offerEvent'] == '536' && stripos($offerStatus['codeCheck']['offerType'],'3000') !== false)
+                {
+                    $data['offerType'] = 'Valid for food & beer (3000)';
+                }
+                elseif($offerStatus['codeCheck']['offerEvent'] == '536' && stripos($offerStatus['codeCheck']['offerType'],'2000') !== false)
+                {
+                    $data['offerType'] = 'Valid for food (2000)';
+                }
+                else
+                {
+                    $data['offerType'] = $offerStatus['codeCheck']['offerType'];
+                }
             }
             else
             {
@@ -381,7 +392,18 @@ class Offers extends MY_Controller {
                     if(strtotime($toDay) >= strtotime($offerStatus['codeCheck']['validFromDate']))
                     {
                         $data['status'] = true;
-                        $data['offerType'] = $offerStatus['codeCheck']['offerType'];
+                        if($offerStatus['codeCheck']['offerEvent'] == '536' && stripos($offerStatus['codeCheck']['offerType'],'3000') !== false)
+                        {
+                            $data['offerType'] = 'food & beer (3000)';
+                        }
+                        elseif($offerStatus['codeCheck']['offerEvent'] == '536' && stripos($offerStatus['codeCheck']['offerType'],'2000') !== false)
+                        {
+                            $data['offerType'] = 'food (2000)';
+                        }
+                        else
+                        {
+                            $data['offerType'] = $offerStatus['codeCheck']['offerType'];
+                        }
                     }
                     else
                     {
