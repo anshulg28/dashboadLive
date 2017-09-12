@@ -56,7 +56,7 @@
                                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth text-left">
                                         <label for="eventDescription">Event Description: </label>
                                         <textarea class="mdl-textfield__input my-singleBorder" type="text" name="eventDescription" rows="5"
-                                                  id="eventDescription"><?php echo strip_tags($row['eventData']['eventDescription']);?></textarea>
+                                                  id="eventDescription"><?php echo $row['eventData']['eventDescription'];?></textarea>
                                     </div>
                                     <ul class="list-inline text-left">
                                         <li>
@@ -321,6 +321,9 @@
 <?php echo $globalJs; ?>
 
 <script>
+    CKEDITOR.replace( 'eventDescription' );
+    CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
+    CKEDITOR.config.shiftEnterMode = CKEDITOR.ENTER_P;
     var oldStartT,oldEndT;
     $(window).load(function(){
         oldStartT = $('#startTime').val();

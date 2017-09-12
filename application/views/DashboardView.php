@@ -4289,7 +4289,7 @@
 
     function fetchAllShareImgs(eventId)
     {
-        var errUrl = base_url='dashboard/getShareImgs/'+eventId;
+        var errUrl = base_url+'dashboard/getShareImgs/'+eventId;
         //Get All the sharing images
         showCustomLoader();
         $.ajax({

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="c516f556-797a-452b-9539-4def5fce07b8" name="demo dash" url="http://dtest.doolally.in">
+        <fileTransfer host="dtest.doolally.in" port="22" privateKey="F:\Tech softs\doolProd.pem" accessType="SFTP" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
