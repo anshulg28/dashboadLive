@@ -134,6 +134,24 @@ class Mugclub_Model extends CI_Model
         return $data;
     }
 
+    function checkMugExists($mugId)
+    {
+        $query = "SELECT * FROM mugmaster WHERE mugId = ".$mugId;
+
+        $result = $this->db->query($query)->row_array();
+
+        return $result;
+    }
+
+    function checkDelMug($mugId)
+    {
+        $query = "SELECT * FROM deletedmugmaster WHERE mugId = ".$mugId;
+
+        $result = $this->db->query($query)->row_array();
+
+        return $result;
+    }
+
     public function getMugHoldById($mugId)
     {
         $query = "SELECT * "
@@ -416,11 +434,11 @@ class Mugclub_Model extends CI_Model
     }
     public function deleteMugRecord($mugId)
     {
-        $query = "INSERT INTO deletedmugmaster "
+        /*$query = "INSERT INTO deletedmugmaster "
             ."SELECT * FROM mugmaster "
             ."where mugId = ".$mugId;
 
-        $this->db->query($query);
+        $this->db->query($query);*/
 
         $this->db->where('mugId', $mugId);
         $this->db->delete('mugmaster');
@@ -552,6 +570,12 @@ class Mugclub_Model extends CI_Model
     public function saveRenewRecord($post)
     {
         $this->db->insert('mugrenewmaster', $post);
+        return true;
+    }
+
+    public function saveDelRecord($post)
+    {
+        $this->db->insert('deletedmugmaster', $post);
         return true;
     }
 

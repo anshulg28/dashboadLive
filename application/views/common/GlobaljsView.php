@@ -452,7 +452,7 @@ $(document).on('click','.homePage .request-otp', function(){
             'organizer_account_name' : '<?php echo EVENT_HIGH_ACCOUNT;?>',
             'organizer_name' : 'Doolally',
             'organizer_email' : 'events@brewcraftsindia.com',
-            'organizer_phone' : eventData.mobNum
+            'organizer_phone' : eventData.creatorPhone
         };
         if(typeof eventData.highId !== 'undefined')
         {

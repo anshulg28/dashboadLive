@@ -855,6 +855,14 @@ class Dashboard_Model extends CI_Model
         return $result;
     }
 
+    function commEventCheck($email)
+    {
+        $query = "SELECT * FROM doolally_usersmaster WHERE userType = ".EXECUTIVE_USER." AND emailId LIKE '".$email."'";
+
+        $result = $this->db->query($query)->row_array();
+        return $result;
+    }
+
     public function saveEventRegis($details)
     {
         $details['createdDT'] = date('Y-m-d H:i:s');
@@ -1083,9 +1091,10 @@ class Dashboard_Model extends CI_Model
     }
     public function getWalletTrans($id)
     {
-        $query = "SELECT wlm.amount, wlm.amtAction, wlm.notes, wlm.loggedDT, wlm.updatedBy, sb.billNum"
+        $query = "SELECT wlm.amount, wlm.amtAction, wlm.notes, wlm.loggedDT, wlm.updatedBy, sb.billNum, lm.locName"
             ." FROM walletlogmaster wlm"
-            ." LEFT JOIN staffbillingmaster sb ON wlm.staffId = sb.staffId AND wlm.amount = sb.billAmount"
+            ." LEFT JOIN staffbillingmaster sb ON wlm.id = sb.walletId"
+            ." LEFT JOIN locationmaster lm ON lm.id = sb.billLoc"
             ." WHERE wlm.staffId = ".$id
             ." ORDER BY loggedDT ASC";
 
@@ -1115,7 +1124,8 @@ class Dashboard_Model extends CI_Model
     public function updateWalletLog($details)
     {
         $this->db->insert('walletlogmaster', $details);
-        return true;
+        $insert_id = $this->db->insert_id();
+        return $insert_id;
     }
 
     public function updateStaffRecord($id,$details)
@@ -1283,6 +1293,32 @@ class Dashboard_Model extends CI_Model
         }
 
         return $data;
+    }
+
+    function getStaffIds()
+    {
+        $query = "SELECT id FROM staffmaster";
+
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+    function getAllStaffBills($staffId)
+    {
+        $query = "SELECT id, billAmount,insertedDT FROM staffbillingmaster WHERE staffId = ".$staffId;
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+
+    function getAllStaffWallets($staffId)
+    {
+        $query = "SELECT id, amount, loggedDT FROM walletlogmaster WHERE amtAction = 1 AND staffId = ".$staffId;
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+    function updateStaffBill($id,$details)
+    {
+        $this->db->where('id',$id);
+        $this->db->update('staffbillingmaster',$details);
     }
 
     /* Meta Tag Sharing function */

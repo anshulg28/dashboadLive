@@ -67,7 +67,7 @@ class Offers_Model extends CI_Model
 
     public function getOfferCodes()
     {
-        $query = "SELECT o.id, offerCode, offerType, isRedeemed, createDateTime, useDateTime ,l.locName"
+        $query = "SELECT o.id, offerCode, offerEvent, offerType, isRedeemed, createDateTime, useDateTime ,l.locName"
                 ." FROM offersmaster o "
                 ."LEFT JOIN locationmaster l ON l.id = offerLoc ORDER BY useDateTime DESC";
 

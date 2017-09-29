@@ -303,6 +303,75 @@ class Offers extends MY_Controller {
 
         $this->load->view('OfferStatsView', $data);
     }
+
+    public function getOfferStats()
+    {
+        if(isSessionVariableSet($this->isUserSession) === false)
+        {
+            redirect(base_url());
+        }
+        $data = array();
+
+        $statsData = $this->offers_model->getOfferCodes();
+        if(isset($statsData) && myIsArray($statsData))
+        {
+            foreach($statsData['codes'] as $key => $row)
+            {
+                $data['data'][$key][] = $row['id'];
+                $offCode = '';
+
+                switch($row['offerType'])
+                {
+                    case 'Breakfast2':
+                        $offCode = 'BR-'.$row['offerCode'];
+                        break;
+                    case 'Beer':
+                        $offCode = 'DO-'.$row['offerCode'];
+                        break;
+                    case 'Workshop':
+                        $offCode = 'EV-'.$row['offerCode'];
+                        break;
+                    default:
+                        if(isset($row['offerEvent']))
+                        {
+                            $offCode = 'EV-'.$row['offerCode'];
+                        }
+                        else
+                        {
+                            $offCode = 'DO-'.$row['offerCode'];
+                        }
+                        break;
+                }
+                $data['data'][$key][] = $offCode;
+                if($row['offerType'] == 'Breakfast2')
+                {
+                    $data['data'][$key][]= 'Breakfast For Two';
+                }
+                else
+                {
+                    $data['data'][$key][]= $row['offerType'];
+                }
+                $data['data'][$key][] = $row['locName'];
+                $data['data'][$key][] = $row['createDateTime'];
+                $data['data'][$key][] = $row['useDateTime'];
+                $actions = '<a data-toggle="tooltip" class="mugDelete-icon" title="Delete" data-offerId="'.$row['id'].'"
+                                               data-offerCode= "'.$row['offerCode'].'">
+                                                <i class="fa fa-trash-o"></i></a>&nbsp;';
+                if($row['isRedeemed'] == 1)
+                {
+                    $actions .= '<a data-toggle="tooltip" class="repeat-coupon" title="Renew" href="'.base_url().'offers/offerUnused/'.$row['id'].'">
+                                                    <i class="fa fa-repeat"></i></a>';
+                }
+                $data['data'][$key][] = $actions;
+            }
+        }
+        else
+        {
+            $data['data'] = null;
+        }
+        echo json_encode($data);
+    }
+
     public function delete($offerId, $offerAge)
     {
         if(isSessionVariableSet($this->isUserSession) === false)

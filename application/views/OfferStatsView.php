@@ -72,85 +72,7 @@
                             <th>Actions</th>
                         </tr>
                         </thead>
-                        <?php
-                        if(isset($offerCodes) && myIsArray($offerCodes))
-                        {
-                            if($offerCodes['status'] === false)
-                            {
-                                ?>
-                                <tbody>
-                                <tr class="my-danger-text text-center">
-                                    <td colspan="6">No Data Found!</td>
-                                </tr>
-                                </tbody>
-                                <?php
-                            }
-                            else
-                            {
-                                ?>
-                                <tbody>
-                                <?php
-                                foreach($offerCodes['codes'] as $key => $row)
-                                {
-                                    ?>
-                                    <tr class="<?php if($row['isRedeemed'] == 1) {echo 'danger';};?>">
-                                        <th scope="row"><?php echo $row['id'];?></th>
-                                        <td>
-                                            <?php
-                                            switch($row['offerType'])
-                                            {
-                                                case 'Breakfast2':
-                                                    echo 'BR-'.$row['offerCode'];
-                                                    break;
-                                                case 'Beer':
-                                                    echo 'DO-'.$row['offerCode'];
-                                                    break;
-                                                case 'Workshop':
-                                                    echo 'EV-'.$row['offerCode'];
-                                                    break;
-                                                default:
-                                                    echo 'DO-'.$row['offerCode'];
-                                            }
-                                            ?>
-                                        </td>
-                                        <td>
-                                            <?php
-                                            if($row['offerType'] == 'Breakfast2')
-                                            {
-                                                echo 'Breakfast For Two';
-                                            }
-                                            else
-                                            {
-                                                echo $row['offerType'];
-                                            }
-                                            ?>
-                                        </td>
-                                        <td><?php echo $row['locName'];?></td>
-                                        <td><?php echo $row['createDateTime'];?></td>
-                                        <td><?php echo $row['useDateTime'];?></td>
-                                        <td>
-                                            <a data-toggle="tooltip" class="mugDelete-icon" title="Delete" data-offerId="<?php echo $row['id'];?>"
-                                               data-offerCode= "<?php echo $row['offerCode'];?>">
-                                                <i class="fa fa-trash-o"></i></a>&nbsp;
-                                            <?php
-                                            if($row['isRedeemed'] == 1)
-                                            {
-                                                ?>
-                                                <a data-toggle="tooltip" title="Renew" href="<?php echo base_url().'offers/offerUnused/'.$row['id'];?>">
-                                                    <i class="fa fa-repeat"></i></a>
-                                                <?php
-                                            }
-                                            ?>
-                                        </td>
-                                    </tr>
-                                    <?php
-                                }
-                                ?>
-                                </tbody>
-                                <?php
-                            }
-                        }
-                        ?>
+
                     </table>
                 </div>
                 <div id="old" class="tab-pane fade">
@@ -285,8 +207,24 @@
         });
     });
 
-    $('#new-offers-table, #old-offers-table').DataTable({
-        ordering: false
+    $(' #old-offers-table').DataTable({
+        ordering: false,
+        deferRender: true
+
+    });
+    var isOnce = false;
+    $(window).load(function(){
+        var newTab = $('#new-offers-table').DataTable({
+            ordering: false,
+            deferRender: true,
+            ajax: base_url+'offers/getOfferStats'
+        });
+
+        newTab.on('draw', function () {
+            $('.repeat-coupon').each(function(i,val){
+                $(val).parent().parent().addClass('danger');
+            });
+        } )
     });
 </script>
 </html>

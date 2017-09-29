@@ -1025,16 +1025,6 @@ class Home extends MY_Controller {
                                 $usedAmt = $postBillAmt;
                                 $finalBal = $oldBalance - $usedAmt;
                                 //$this->dashboard_model->setCouponUsed($coupon['id']);
-                                $billLog = array(
-                                    'billNum' => $postBillNum,
-                                    'billLoc' => $post['billLoc'],
-                                    'offerId' => null,
-                                    'staffId' => $staffDetails['id'],
-                                    'billAmount' => $postBillAmt,
-                                    'insertedDT' => date('Y-m-d H:i:s')
-                                );
-                                $this->dashboard_model->saveBillLog($billLog);
-                                //$this->dashboard_model->clearCheckinLog($post['checkInId']);
 
                                 $walletRecord = array(
                                     'staffId' => $staffDetails['id'],
@@ -1045,7 +1035,19 @@ class Home extends MY_Controller {
                                     'updatedBy' => 'system'
                                 );
                                 //Log Insertion in the wallet
-                                $this->dashboard_model->updateWalletLog($walletRecord);
+                                $wallId = $this->dashboard_model->updateWalletLog($walletRecord);
+
+                                $billLog = array(
+                                    'billNum' => $postBillNum,
+                                    'billLoc' => $post['billLoc'],
+                                    'offerId' => null,
+                                    'staffId' => $staffDetails['id'],
+                                    'billAmount' => $postBillAmt,
+                                    'insertedDT' => date('Y-m-d H:i:s'),
+                                    'walletId' => $wallId
+                                );
+                                $this->dashboard_model->saveBillLog($billLog);
+                                //$this->dashboard_model->clearCheckinLog($post['checkInId']);
 
                                 $details = array(
                                     'walletBalance' => $finalBal
@@ -1263,5 +1265,32 @@ class Home extends MY_Controller {
                 break;
         }
         return $returnVal;
+    }
+
+    public function fixStaffRecords()
+    {
+        $staffIds = $this->dashboard_model->getStaffIds();
+
+        foreach($staffIds as $key => $row)
+        {
+            $allBills = $this->dashboard_model->getAllStaffBills($row['id']);
+            $allWalls = $this->dashboard_model->getAllStaffWallets($row['id']);
+            foreach($allBills as $billKey => $billRow)
+            {
+                foreach($allWalls as $wallKey => $wallRow)
+                {
+                    if($billRow['billAmount'] == $wallRow['amount'] && $billRow['insertedDT'] == $wallRow['loggedDT'])
+                    {
+                        $details = array(
+                            'walletId' => $wallRow['id']
+                        );
+                        $this->dashboard_model->updateStaffBill($billRow['id'],$details);
+                        break;
+                    }
+                }
+            }
+        }
+
+        echo 'DONE';
     }
 }

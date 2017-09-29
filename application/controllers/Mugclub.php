@@ -408,7 +408,8 @@ class Mugclub extends MY_Controller {
     }
     public function deleteMugData($mugId)
     {
-        $mugExists = $this->mugclub_model->getMugDataById($mugId);
+
+        $mugExists = $this->mugclub_model->checkMugExists($mugId);
 
         if($mugExists['status'] === false)
         {
@@ -416,6 +417,22 @@ class Mugclub extends MY_Controller {
         }
         else
         {
+            //Check if mug already has delete record
+            $oldMug = $mugId;
+            while(true)
+            {
+                $delMug = $this->mugclub_model->checkDelMug($oldMug);
+                if(myIsArray($delMug))
+                {
+                    $oldMug += 0.1;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            $mugExists['mugId'] = $oldMug;
+            $this->mugclub_model->saveDelRecord($mugExists);
             $this->mugclub_model->deleteMugRecord($mugId);
         }
         redirect(base_url().'mugclub');
