@@ -1275,4 +1275,34 @@ class Cron extends MY_Controller
         return $tagStr;
     }
 
+    public function regularizeOfficeWallets()
+    {
+        $officeWalls = $this->dashboard_model->getAllOfficeWallets();
+
+        if(isset($officeWalls) && myIsArray($officeWalls))
+        {
+            $offWallBatch = array();
+            foreach($officeWalls as $key => $row)
+            {
+                $oldBal = (double)$row['walletBalance'];
+                $remainBal = (double)OFFICE_WALLET_CAP - $oldBal;
+                $details = array(
+                    'walletBalance' => OFFICE_WALLET_CAP
+                );
+                $this->dashboard_model->updateStaffRecord($row['id'],$details);
+                if($remainBal > 0)
+                {
+                    $offWallBatch[] = array(
+                        'amtCredit' => $remainBal,
+                        'empId' => $row['empId'],
+                        'staffStatus' => '2',
+                        'updateDT' => date('Y-m-d H:i:s')
+                    );
+                }
+            }
+
+            $this->dashboard_model->offWallBatch($offWallBatch);
+        }
+    }
+
 }

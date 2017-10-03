@@ -703,6 +703,12 @@ display:block;
 {
     font-size:85%;
 }
+.editStaff .userType-div
+{
+    padding-left:50px;
+    text-align:left;
+    height:100px;
+}
 @media screen and (max-width: 1024px)
 {
     .mailPage .mail-content
@@ -715,6 +721,10 @@ display:block;
     .mugCheckIn .form-horizontal .control-label
     {
         padding: 7px 15px;
+    }
+    .editStaff .userType-div
+    {
+        height:auto;
     }
     .notification-indicator
     {

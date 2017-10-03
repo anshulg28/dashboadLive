@@ -25,30 +25,48 @@
                             <label class="mdl-textfield__label" for="empId">Employee Id</label>
                         </div>
                     </div>
+                    <div class="mdl-cell mdl-cell--6-col userType-div">
+                        <h4>User Type:</h4>
+                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="resEmp">
+                            <input type="radio" id="resEmp" class="mdl-radio__button" name="userType" value="1" checked>
+                            <span class="mdl-radio__label"> Restaurant Employee (<p style="font-size:12px;display:inline-block">1500 credits/month, Max 6000 credits</p>)</span>
+                        </label><br>
+                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="offEmp">
+                            <input type="radio" id="offEmp" class="mdl-radio__button" name="userType" value="2">
+                            <span class="mdl-radio__label"> Office Employee (<p style="font-size:12px;display:inline-block">7000 credits at all time</p>)</span>
+                        </label><br>
+                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="guestEmp">
+                            <input type="radio" id="guestEmp" class="mdl-radio__button" name="userType" value="3">
+                            <span class="mdl-radio__label"> Guest Wallet (<p style="font-size:12px;display:inline-block">add credits using Add Amount feature</p>)</span>
+                        </label>
+                    </div>
                     <div class="mdl-cell mdl-cell--6-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
                             <input class="mdl-textfield__input" type="text" name="firstName" id="firstName" required>
                             <label class="mdl-textfield__label" for="firstName">First Name</label>
                         </div>
                     </div>
+                    <div class="mdl-cell mdl-cell--6-col"></div>
                     <div class="mdl-cell mdl-cell--6-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
                             <input class="mdl-textfield__input" type="text" name="middleName" id="middleName" >
                             <label class="mdl-textfield__label" for="middleName">Middle Name</label>
                         </div>
                     </div>
+                    <div class="mdl-cell mdl-cell--6-col"></div>
                     <div class="mdl-cell mdl-cell--6-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
-                            <input class="mdl-textfield__input" type="text" name="lastName" id="lastName" >
+                            <input class="mdl-textfield__input" type="text" name="lastName" id="lastName" required>
                             <label class="mdl-textfield__label" for="lastName">Last Name</label>
                         </div>
                     </div>
-                    <div class="mdl-cell mdl-cell--6-col">
+                    <div class="mdl-cell mdl-cell--6-col"></div>
+                    <!--<div class="mdl-cell mdl-cell--6-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
                             <input class="mdl-textfield__input" type="number" name="walletBalance" id="walletBalance" value="1500" required>
                             <label class="mdl-textfield__label" for="walletBalance">Wallet Balance</label>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="mdl-cell mdl-cell--6-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
                             <input class="mdl-textfield__input" type="number" name="mobNum" id="mobNum" required>
@@ -56,10 +74,10 @@
                         </div>
                         <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect text-left" for="useDefault">
                             <input type="checkbox" id="useDefault" value="1" class="mdl-checkbox__input">
-                            <span class="mdl-checkbox__label">No Mobile No. Use Default?</span>
+                            <span class="mdl-checkbox__label">If no mobile number then use default</span>
                         </label>
                     </div>
-                    <div class="mdl-cell mdl-cell--12-col">
+                    <!--<div class="mdl-cell mdl-cell--12-col">
                         <label for="recurringFreq">Recurring Frequency</label>
                         <select id="recurringFreq" class="form-control" name="recurringFrequency">
                             <option value="monthly" selected>Monthly</option>
@@ -103,7 +121,7 @@
                                    value="6000">
                             <label class="mdl-textfield__label" for="cappingAmt">Capping Amount</label>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
 
                 <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Submit</button>
@@ -198,6 +216,17 @@
             e.preventDefault();
     });
 
+    $(document).on('change','input[name="userType"]',function(){
+        if($('input[name="userType"]:checked').val() != '1')
+        {
+            $('#useDefault').attr('disabled','disabled');
+        }
+        else
+        {
+            $('#useDefault').removeAttr('disabled');
+        }
+    });
+
     $(document).on('submit','#staff-add-form',function(e){
         e.preventDefault();
 
@@ -220,6 +249,12 @@
         if(mobError)
         {
             bootbox.alert('Mobile Number Already Exists!');
+            return false;
+        }
+
+        if($('input[name="userType"]:checked').val() != 1 && $('#useDefault').is(':checked'))
+        {
+            bootbox.alert('Default Number can only be used for reataurant employee\'s');
             return false;
         }
         showCustomLoader();

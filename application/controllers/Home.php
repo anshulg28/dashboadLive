@@ -621,18 +621,39 @@ class Home extends MY_Controller {
         }
         else
         {
-            $id = $this->dashboard_model->saveStaffRecord($post);
+            if(isset($post['userType']))
+            {
+                if($post['userType'] == WALLET_RESTAURANT)
+                {
+                    $post['walletBalance'] = 1500;
+                }
+                elseif($post['userType'] == WALLET_OFFICE)
+                {
+                    $post['walletBalance'] = 7000;
+                }
+                elseif($post['userType'] == WALLET_GUEST)
+                {
+                    $post['walletBalance'] = 0;
+                }
+                $id = $this->dashboard_model->saveStaffRecord($post);
 
-            $walletRecord = array(
-                'staffId' => $id,
-                'amount' => $post['walletBalance'],
-                'amtAction' => '2',
-                'notes' => 'New Staff Added',
-                'loggedDT' => date('Y-m-d H:i:s'),
-                'updatedBy' => $this->userName
-            );
-            $this->dashboard_model->updateWalletLog($walletRecord);
-            $data['status'] = true;
+                $walletRecord = array(
+                    'staffId' => $id,
+                    'amount' => $post['walletBalance'],
+                    'amtAction' => '2',
+                    'notes' => 'New Staff Added',
+                    'loggedDT' => date('Y-m-d H:i:s'),
+                    'updatedBy' => $this->userName
+                );
+                $this->dashboard_model->updateWalletLog($walletRecord);
+                $data['status'] = true;
+            }
+            else
+            {
+                $data['status'] = false;
+                $data['errorMsg'] = 'No User Type Selected!';
+            }
+
         }
 
         echo json_encode($data);

@@ -1145,6 +1145,11 @@ class Dashboard_Model extends CI_Model
         $this->db->insert_batch('walletlogmaster', $details);
         return true;
     }
+    function offWallBatch($details)
+    {
+        $this->db->insert_batch('offwalletrecord',$details);
+        return true;
+    }
     public function smsLogsBatch($details)
     {
         $this->db->insert_batch('smsmaster', $details);
@@ -1231,23 +1236,23 @@ class Dashboard_Model extends CI_Model
     {
         $query= "SELECT *"
             ." FROM staffmaster WHERE ifActive = 1 AND mobNum != '' AND mobNum IS NOT NULL "
-            ."AND isRecurring = 1 AND recurringFrequency LIKE '%monthly%'";
+            ."AND isRecurring = 1 AND userType = ".WALLET_RESTAURANT." AND recurringFrequency LIKE '%monthly%'";
         switch ($period)
         {
             case 'monthly':
                 $query= "SELECT *"
                     ." FROM staffmaster WHERE ifActive = 1 AND mobNum != '' AND mobNum IS NOT NULL "
-                    ."AND isRecurring = 1 AND recurringFrequency LIKE '%monthly%'";
+                    ."AND isRecurring = 1 AND userType = ".WALLET_RESTAURANT." AND recurringFrequency LIKE '%monthly%'";
                 break;
             case 'quarterly':
                 $query= "SELECT *"
                     ." FROM staffmaster WHERE ifActive = 1 AND mobNum != '' AND mobNum IS NOT NULL "
-                    ."AND isRecurring = 1 AND recurringFrequency LIKE '%quarterly%'";
+                    ."AND isRecurring = 1 AND userType = ".WALLET_RESTAURANT." AND recurringFrequency LIKE '%quarterly%'";
                 break;
             case 'yearly':
                 $query= "SELECT *"
                     ." FROM staffmaster WHERE ifActive = 1 AND mobNum != '' AND mobNum IS NOT NULL "
-                    ."AND isRecurring = 1 AND recurringFrequency LIKE '%yearly%'";
+                    ."AND isRecurring = 1 AND userType = ".WALLET_RESTAURANT." AND recurringFrequency LIKE '%yearly%'";
         }
 
         $result = $this->db->query($query)->result_array();
@@ -1262,6 +1267,14 @@ class Dashboard_Model extends CI_Model
         }
 
         return $data;
+    }
+    function getAllOfficeWallets()
+    {
+        $query = "SELECT * FROM staffmaster WHERE ifActive = 1 AND userType = ".WALLET_OFFICE;
+
+        $result = $this->db->query($query)->result_array();
+
+        return $result;
     }
     public function getStaffByEmpId($empid)
     {
