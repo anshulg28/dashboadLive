@@ -415,6 +415,26 @@ class Offers extends MY_Controller {
             elseif($toRedeem == '1')
             {
                 $offerData = array();
+                if(isset($offerStatus['codeCheck']['offerLoc']))
+                {
+                    if(isset($this->currentLocation) || isSessionVariableSet($this->currentLocation) === true)
+                    {
+                        if($this->currentLocation != $offerStatus['codeCheck']['offerLoc'])
+                        {
+                            $data['status'] = false;
+                            $data['errorMsg'] = 'Coupon Can\'t be redeemed at this location!';
+                            echo json_encode($data);
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        $data['status'] = false;
+                        $data['errorMsg'] = 'Location error!';
+                        echo json_encode($data);
+                        return false;
+                    }
+                }
                 $offerData['offerCode'] = $offerCode;
                 if(isset($this->currentLocation) || isSessionVariableSet($this->currentLocation) === true)
                 {
@@ -478,6 +498,21 @@ class Offers extends MY_Controller {
                     {
                         $data['status'] = false;
                         $data['errorMsg'] = 'This code isn\'t active yet. Will be active on '.date_format($d,DATE_MAIL_FORMAT_UI);
+                    }
+                }
+                elseif(isset($offerStatus['codeCheck']['expiryDateTime']))
+                {
+                    $currDT = date('Y-m-d H:i:s');
+                    //$d = date_create($offerStatus['codeCheck']['expiryDateTime']);
+                    if(strtotime($currDT) > strtotime($offerStatus['codeCheck']['expiryDateTime']))
+                    {
+                      $data['status'] = false;
+                      $data['errorMsg'] = 'Coupon has expired!';
+                    }
+                    else
+                    {
+                        $data['status'] = true;
+                        $data['offerType'] = $offerStatus['codeCheck']['offerType'];
                     }
                 }
                 else

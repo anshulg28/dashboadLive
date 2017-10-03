@@ -18,16 +18,18 @@
         3. You will also be given access to a dashboard. This is a place where information on the number of sign ups, fees collected,
         payout details will be available to you. You can also edit your event from this dashboard.<br><br>
 
-        4. Doolally will also list and promote your event on the following platforms - zomato, eventshigh.com, meetup, and Doolally social media profiles.<br><br>
+        4. For paid events/workshops, we charge a venue fee of Rs. 118<br><br>
 
-        5. Cancellation Policy:<br>
+        5. Doolally will also list and promote your event on the following platforms - zomato, eventshigh.com, meetup, and Doolally social media profiles.<br><br>
+
+        6. Cancellation Policy:<br>
         If you need to cancel an event, you will need to get in touch with the venue's community manager.<br><br>
 
         If you cancel your event, we will refund the full amount to the attendees. However, the payment fee of 2.24% per attendee will be borne by you.<br><br>
 
         If an attendee cancels their attendance to your event, the transaction fee of 2.24% will be borne by the attendee.<br><br>
 
-        6. Pay Outs to Organisers:<br>
+        7. Pay Outs to Organisers:<br>
         For paid events, we will collect money from the customer on your behalf. This is to ensure a refund in case of cancelled events.<br><br>
 
         Doolally will bear the 2.24% payment gateway fees except during cancellations by either the organiser or attendee.<br><br>

@@ -121,7 +121,7 @@ class Offers_Model extends CI_Model
 
     public function checkOfferCode($offerCode)
     {
-        $query = "SELECT offerType, offerEvent, isRedeemed, validFromDate"
+        $query = "SELECT offerType, offerEvent, isRedeemed, validFromDate, expiryDateTime, offerLoc"
                 ." FROM offersmaster "
                 ."WHERE ifActive = 1 AND offerCode = ".$offerCode;
 

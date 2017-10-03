@@ -160,6 +160,8 @@ defined('EVENT_DOOLALLY_FEE') OR define('EVENT_DOOLALLY_FEE','4');
 
 defined('DEFAULT_SENDER_EMAIL') OR define('DEFAULT_SENDER_EMAIL','events@brewcraftsindia.com');
 defined('DEFAULT_SENDER_PASS') OR define('DEFAULT_SENDER_PASS','doolally123');
+defined('DEFAULT_COMM_EMAIL') OR define('DEFAULT_COMM_EMAIL','communitymanager@brewcraftsindia.com');
+defined('DEFAULT_COMM_PASS') OR define('DEFAULT_COMM_PASS','Ngks2009');
 
 defined('OLD_DOOLALLY_FEE') OR define('OLD_DOOLALLY_FEE','250');
 defined('NEW_DOOLALLY_FEE') OR define('NEW_DOOLALLY_FEE','300');

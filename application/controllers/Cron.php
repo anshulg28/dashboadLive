@@ -6,6 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @property Cron_model $cron_model
  * @property Dashboard_Model $dashboard_model
  * @property Locations_Model $locations_model
+ * @property Mugclub_Model $mugclub_model
  */
 
 class Cron extends MY_Controller
@@ -1185,4 +1186,93 @@ class Cron extends MY_Controller
             }
         }
     }
+
+    public function sendAllBirthdayMails()
+    {
+        $this->load->model('mailers_model');
+        $this->load->model('users_model');
+        $birthMails = $this->mugclub_model->getBirthdayMugsList();
+        $mailResult = $this->mailers_model->getAllTemplatesByType(BIRTHDAY_MAIL);
+
+        if($birthMails['status'] == true)
+        {
+            foreach($birthMails['expiryMugList'] as $key => $row)
+            {
+                $mailRecord = $this->users_model->searchUserByLoc($row['homeBase']);
+                $mugInfo = $this->mugclub_model->getMugDataForMailById($row['mugId']);
+
+                $newDate =array("membershipEnd"=> date('Y-m-d', strtotime($mugInfo['mugList'][0]['membershipEnd'].' +3 month')));
+                $this->mugclub_model->extendMemberShip($row['mugId'],$newDate);
+                $mugInfo['mugList'][0]['membershipEnd'] = $newDate['membershipEnd'];
+                $newSubject = $this->replaceMugTags($mailResult['mailData'][0]['mailSubject'],$mugInfo,$mailRecord['userData']['firstName']);
+                $newBody = $this->replaceMugTags($mailResult['mailData'][0]['mailBody'],$mugInfo,$mailRecord['userData']['firstName']);
+
+                $mainBody = '<html><body>';
+                $body = $newBody;
+                //$body = wordwrap($body, 70);
+                $body = nl2br($body);
+                $body = stripslashes($body);
+                $mainBody .= $body .'</body></html>';
+                $newBody = $mainBody;
+
+                $fromName  = 'Doolally';
+                if(isset($mailRecord['userData']['firstName']))
+                {
+                    $fromName = trim(ucfirst($mailRecord['userData']['firstName']));
+                }
+                $fromEmail = DEFAULT_COMM_EMAIL;
+                $fromPass = DEFAULT_COMM_PASS;
+                $replyTo = $fromEmail;
+
+                if(isset($mailRecord['userData']['emailId']))
+                {
+                    $replyTo = $mailRecord['userData']['emailId'];
+                }
+
+                $cc        = implode(',',$this->config->item('ccList'));
+                $extraCc = getExtraCCEmail($fromEmail);
+                if(isStringSet($extraCc))
+                {
+                    $cc = $cc.','.$extraCc;
+                }
+
+                $this->sendemail_library->sendEmail($mugInfo['mugList'][0]['emailId'],$cc,$fromEmail, $fromPass,$fromName,$replyTo,$newSubject,$newBody);
+                $this->mailers_model->setMailSend($row['mugId'],BIRTHDAY_MAIL);
+            }
+        }
+    }
+
+    function replaceMugTags($tagStr,$mugInfo,$senderName)
+    {
+
+        $tagStr = str_replace('[sendername]',trim(ucfirst($senderName)),$tagStr);
+        foreach($mugInfo['mugList'][0] as $key => $row)
+        {
+            switch($key)
+            {
+                case 'mugId':
+                    $tagStr = str_replace('[mugno]',trim($row),$tagStr);
+                    break;
+                case 'firstName':
+                    $tagStr = str_replace('[firstname]',trim(ucfirst($row)),$tagStr);
+                    break;
+                case 'lastName':
+                    $tagStr = str_replace('[lastname]',trim(ucfirst($row)),$tagStr);
+                    break;
+                case 'birthDate':
+                    $d = date_create($row);
+                    $tagStr = str_replace('[birthdate]',date_format($d,DATE_MAIL_FORMAT_UI),$tagStr);
+                    break;
+                case 'mobileNo':
+                    $tagStr = str_replace('[mobno]',trim($row),$tagStr);
+                    break;
+                case 'membershipEnd':
+                    $d = date_create($row);
+                    $tagStr = str_replace('[expirydate]',date_format($d,DATE_MAIL_FORMAT_UI),$tagStr);
+                    break;
+            }
+        }
+        return $tagStr;
+    }
+
 }
