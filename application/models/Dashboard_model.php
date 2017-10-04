@@ -1501,4 +1501,14 @@ class Dashboard_Model extends CI_Model
         $this->db->insert('ehrefundmaster',$details);
         return true;
     }
+    public function saveUpiDump($details)
+    {
+        $this->db->insert('upidumpingtable', $details);
+        return true;
+    }
+    public function saveSmsWall($details)
+    {
+        $this->db->insert('smsreceivemaster', $details);
+        return true;
+    }
 }

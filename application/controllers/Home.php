@@ -1317,4 +1317,96 @@ class Home extends MY_Controller {
 
         echo 'DONE';
     }
+
+    public function walletBalanceSms()
+    {
+        $post = $this->input->post();
+
+        if(isset($post['content']))
+        {
+            $empDetails = $this->dashboard_model->getBalanceByInput($this->clearMobNumber($post['comments']));
+
+            if(isset($empDetails) && myIsArray($empDetails))
+            {
+                $numbers = array($post['sender']);
+
+                $name = trim(ucfirst($empDetails['firstName'])).' '.trim(ucfirst($empDetails['lastName'][0])).'. ';
+                $postDetails = array(
+                    'apiKey' => TEXTLOCAL_API,
+                    'numbers' => implode(',', $numbers),
+                    'sender'=> urlencode('DOLALY'),
+                    'message' => rawurlencode('Requested Wallet Balance for '.$name.$empDetails['mobNum'].' is '.$empDetails['walletBalance'])
+                );
+
+                $smsStatus = $this->curl_library->sendCouponSMS($postDetails);
+                $failMsg = '';
+                if($smsStatus['status'] == 'failure')
+                {
+                    if(isset($smsStatus['warnings']))
+                    {
+                        $failMsg = $smsStatus['warnings'][0]['message'];
+                    }
+                    else
+                    {
+                        $failMsg = $smsStatus['errors'][0]['message'];
+                    }
+                }
+                $details = array(
+                    'messageId' => $post['msgId'],
+                    'fromNumber' => $this->clearMobNumber($post['sender']),
+                    'message' => $post['content'],
+                    'isProcessed' => 1,
+                    'recordFound' => 1,
+                    'errorMsg' => $failMsg,
+                    'insertedDT' => $post['rcvd']
+                );
+                $this->dashboard_model->saveSmsWall($details);
+            }
+            else
+            {
+                $numbers = array($post['sender']);
+
+                $postDetails = array(
+                    'apiKey' => TEXTLOCAL_API,
+                    'numbers' => implode(',', $numbers),
+                    'sender'=> urlencode('DOLALY'),
+                    'message' => rawurlencode('Wallet for this phone number '.$this->clearMobNumber($post['comments']).' not found')
+                );
+
+                $smsStatus = $this->curl_library->sendCouponSMS($postDetails);
+                $failMsg = '';
+                if($smsStatus['status'] == 'failure')
+                {
+                    if(isset($smsStatus['warnings']))
+                    {
+                        $failMsg = $smsStatus['warnings'][0]['message'];
+                    }
+                    else
+                    {
+                        $failMsg = $smsStatus['errors'][0]['message'];
+                    }
+                }
+                $details = array(
+                    'messageId' => $post['msgId'],
+                    'fromNumber' => $this->clearMobNumber($post['sender']),
+                    'message' => $post['content'],
+                    'isProcessed' => 1,
+                    'recordFound' => 2,
+                    'errorMsg' => $failMsg,
+                    'insertedDT' => $post['rcvd']
+                );
+                $this->dashboard_model->saveSmsWall($details);
+            }
+        }
+
+    }
+    function clearMobNumber($mobNum)
+    {
+        $tempMob = $mobNum;
+        if (strlen($mobNum) != 10) {
+            $extensionClear = str_replace('91', '', $mobNum);
+            $tempMob = ltrim($extensionClear, '0');
+        }
+        return $tempMob;
+    }
 }
