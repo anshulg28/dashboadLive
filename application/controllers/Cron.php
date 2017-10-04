@@ -1207,13 +1207,6 @@ class Cron extends MY_Controller
                 $newSubject = $this->replaceMugTags($mailResult['mailData'][0]['mailSubject'],$mugInfo,$mailRecord['userData']['firstName']);
                 $newBody = $this->replaceMugTags($mailResult['mailData'][0]['mailBody'],$mugInfo,$mailRecord['userData']['firstName']);
 
-                $mainBody = '<html><body>';
-                $body = $newBody;
-                //$body = wordwrap($body, 70);
-                $body = nl2br($body);
-                $body = stripslashes($body);
-                $mainBody .= $body .'</body></html>';
-                $newBody = $mainBody;
 
                 $fromName  = 'Doolally';
                 if(isset($mailRecord['userData']['firstName']))

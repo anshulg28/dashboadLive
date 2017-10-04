@@ -1083,7 +1083,7 @@ class Home extends MY_Controller {
                                         'apiKey' => TEXTLOCAL_API,
                                         'numbers' => implode(',', $numbers),
                                         'sender'=> urlencode('DOLALY'),
-                                        'message' => rawurlencode('Available Wallet Balance: '.$finalBal)
+                                        'message' => rawurlencode($usedAmt.' Debited, Available Wallet Balance: '.$finalBal)
                                     );
                                     $smsStatus = $this->curl_library->sendCouponSMS($postDetails);
                                     if($smsStatus['status'] == 'failure')
@@ -1164,17 +1164,6 @@ class Home extends MY_Controller {
                         $oldBalance = $staffDetails['walletBalance']; // $post['walletBalance'];
                         $usedAmt = $postBillAmt;
                         $finalBal = $oldBalance - $usedAmt;
-                        //$this->dashboard_model->setCouponUsed($coupon['id']);
-                        $billLog = array(
-                            'billNum' => $postBillNum,
-                            'billLoc' => $post['billLoc'],
-                            'offerId' => null,
-                            'staffId' => $staffDetails['id'],
-                            'billAmount' => $postBillAmt,
-                            'insertedDT' => date('Y-m-d H:i:s')
-                        );
-                        $this->dashboard_model->saveBillLog($billLog);
-                        //$this->dashboard_model->clearCheckinLog($post['checkInId']);
 
                         $walletRecord = array(
                             'staffId' => $staffDetails['id'],
@@ -1185,7 +1174,20 @@ class Home extends MY_Controller {
                             'updatedBy' => 'system'
                         );
                         //Log Insertion in the wallet
-                        $this->dashboard_model->updateWalletLog($walletRecord);
+                        $wallId = $this->dashboard_model->updateWalletLog($walletRecord);
+
+                        //$this->dashboard_model->setCouponUsed($coupon['id']);
+                        $billLog = array(
+                            'billNum' => $postBillNum,
+                            'billLoc' => $post['billLoc'],
+                            'offerId' => null,
+                            'staffId' => $staffDetails['id'],
+                            'billAmount' => $postBillAmt,
+                            'insertedDT' => date('Y-m-d H:i:s'),
+                            'walletId' => $wallId
+                        );
+                        $this->dashboard_model->saveBillLog($billLog);
+                        //$this->dashboard_model->clearCheckinLog($post['checkInId']);
 
                         $details = array(
                             'walletBalance' => $finalBal
@@ -1200,8 +1202,9 @@ class Home extends MY_Controller {
                                 'apiKey' => TEXTLOCAL_API,
                                 'numbers' => implode(',', $numbers),
                                 'sender'=> urlencode('DOLALY'),
-                                'message' => rawurlencode('Available Wallet Balance: '.$finalBal)
+                                'message' => rawurlencode($usedAmt.' Debited, Available Wallet Balance: '.$finalBal)
                             );
+
                             $smsStatus = $this->curl_library->sendCouponSMS($postDetails);
                             if($smsStatus['status'] == 'failure')
                             {

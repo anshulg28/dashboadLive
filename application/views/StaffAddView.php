@@ -28,7 +28,7 @@
                     <div class="mdl-cell mdl-cell--6-col userType-div">
                         <h4>User Type:</h4>
                         <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="resEmp">
-                            <input type="radio" id="resEmp" class="mdl-radio__button" name="userType" value="1" checked>
+                            <input type="radio" id="resEmp" class="mdl-radio__button" name="userType" value="1">
                             <span class="mdl-radio__label"> Restaurant Employee (<p style="font-size:12px;display:inline-block">1500 credits/month, Max 6000 credits</p>)</span>
                         </label><br>
                         <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="offEmp">
@@ -252,6 +252,12 @@
             return false;
         }
 
+        if(typeof $('input[name="userType"]:checked').val() === 'undefined')
+        {
+            bootbox.alert('Please Select Type of Employee!');
+            return false;
+        }
+        
         if($('input[name="userType"]:checked').val() != 1 && $('#useDefault').is(':checked'))
         {
             bootbox.alert('Default Number can only be used for reataurant employee\'s');
