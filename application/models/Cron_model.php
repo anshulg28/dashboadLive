@@ -265,7 +265,7 @@ class Cron_Model extends CI_Model
             ." FROM walletlogmaster wlm"
             ." LEFT JOIN staffbillingmaster sb ON wlm.id = sb.walletId"
             ." LEFT JOIN locationmaster lm ON lm.id = sb.billLoc"
-            ." WHERE wlm.amtAction = 1 AND wlm.staffId = ".$id." AND (DATE(wlm.loggedDT) >= ".$startDate." AND DATE(wlm.loggedDT) <= ".$endDate.")"
+            ." WHERE wlm.amtAction = 1 AND wlm.staffId = ".$id." AND (DATE(wlm.loggedDT) >= '".$startDate."' AND DATE(wlm.loggedDT) <= '".$endDate."')"
             ." ORDER BY loggedDT ASC";
 
         $result = $this->db->query($query)->result_array();
