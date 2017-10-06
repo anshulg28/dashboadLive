@@ -25,7 +25,6 @@
                     deducted against event code(s) redemption at the Taproom) against your booking
                     for <?php echo $mailData['quantity'];?> for <?php echo $mailData['eventName'];?>.
                     It should be transferred into your account within 7 bank working days.
-                    <br><br>
                     <?php
                 }
                 else
@@ -34,7 +33,6 @@
                     Refund details: We have initiated the refund for Rs. <?php echo $mailData['refundAmt'];?> against your booking
                     for <?php echo $mailData['quantity'];?> for <?php echo $mailData['eventName'];?>.
                     It should be transferred into your account within 7 bank working days.
-                    <br><br>
                     <?php
                 }
                 ?>

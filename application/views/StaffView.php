@@ -79,6 +79,16 @@
                                     <div for="wallet<?php echo $row['id'];?>" class="mdl-tooltip">Manage Wallet</div>
                                     <a class="pageTracker" id="wallet<?php echo $row['id'];?>" href="<?php echo base_url().'walletManage/'.$row['id'];?>">
                                         <i class="fa fa-money fa-15x"></i></a>&nbsp;
+                                    <?php
+                                        if($this->userType == ADMIN_USER || $this->userType == ROOT_USER)
+                                        {
+                                            ?>
+                                            <div for="delWallet<?php echo $row['id'];?>" class="mdl-tooltip">Delete Wallet</div>
+                                            <a class="pageTracker" id="delWallet<?php echo $row['id'];?>" href="<?php echo base_url().'home/delStaffRecord/'.$row['id'];?>">
+                                                <i class="fa fa-trash fa-15x"></i></a>&nbsp;
+                                            <?php
+                                        }
+                                    ?>
                                 </td>
                             </tr>
                             <?php

@@ -87,3 +87,80 @@ $config['eventTc'] = '<div class="page-content">
 
     </div>
 </div>';
+
+$config['defaultRoles'] = array(
+    ROOT_USER => array(
+        'mug_portal',
+        'mug_club',
+        'mug_add',
+        'mug_num_check',
+        'mailers',
+        'user_mgt',
+        'location_mgt',
+        'offers',
+        'offers_check',
+        'offers_gen',
+        'offers_stats',
+        'checkins',
+        'dashboard_report',
+        'dashboard_feedback',
+        'dashboard_events',
+        'dashboard_fnb',
+        'dashboard_beerolympics',
+        'wallet_check',
+        'wallet_users',
+        'twitter_page'
+    ),
+    ADMIN_USER => array(
+        'mug_portal',
+        'mug_club',
+        'mug_add',
+        'mug_num_check',
+        'mailers',
+        'location_mgt',
+        'offers',
+        'offers_check',
+        'offers_gen',
+        'offers_stats',
+        'checkins',
+        'dashboard_report',
+        'dashboard_feedback',
+        'dashboard_events',
+        'dashboard_fnb',
+        'dashboard_beerolympics',
+        'wallet_check',
+        'wallet_users'
+    ),
+    EXECUTIVE_USER => array(
+        'mug_portal',
+        'mug_club',
+        'mug_add',
+        'mug_num_check',
+        'mailers',
+        'offers',
+        'offers_check',
+        'offers_gen',
+        'offers_stats',
+        'checkins',
+        'dashboard_report',
+        'dashboard_feedback',
+        'dashboard_events',
+        'dashboard_fnb',
+        'dashboard_beerolympics'
+    ),
+    SERVER_USER => array(
+        'mug_club',
+        'offers_check',
+        'checkins',
+        'wallet_check'
+    ),
+    WALLET_USER => array(
+        'wallet_check',
+        'wallet_users'
+    ),
+    OFFERS_USER => array(
+        'offers',
+        'offers_gen'
+    ),
+
+);

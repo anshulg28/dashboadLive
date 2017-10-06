@@ -216,4 +216,30 @@ class Login_Model extends CI_Model
         $this->db->update('doolally_usersmaster', $post);
         return true;
     }
+
+    function getUserRoles($userId)
+    {
+        $query = "SELECT modulesAssigned FROM roletomodulemaster WHERE userId = ".$userId;
+
+        $result = $this->db->query($query)->row_array();
+
+        return $result;
+    }
+
+    function getAllDashboardUsers()
+    {
+        $query = "SELECT * "
+            ."FROM doolally_usersmaster "
+            ."where userType IN(0,1,2,3,5,6)";
+
+        $result = $this->db->query($query)->result_array();
+
+        return $result;
+    }
+
+    function saveModuleUser($details)
+    {
+        $this->db->insert('roletomodulemaster',$details);
+    }
+
 }

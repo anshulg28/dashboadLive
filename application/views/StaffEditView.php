@@ -27,7 +27,7 @@
                                 <div class="mdl-cell mdl-cell--6-col">
                                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
                                         <input class="mdl-textfield__input" type="text" name="empId" id="empId"
-                                               value="<?php echo $row['empId'];?>">
+                                               value="<?php echo $row['empId'];?>" readonly>
                                         <label class="mdl-textfield__label" for="empId">Employee Id</label>
                                     </div>
                                 </div>
@@ -52,13 +52,13 @@
                                         <label class="mdl-textfield__label" for="lastName">Last Name</label>
                                     </div>
                                 </div>
-                                <div class="mdl-cell mdl-cell--6-col">
+                                <!--<div class="mdl-cell mdl-cell--6-col">
                                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
                                         <input class="mdl-textfield__input" type="number" name="walletBalance" id="walletBalance"
-                                               value="<?php echo $row['walletBalance'];?>" readonly>
+                                               value="<?php /*echo $row['walletBalance'];*/?>" readonly>
                                         <label class="mdl-textfield__label" for="walletBalance">Wallet Balance</label>
                                     </div>
-                                </div>
+                                </div>-->
                                 <div class="mdl-cell mdl-cell--6-col">
                                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
                                         <input class="mdl-textfield__input" type="number" name="mobNum" id="mobNum"
@@ -67,11 +67,27 @@
                                     </div>
                                 </div>
                                 <div class="mdl-cell mdl-cell--12-col">
+                                    <h4>User Type:</h4>
+                                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="resEmp">
+                                        <input type="radio" id="resEmp" class="mdl-radio__button" name="userType" value="1" <?php if($row['userType'] == 1){echo 'checked';} ?>>
+                                        <span class="mdl-radio__label"> Restaurant Employee (<p style="font-size:12px;display:inline-block">1500 credits/month, Max 6000 credits</p>)</span>
+                                    </label><br>
+                                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="offEmp">
+                                        <input type="radio" id="offEmp" class="mdl-radio__button" name="userType" value="2" <?php if($row['userType'] == 2){echo 'checked';} ?>>
+                                        <span class="mdl-radio__label"> Office Employee/RM/FM/Sous Chef/CDP (<p style="font-size:12px;display:inline-block">7000 credits at all time</p>)</span>
+                                    </label><br>
+                                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="guestEmp">
+                                        <input type="radio" id="guestEmp" class="mdl-radio__button" name="userType" value="3" <?php if($row['userType'] == 3){echo 'checked';} ?>>
+                                        <span class="mdl-radio__label"> Guest Wallet (<p style="font-size:12px;display:inline-block">add credits using Add Amount feature</p>)</span>
+                                    </label>
+                                </div>
+                                <br>
+                                <!--<div class="mdl-cell mdl-cell--12-col">
                                     <label for="recurringFreq">Recurring Frequency</label>
                                     <select id="recurringFreq" class="form-control" name="recurringFrequency">
-                                        <option value="monthly" <?php if($row['recurringFrequency'] == 'monthly'){echo 'selected';}?>>Monthly</option>
-                                        <option value="quarterly" <?php if($row['recurringFrequency'] == 'quarterly'){echo 'selected';}?>>Quarterly</option>
-                                        <option value="yearly" <?php if($row['recurringFrequency'] == 'yearly'){echo 'selected';}?>>Yearly</option>
+                                        <option value="monthly" <?php /*if($row['recurringFrequency'] == 'monthly'){echo 'selected';}*/?>>Monthly</option>
+                                        <option value="quarterly" <?php /*if($row['recurringFrequency'] == 'quarterly'){echo 'selected';}*/?>>Quarterly</option>
+                                        <option value="yearly" <?php /*if($row['recurringFrequency'] == 'yearly'){echo 'selected';}*/?>>Yearly</option>
                                     </select>
                                 </div>
 
@@ -79,19 +95,19 @@
                                     <label>Recurring?</label>
                                     <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="isRecYes">
                                         <input type="radio" id="isRecYes" class="mdl-radio__button" name="isRecurring" value="1"
-                                            <?php if($row['isRecurring'] == '1'){echo 'checked';}?>>
+                                            <?php /*if($row['isRecurring'] == '1'){echo 'checked';}*/?>>
                                         <span class="mdl-radio__label">Yes</span>
                                     </label>
                                     <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="isRecYes">
                                         <input type="radio" id="isRecNo" class="mdl-radio__button" name="isRecurring" value="2"
-                                            <?php if($row['isRecurring'] == '2'){echo 'checked';}?>>
+                                            <?php /*if($row['isRecurring'] == '2'){echo 'checked';}*/?>>
                                         <span class="mdl-radio__label">No</span>
                                     </label>
                                 </div>
                                 <div class="mdl-cell mdl-cell--6-col">
                                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
                                         <input class="mdl-textfield__input" type="number" name="recurringAmt" id="recurringAmt"
-                                               value="<?php echo $row['recurringAmt'];?>">
+                                               value="<?php /*echo $row['recurringAmt'];*/?>">
                                         <label class="mdl-textfield__label" for="recurringAmt">Recurring Amount</label>
                                     </div>
                                 </div>
@@ -99,22 +115,22 @@
                                     <label>Capping?</label>
                                     <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="isCapYes">
                                         <input type="radio" id="isCapYes" class="mdl-radio__button" name="isCapping" value="1"
-                                            <?php if($row['isCapping'] == '1'){echo 'checked';}?>>
+                                            <?php /*if($row['isCapping'] == '1'){echo 'checked';}*/?>>
                                         <span class="mdl-radio__label">Yes</span>
                                     </label>
                                     <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="isCapYes">
                                         <input type="radio" id="isCapNo" class="mdl-radio__button" name="isCapping" value="2"
-                                            <?php if($row['isCapping'] == '2'){echo 'checked';}?>>
+                                            <?php /*if($row['isCapping'] == '2'){echo 'checked';}*/?>>
                                         <span class="mdl-radio__label">No</span>
                                     </label>
                                 </div>
                                 <div class="mdl-cell mdl-cell--6-col">
                                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
                                         <input class="mdl-textfield__input" type="number" name="cappingAmt" id="cappingAmt"
-                                               value="<?php echo $row['cappingAmt'];?>">
+                                               value="<?php /*echo $row['cappingAmt'];*/?>">
                                         <label class="mdl-textfield__label" for="cappingAmt">Capping Amount</label>
                                     </div>
-                                </div>
+                                </div>-->
                             </div>
 
                             <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Submit</button>

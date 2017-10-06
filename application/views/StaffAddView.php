@@ -33,7 +33,7 @@
                         </label><br>
                         <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="offEmp">
                             <input type="radio" id="offEmp" class="mdl-radio__button" name="userType" value="2">
-                            <span class="mdl-radio__label"> Office Employee (<p style="font-size:12px;display:inline-block">7000 credits at all time</p>)</span>
+                            <span class="mdl-radio__label"> Office Employee/RM/FM/Sous Chef/CDP (<p style="font-size:12px;display:inline-block">7000 credits at all time</p>)</span>
                         </label><br>
                         <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="guestEmp">
                             <input type="radio" id="guestEmp" class="mdl-radio__button" name="userType" value="3">

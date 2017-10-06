@@ -870,7 +870,7 @@
                                                 <th>Timing</th>
                                                 <th>Cost</th>
                                                 <th>Place</th>
-                                                <th>Organizer Name</th>
+                                                <th>Organizer Details</th>
                                                 <th>Actions</th>
                                             </tr>
                                             </thead>
@@ -922,7 +922,7 @@
                                                             }
                                                             ?>
                                                         </td>
-                                                        <td><?php echo $row['eventData']['creatorName'];?></td>
+                                                        <td><?php echo $row['eventData']['creatorName'].'<br>'.$row['eventData']['creatorPhone'];?></td>
                                                         <td class="my-keepRelative"><!--<a data-toggle="tooltip" title="Edit" href="<?php /*echo base_url().'mugclub/edit/'.$row['mugId'];*/?>">
                                                         <i class="glyphicon glyphicon-edit"></i></a>&nbsp;-->
                                                             <?php
@@ -1246,7 +1246,7 @@
                                                 <th>Timing</th>
                                                 <th>Cost</th>
                                                 <th>Place</th>
-                                                <th>Organizer Name</th>
+                                                <th>Organizer Details</th>
                                                 <th>Actions</th>
                                             </tr>
                                             </thead>
@@ -1282,7 +1282,7 @@
                                                         ?>
                                                     </td>
                                                     <td><?php echo $row['locName'];?></td>
-                                                    <td><?php echo $row['creatorName'];?></td>
+                                                    <td><?php echo $row['creatorName'].'<br>'.$row['creatorPhone'];?></td>
                                                     <td><!--<a data-toggle="tooltip" title="Edit" href="<?php /*echo base_url().'mugclub/edit/'.$row['mugId'];*/?>">
                                                         <i class="glyphicon glyphicon-edit"></i></a>&nbsp;-->
                                                         <?php
@@ -1337,7 +1337,7 @@
                                                 <th>Timing</th>
                                                 <th>Cost</th>
                                                 <th>Place</th>
-                                                <th>Organizer Name</th>
+                                                <th>Organizer Details</th>
                                                 <th>Actions</th>
                                             </tr>
                                             </thead>
@@ -1386,7 +1386,7 @@
                                                             }
                                                             ?>
                                                         </td>
-                                                        <td><?php echo $row['eventData']['creatorName'];?></td>
+                                                        <td><?php echo $row['eventData']['creatorName'].'<br>'.$row['eventData']['creatorPhone'];?></td>
                                                         <td><!--<a data-toggle="tooltip" title="Edit" href="<?php /*echo base_url().'mugclub/edit/'.$row['mugId'];*/?>">
                                                         <i class="glyphicon glyphicon-edit"></i></a>&nbsp;-->
                                                             <?php

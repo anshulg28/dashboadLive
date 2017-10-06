@@ -1400,6 +1400,13 @@ class Home extends MY_Controller {
         }
 
     }
+
+    public function delStaffRecord($id)
+    {
+        $this->dashboard_model->deleteStaffRecord($id);
+        redirect(base_url().'empDetails');
+    }
+
     function clearMobNumber($mobNum)
     {
         $tempMob = $mobNum;
@@ -1408,5 +1415,25 @@ class Home extends MY_Controller {
             $tempMob = ltrim($extensionClear, '0');
         }
         return $tempMob;
+    }
+
+    public function assignAllModules()
+    {
+        $roles = $this->config->item('defaultRoles');
+
+        $allUsers = $this->login_model->getAllDashboardUsers();
+
+        foreach($allUsers as $key => $row)
+        {
+            $details = array(
+                'userId' => $row['userId'],
+                'userType' => $row['userType'],
+                'modulesAssigned' => implode(',',$roles[$row['userType']])
+            );
+
+            $this->login_model->saveModuleUser($details);
+        }
+        echo 'Done';
+
     }
 }

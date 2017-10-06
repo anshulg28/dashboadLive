@@ -1134,6 +1134,18 @@ class Dashboard_Model extends CI_Model
         $this->db->update('staffmaster', $details);
         return true;
     }
+    function deleteStaffRecord($id)
+    {
+        $query = "INSERT INTO deletedstaffmaster "
+            ."SELECT * FROM staffmaster "
+            ."where id = ".$id;
+
+        $this->db->query($query);
+
+        $this->db->where('id', $id);
+        $this->db->delete('staffmaster');
+        return true;
+    }
     public function updateStaffRecordByEmp($empid,$details)
     {
         $this->db->where('empId', $empid);

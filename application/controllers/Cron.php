@@ -1300,18 +1300,18 @@ class Cron extends MY_Controller
 
     public function sendWalletUseReport()
     {
-        $colKeys = array('Bill #', 'Bill Location', 'Logged Date/Time','Amount','Notes');
-        $colKeys1 = array('Name','Mobile #','Employee Id','Amount Consumed');
+        $colKeys = array('Name','Employee Id','Mobile #','Employee Type','Bill #', 'Bill Location', 'Logged Date/Time','Amount');
+        $colKeys1 = array('Name','Mobile #','Employee Id','Amount Used');
 
         $allFeedbacks = $this->cron_model->getAllActiveEmps();
 
 
         if( isset($allFeedbacks) && myIsArray($allFeedbacks))
         {
-            $file1 = fopen("./uploads/monthly_wallet_report_".date('d_M_Y').".csv","w");
-            $file2 = fopen("./uploads/monthly_wallet_total_consumption_".date('d_M_Y').".csv","w");
+            $file1 = fopen("./uploads/monthly_wallet_detail_transactions_".date('d_M_Y').".csv","w");
+            $file2 = fopen("./uploads/monthly_wallet_usage_".date('d_M_Y').".csv","w");
             $otherRow = true;
-
+            $firstRow = true;
             foreach($allFeedbacks as $key => $row)
             {
                 if($otherRow)
@@ -1319,6 +1319,12 @@ class Cron extends MY_Controller
                     $otherRow = false;
                     $otherFileRow = $colKeys1;
                     fputcsv($file2,$otherFileRow);
+                }
+                if($firstRow)
+                {
+                    $firstRow = false;
+                    $textToWrite = $colKeys;
+                    fputcsv($file1,$textToWrite);
                 }
                 $userType = '';
                 if($row['userType'] == WALLET_RESTAURANT)
@@ -1329,9 +1335,6 @@ class Cron extends MY_Controller
                 {
                     $userType = 'Office Employee';
                 }
-                $textToWrite = array($row['firstName'].' '.$row['middleName'].' '.$row['lastName'],$row['mobNum'],'Wallet Balance: '.$row['walletBalance'],$userType);
-                fputcsv($file1,array());
-                fputcsv($file1,$textToWrite);
 
                 $startDate = date('Y-m-d', strtotime('-1 month'));
                 $endDate = date('Y-m-d');
@@ -1346,23 +1349,19 @@ class Cron extends MY_Controller
                         array_sum(array_map(function($foo){return $foo['amount'];}, $walletTrans['walletDetails']))
                     );
                     fputcsv($file2,$otherArr);
-                    $firstRow = true;
                     foreach($walletTrans['walletDetails'] as $wallKey => $wallRow)
                     {
-                        if($firstRow)
-                        {
-                            $firstRow = false;
-                            $textToWrite = $colKeys;
-                            fputcsv($file1,$textToWrite);
-                        }
 
                         $d = date_create($wallRow['loggedDT']);
                         $ehRow = array(
+                            $row['firstName'].' '.$row['middleName'].' '.$row['lastName'],
+                            $row['empId'],
+                            $row['mobNum'],
+                            $userType,
                             $wallRow['billNum'],
                             $wallRow['locName'],
                             date_format($d,DATE_TIME_FORMAT_UI),
-                            $wallRow['amount'],
-                            $wallRow['notes']
+                            $wallRow['amount']
                         );
                         $textToWrite = $ehRow;
                         fputcsv($file1,$textToWrite);
@@ -1373,13 +1372,13 @@ class Cron extends MY_Controller
             fclose($file1);
             $content = '<html><body><p>Monthly Employee Expenditure Report<br>PFA</p></body></html>';
 
-            $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
-                ,'admin@brewcraftsindia.com','Employee Monthly Report '.date('d_M_Y'),$content,array("./uploads/monthly_wallet_report_".date('d_M_Y').".csv",
-                    "./uploads/monthly_wallet_total_consumption_".date('d_M_Y').".csv"));
+            $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com','savio@brewcraftsindia.com','amit@brewcraftsindia.com','pranjal.rathi@rubycapital.net'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+                ,'admin@brewcraftsindia.com','Employee Monthly Report '.date('d_M_Y'),$content,array("./uploads/monthly_wallet_detail_transactions_".date('d_M_Y').".csv",
+                    "./uploads/monthly_wallet_usage_".date('d_M_Y').".csv"));
             try
             {
-                unlink("./uploads/monthly_wallet_report_".date('d_M_Y').".csv");
-                unlink("./uploads/monthly_wallet_total_consumption_".date('d_M_Y').".csv");
+                unlink("./uploads/monthly_wallet_detail_transactions_".date('d_M_Y').".csv");
+                unlink("./uploads/monthly_wallet_usage_".date('d_M_Y').".csv");
             }
             catch(Exception $ex)
             {
