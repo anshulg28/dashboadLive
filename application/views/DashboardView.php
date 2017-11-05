@@ -26,19 +26,33 @@
             <ul class="nav nav-pills nav-stacked">
                 <li class="active"><a data-toggle="pill" class="my-noBorderRadius" href="#mugclub">Mug Club</a></li>
                 <li><a class="my-noBorderRadius" data-toggle="pill" href="#instamojo">Instamojo</a></li>
-                <li><a class="my-noBorderRadius" data-toggle="pill" href="#feedback">Feedback</a></li>
                 <?php
-                if($this->userId == '960' && $this->commSecLoc == '5')
-                {
-                }
-                else
-                {
-                    ?>
-                    <li><a class="my-noBorderRadius" data-toggle="pill" href="#fnbpanel">FnB Data</a></li>
-                    <li><a class="my-noBorderRadius" data-toggle="pill" href="#eventpanel">Events</a></li>
-                    <li><a class="my-noBorderRadius" data-toggle="pill" href="#beerpanel">Beer Olympics</a></li>
-                    <?php
-                }
+                    if(myInArray('dashboard_feedback',$userModules))
+                    {
+                        ?>
+                        <li><a class="my-noBorderRadius" data-toggle="pill" href="#feedback">Feedback</a></li>
+                        <?php
+                    }
+
+                    if(myInArray('dashboard_fnb',$userModules) || (isset($this->commSecLoc) && $this->commSecLoc != 5))
+                    {
+                        ?>
+                        <li><a class="my-noBorderRadius" data-toggle="pill" href="#fnbpanel">FnB Data</a></li>
+                        <?php
+                    }
+
+                    if(myInArray('dashboard_events',$userModules) || (isset($this->commSecLoc) && $this->commSecLoc != 5))
+                    {
+                        ?>
+                        <li><a class="my-noBorderRadius" data-toggle="pill" href="#eventpanel">Events</a></li>
+                        <?php                    }
+
+                    if(myInArray('dashboard_beerolympics',$userModules) || (isset($this->commSecLoc) && $this->commSecLoc != 5))
+                    {
+                        ?>
+                        <li><a class="my-noBorderRadius" data-toggle="pill" href="#beerpanel">Beer Olympics</a></li>
+                        <?php
+                    }
                 ?>
             </ul>
             <!--<div class="mdl-layout__tab-bar mdl-js-ripple-effect">
@@ -420,83 +434,87 @@
                     </div>
                 </dialog>
             </section>
-            <section class="tab-pane fade" id="feedback">
-                <div class="mdl-grid">
-                    <div class="mdl-cell mdl-cell--1-col"></div>
-                    <div class="mdl-cell mdl-cell--10-col text-center">
-                        <ul class="list-inline">
-                            <li>
-                                <label for="feedbackLoc">Location</label>
-                                <?php
-                                $commonLoc = array();
-                                if($this->userType == ADMIN_USER || $this->userType == ROOT_USER)
-                                {
-                                    $commonLoc[] = 'overall';
-                                    ?>
-                                    <select id="feedbackLoc" class="form-control">
+            <?php
+                if(myInArray('dashboard_feedback',$userModules))
+                {
+                    ?>
+                    <section class="tab-pane fade" id="feedback">
+                        <div class="mdl-grid">
+                            <div class="mdl-cell mdl-cell--1-col"></div>
+                            <div class="mdl-cell mdl-cell--10-col text-center">
+                                <ul class="list-inline">
+                                    <li>
+                                        <label for="feedbackLoc">Location</label>
                                         <?php
-                                        if(isset($locations))
+                                        $commonLoc = array();
+                                        if($this->userType == ADMIN_USER || $this->userType == ROOT_USER)
                                         {
-                                            foreach($locations as $key => $row)
-                                            {
-                                                if(isset($row['id']))
+                                            $commonLoc[] = 'overall';
+                                            ?>
+                                            <select id="feedbackLoc" class="form-control">
+                                                <?php
+                                                if(isset($locations))
                                                 {
-                                                    $commonLoc[] = $row['locUniqueLink'];
-                                                    ?>
-                                                    <option value="<?php echo $row['id'];?>"><?php echo $row['locName'];?></option>
-                                                    <?php
+                                                    foreach($locations as $key => $row)
+                                                    {
+                                                        if(isset($row['id']))
+                                                        {
+                                                            $commonLoc[] = $row['locUniqueLink'];
+                                                            ?>
+                                                            <option value="<?php echo $row['id'];?>"><?php echo $row['locName'];?></option>
+                                                            <?php
+                                                        }
+                                                    }
                                                 }
-                                            }
-                                        }
-                                        ?>
-                                    </select>
-                                    <?php
-                                }
-                                elseif($this->userType == EXECUTIVE_USER)
-                                {
-                                    if(isset($userInfo))
-                                    {
-                                        ?>
-                                        <select id="feedbackLoc" class="form-control">
-                                            <?php
-                                            foreach($userInfo as $key => $row)
-                                            {
-                                                $commonLoc[] = $row['locData'][0]['locUniqueLink'];
                                                 ?>
-                                                <option value="<?php echo $row['locData'][0]['id'];?>">
-                                                    <?php echo $row['locData'][0]['locName'];?>
-                                                </option>
+                                            </select>
+                                            <?php
+                                        }
+                                        elseif($this->userType == EXECUTIVE_USER)
+                                        {
+                                            if(isset($userInfo))
+                                            {
+                                                ?>
+                                                <select id="feedbackLoc" class="form-control">
+                                                    <?php
+                                                    foreach($userInfo as $key => $row)
+                                                    {
+                                                        $commonLoc[] = $row['locData'][0]['locUniqueLink'];
+                                                        ?>
+                                                        <option value="<?php echo $row['locData'][0]['id'];?>">
+                                                            <?php echo $row['locData'][0]['locName'];?>
+                                                        </option>
+                                                        <?php
+                                                    }
+                                                    ?>
+                                                </select>
                                                 <?php
                                             }
                                             ?>
-                                        </select>
-                                        <?php
-                                    }
+
+                                            <?php
+                                        }
+                                        ?>
+
+                                    </li>
+                                    <li>
+                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                            <input class="mdl-textfield__input" type="number" id="feedbackNum">
+                                            <label class="mdl-textfield__label" for="feedbackNum">Number (max:50)</label>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <button type="button" id="genBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                                            Generate
+                                        </button>
+                                    </li>
+                                </ul>
+                                <?php
+                                if(isset($feedbacks) && myIsArray($feedbacks))
+                                {
                                     ?>
-
-                                    <?php
-                                }
-                                ?>
-
-                            </li>
-                            <li>
-                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="number" id="feedbackNum">
-                                    <label class="mdl-textfield__label" for="feedbackNum">Number (max:50)</label>
-                                </div>
-                            </li>
-                            <li>
-                                <button type="button" id="genBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                                    Generate
-                                </button>
-                            </li>
-                        </ul>
-                        <?php
-                            if(isset($feedbacks) && myIsArray($feedbacks))
-                            {
-                                ?>
-                                <ul class="list-inline">
-                                    <?php
+                                    <ul class="list-inline">
+                                        <?php
                                         foreach($feedbacks as $key => $row)
                                         {
                                             if(myInArray($key,$commonLoc))
@@ -513,36 +531,33 @@
                                                 <?php
                                             }
                                         }
-                                    ?>
-                                </ul>
-                                <?php
-                            }
-                        ?>
-                        <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-                                data-toggle="modal" data-target="#feedback-modal">
-                            Show Graph
-                        </button>
-                        <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-                                data-toggle="modal" data-target="#feedData-modal">
-                            Show Feedback Data
-                        </button>
-                    </div>
-                    <div class="mdl-cell mdl-cell--1-col"></div>
-                    <!-- Dynamic Form -->
-                    <div class="mdl-cell mdl-cell--12-col dynamic-form-wrapper">
-                        <form action="<?php echo base_url().'dashboard/saveFeedback/json';?>" id="feedback-form" method="post">
-                            <div class="form-super-container"></div>
-                            <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent hide">Submit</button>
-                        </form>
-                    </div>
-                </div>
-            </section>
-            <?php
-                if($this->userId == '960' && $this->commSecLoc == '5')
-                {
-
+                                        ?>
+                                    </ul>
+                                    <?php
+                                }
+                                ?>
+                                <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                                        data-toggle="modal" data-target="#feedback-modal">
+                                    Show Graph
+                                </button>
+                                <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                                        data-toggle="modal" data-target="#feedData-modal">
+                                    Show Feedback Data
+                                </button>
+                            </div>
+                            <div class="mdl-cell mdl-cell--1-col"></div>
+                            <!-- Dynamic Form -->
+                            <div class="mdl-cell mdl-cell--12-col dynamic-form-wrapper">
+                                <form action="<?php echo base_url().'dashboard/saveFeedback/json';?>" id="feedback-form" method="post">
+                                    <div class="form-super-container"></div>
+                                    <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent hide">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+                    <?php
                 }
-                else
+                if(myInArray('dashboard_fnb',$userModules) || (isset($this->commSecLoc) && $this->commSecLoc != 5))
                 {
                     ?>
                     <section class="tab-pane fade" id="fnbpanel">
@@ -835,6 +850,12 @@
                             </div>
                         </div>
                     </section>
+                    <?php
+                }
+
+                if(myInArray('dashboard_events',$userModules) || (isset($this->commSecLoc) && $this->commSecLoc != 5))
+                {
+                    ?>
                     <section class="tab-pane fade" id="eventpanel">
                         <ul class="nav nav-tabs">
                             <li class="active"><a data-toggle="tab" href="#eventView">Event Records</a></li>
@@ -1512,6 +1533,12 @@
                             ?>
                         </div>
                     </section>
+                    <?php
+                }
+
+                if(myInArray('dashboard_beerolympics',$userModules) || (isset($this->commSecLoc) && $this->commSecLoc != 5))
+                {
+                    ?>
                     <section class="tab-pane fade" id="beerpanel">
                         <ul class="nav nav-tabs">
                             <li class="active"><a data-toggle="tab" href="#beerTab">Olympics Sharing</a></li>
@@ -3582,7 +3609,7 @@
                         var tblHtml = '<table class="table table-striped">';
                         downTbl += '<thead><tr><th>Doolally Signups</th></tr><tr><th>Name</th><th>Email</th><th>Mobile Number</th><th>Quantitiy</th><th>Signup Date/time</th>';
                         downTbl += '</tr></thead><tbody>';
-                        tblHtml += '<thead><tr><th>Name</th><th>Email</th><th>Mobile Number</th><th>Quantitiy</th><th>Signup Date/time</th>';
+                        tblHtml += '<thead><tr><th>Name</th><th>Email</th><th>Mobile Number</th><th>Quantity</th><th>Signup Date/time</th>';
                         tblHtml += '</tr></thead><tbody>';
                         for(var i=0;i<data.joinData.length;i++)
                         {
@@ -3622,7 +3649,7 @@
                     {
                         var tblHtml1 = '<table class="table table-striped">';
                         downTbl += '<tr><th>EventsHigh Signups</th></tr>';
-                        tblHtml1 += '<thead><tr><th>Name</th><th>Email</th><th>Mobile Number</th><th>Quantitiy</th><th>Signup Date/time</th>';
+                        tblHtml1 += '<thead><tr><th>Name</th><th>Email</th><th>Mobile Number</th><th>Quantity</th><th>Signup Date/time</th>';
                         tblHtml1 += '</tr></thead><tbody>';
                         for(var j=0;j<data.EHData.length;j++)
                         {

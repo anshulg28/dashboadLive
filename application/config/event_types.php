@@ -129,7 +129,13 @@ $config['defaultRoles'] = array(
         'dashboard_fnb',
         'dashboard_beerolympics',
         'wallet_check',
-        'wallet_users'
+        'wallet_users',
+        'maintenance',
+        'maintenance_complaint',
+        'maintenance_logview',
+        'maintenance_workarea',
+        'maintenance_worktype',
+        'maintenance_useradd'
     ),
     EXECUTIVE_USER => array(
         'mug_portal',
@@ -152,7 +158,8 @@ $config['defaultRoles'] = array(
         'mug_club',
         'offers_check',
         'checkins',
-        'wallet_check'
+        'wallet_check',
+        'maintenance'
     ),
     WALLET_USER => array(
         'wallet_check',
@@ -162,5 +169,23 @@ $config['defaultRoles'] = array(
         'offers',
         'offers_gen'
     ),
+    MAINTENANCE_MANAGER => array(
+        'maintenance',
+        'maintenance_complaint',
+        'maintenance_logview'
+    ),
+    MAINTENANCE_APPROVER1 => array(
+        'maintenance',
+        'maintenance_complaint',
+        'maintenance_logview',
+        'maintenance_workarea',
+        'maintenance_worktype',
+        'maintenance_useradd'
+    ),
+    MAINTENANCE_APPROVER2 => array(
+        'maintenance',
+        'maintenance_complaint',
+        'maintenance_logview'
+    )
 
 );

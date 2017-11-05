@@ -34,6 +34,15 @@ class Locations_Model extends CI_Model
         return $data;
     }
 
+    function getAllActiveLocations()
+    {
+        $query = "SELECT * FROM locationmaster WHERE ifActive = ".ACTIVE;
+
+        $result = $this->db->query($query)->result_array();
+
+        return $result;
+    }
+
     public function getLocationDetailsById($locId)
     {
         $query = "SELECT * "

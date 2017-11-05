@@ -34,6 +34,7 @@ class Cron_Model extends CI_Model
 
         return $data;
     }
+
     public function getAllFeeds()
     {
         $query = "SELECT * "
@@ -80,6 +81,7 @@ class Cron_Model extends CI_Model
         $this->db->update('socialfeedmaster', $post);
         return true;
     }
+
     public function insertFeedByType($post)
     {
         $post['updateDateTime'] = date('Y-m-d H:i:s');
@@ -87,6 +89,7 @@ class Cron_Model extends CI_Model
         $this->db->insert('socialfeedmaster', $post);
         return true;
     }
+
     public function insertFeedBatch($details)
     {
         $this->db->insert_batch('socialviewmaster', $details);
@@ -110,6 +113,7 @@ class Cron_Model extends CI_Model
 
         return $result;
     }
+
     public function clearViewFeeds()
     {
         $this->db->truncate('socialviewmaster');
@@ -280,5 +284,11 @@ class Cron_Model extends CI_Model
         }
 
         return $data;
+    }
+    function getPostJobs()
+    {
+        $query = "SELECT * FROM complaintlogmaster WHERE status = ".LOG_STATUS_POSTPONE;
+        $result = $this->db->query($query)->result_array();
+        return $result;
     }
 }

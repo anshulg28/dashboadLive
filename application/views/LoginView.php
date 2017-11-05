@@ -9,7 +9,7 @@
     <?php echo $headerView; ?>
     <main class="loginPage">
         <div class="container-fluid">
-            <h1 class="text-center">Admin/Comm Login</h1>
+            <h1 class="text-center">Employee Login</h1>
             <hr>
             <div class="form-group">
                 <div class="row">

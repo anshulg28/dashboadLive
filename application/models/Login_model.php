@@ -62,7 +62,7 @@ class Login_Model extends CI_Model
 
         $query = "SELECT userId,ifActive,attemptTimes,mobNum "
             ."FROM doolally_usersmaster "
-            ."where userType IN(0,1,2,3,5,6) AND emailId = '".$email."'";
+            ."where userType IN(0,1,2,3,5,6,7,8,9,10) AND emailId = '".$email."'";
 
         $result = $this->db->query($query)->row_array();
 
@@ -84,7 +84,7 @@ class Login_Model extends CI_Model
 
         $query = "SELECT userId,ifActive,attemptTimes,emailId "
             ."FROM doolally_usersmaster "
-            ."where userType IN(0,1,2,3,5,6) AND mobNum = '".$mobNum."'";
+            ."where userType IN(0,1,2,3,5,6,7,8,9,10) AND mobNum = '".$mobNum."'";
 
         $result = $this->db->query($query)->row_array();
 
@@ -105,7 +105,7 @@ class Login_Model extends CI_Model
     {
         $query = "SELECT userId,ifActive "
             ."FROM doolally_usersmaster "
-            ."where userType IN(0,1,2,3,5,6) AND mobNum = '".$mobNum."' OR emailId = '".$mobNum."' AND userOtp = ".$otp;
+            ."where userType IN(0,1,2,3,5,6,7,8,9,10) AND mobNum = '".$mobNum."' OR emailId = '".$mobNum."' AND userOtp = ".$otp;
 
         $result = $this->db->query($query)->row_array();
 
@@ -226,6 +226,15 @@ class Login_Model extends CI_Model
         return $result;
     }
 
+    function getUserById($userId)
+    {
+        $query = "SELECT * FROM doolally_usersmaster WHERE userId = ".$userId;
+
+        $result = $this->db->query($query)->row_array();
+
+        return $result;
+    }
+
     function getAllDashboardUsers()
     {
         $query = "SELECT * "
@@ -241,5 +250,11 @@ class Login_Model extends CI_Model
     {
         $this->db->insert('roletomodulemaster',$details);
     }
+    function getMaintenanceManager()
+    {
+        $query = "SELECT * FROM doolally_usersmaster WHERE userType = ".MAINTENANCE_MANAGER;
 
+        $result = $this->db->query($query)->row_array();
+        return $result;
+    }
 }

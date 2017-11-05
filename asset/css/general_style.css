@@ -709,6 +709,77 @@ display:block;
     text-align:left;
     height:100px;
 }
+#mediaViewModal .media-content-wrapper, #mediaModal .media-content-wrapper
+{
+    box-shadow:none;
+    background:transparent;
+    border:none;
+}
+#mediaViewModal .modal-header, #mediaModal .modal-header
+{
+    border:none;
+}
+#mediaViewModal .modal-header button, #mediaModal .modal-header button
+{
+    font-size:30px;
+    opacity:1;
+}
+#mediaViewModal .media-body img, #mediaViewModal .media-body video,
+#mediaModal .media-body img, #mediaModal .media-body video
+{
+    margin:0 auto;
+}
+.logComplaint .pri-group .job-high-pri
+{
+    background-color:#FF1919;
+    color:#fff;
+    padding:0 5px;
+}
+.logComplaint .pri-group .job-medium-pri
+{
+    background-color:#FFFF00;
+    padding:0 5px;
+}
+.logComplaint .pri-group .job-low-pri
+{
+    background-color:#00CC00;
+    color:#fff;
+    padding:0 5px;
+}
+.logComplaint .pri-group ul>li
+{
+    padding-left:10px;
+    padding-right:10px;
+}
+.logComplaint .job-with-high
+{
+    width:30px;
+    height:30px;
+    padding-top:5px;
+    text-align: center;
+    background-color:#FF1919;
+    color:#fff;
+    border-radius:50%;
+}
+.logComplaint .job-with-medium
+{
+    width:30px;
+    height:30px;
+    padding-top:5px;
+    text-align: center;
+    background-color:#FFFF00;
+    border-radius:50%;
+}
+.logComplaint .job-with-low
+{
+    width:30px;
+    height:30px;
+    padding-top:5px;
+    text-align: center;
+    background-color:#00CC00;
+    color:#fff;
+    border-radius:50%;
+}
 @media screen and (max-width: 1024px)
 {
     .mailPage .mail-content

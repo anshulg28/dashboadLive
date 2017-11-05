@@ -110,9 +110,21 @@ defined('SERVER_USER') OR define('SERVER_USER',3);
 defined('GUEST_USER') OR define('GUEST_USER',4);
 defined('WALLET_USER') OR define('WALLET_USER',5);
 defined('OFFERS_USER') OR define('OFFERS_USER',6);
-defined('MAINTENANCE_ADMIN') OR define('MAINTENANCE_ADMIN',7);
-defined('MAINTENANCE_MANAGER') OR define('MAINTENANCE_MANAGER',8);
-defined('MAINTENANCE_USER') OR define('MAINTENANCE_USER',9);
+defined('MAINTENANCE_MANAGER') OR define('MAINTENANCE_MANAGER',7);
+/*defined('MAINTENANCE_USER') OR define('MAINTENANCE_USER',8);*/
+defined('MAINTENANCE_APPROVER1') OR define('MAINTENANCE_APPROVER1',8);
+defined('MAINTENANCE_APPROVER2') OR define('MAINTENANCE_APPROVER2',9);
+defined('FINANCE_APPROVER') OR define('FINANCE_APPROVER',10);
+
+/* Complaint Log Status */
+defined('LOG_STATUS_OPEN') OR define('LOG_STATUS_OPEN',0);
+defined('LOG_STATUS_PENDING_APPROVAL') OR define('LOG_STATUS_PENDING_APPROVAL',1);
+defined('LOG_STATUS_PENDING_BUDGET_APPROVAL') OR define('LOG_STATUS_PENDING_BUDGET_APPROVAL',2);
+defined('LOG_STATUS_IN_PROGRESS') OR define('LOG_STATUS_IN_PROGRESS',3);
+defined('LOG_STATUS_PARTIAL_CLOSE') OR define('LOG_STATUS_PARTIAL_CLOSE', 4);
+defined('LOG_STATUS_CLOSED') OR define('LOG_STATUS_CLOSED',5);
+defined('LOG_STATUS_DECLINED') OR define('LOG_STATUS_DECLINED',6);
+defined('LOG_STATUS_POSTPONE') OR define('LOG_STATUS_POSTPONE',7);
 
 /*Active or not*/
 defined('ACTIVE')   OR define('ACTIVE', 1);
@@ -148,6 +160,7 @@ defined('BEVERAGE_PATH_THUMB') OR define('BEVERAGE_PATH_THUMB','uploads/beverage
 defined('BEVERAGE_PATH_NORMAL') OR define('BEVERAGE_PATH_NORMAL','uploads/beverage/');
 defined('EVENT_PATH_THUMB') OR define('EVENT_PATH_THUMB','uploads/events/thumb/');
 defined('TWITTER_BOT_PATH') OR define('TWITTER_BOT_PATH','socialimages/twitter/');
+defined('JOB_MEDIA_PATH') OR define('JOB_MEDIA_PATH','uploads/jobs/');
 defined('ITEM_FOOD') OR define('ITEM_FOOD','1');
 defined('ITEM_BEVERAGE') OR define('ITEM_BEVERAGE','2');
 defined('MOBILE_URL') OR define('MOBILE_URL','https://doolally.in/');
@@ -175,3 +188,6 @@ defined('WALLET_RESTAURANT') OR define('WALLET_RESTAURANT','1');
 defined('WALLET_OFFICE') OR define('WALLET_OFFICE','2');
 defined('WALLET_GUEST') OR define('WALLET_GUEST','3');
 defined('OFFICE_WALLET_CAP') OR define('OFFICE_WALLET_CAP',7000);
+defined('JOB_PRIORITY_HIGH') OR define('JOB_PRIORITY_HIGH',1);
+defined('JOB_PRIORITY_MEDIUM') OR define('JOB_PRIORITY_MEDIUM',2);
+defined('JOB_PRIORITY_LOW') OR define('JOB_PRIORITY_LOW',3);

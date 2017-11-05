@@ -7,6 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @property Dashboard_Model $dashboard_model
  * @property Locations_Model $locations_model
  * @property Mugclub_Model $mugclub_model
+ * @property Maintenance_Model $maintenance_model
  */
 
 class Cron extends MY_Controller
@@ -18,6 +19,7 @@ class Cron extends MY_Controller
         $this->load->model('dashboard_model');
         $this->load->model('locations_model');
         $this->load->model('mugclub_model');
+        $this->load->model('maintenance_model');
     }
     public function index()
     {
@@ -1386,6 +1388,58 @@ class Cron extends MY_Controller
             }
         }
 
+    }
+    public function checkPostponeJobs()
+    {
+        $postJobs = $this->cron_model->getPostJobs();
+
+        if(isset($postJobs) && myIsArray($postJobs))
+        {
+            foreach($postJobs as $key => $row)
+            {
+                if($row['postpondDate'] == date('Y-m-d'))
+                {
+                    $details = array(
+                        'status' => LOG_STATUS_OPEN
+                    );
+                    $this->maintenance_model->updateComplaint($details,$row['complaintId']);
+                }
+            }
+        }
+
+        //If more than 48 hours
+        $openJobs = $this->maintenance_model->getOnlyOpenJobs();
+        if(isset($openJobs) && myIsArray($openJobs))
+        {
+            foreach($openJobs as $key => $row)
+            {
+                $oldTime = strtotime($row['lastUpdateDT']) + (2 * 24 * 60 * 60);
+                if($oldTime <= strtotime(date('Y-m-d H:i:s')))
+                {
+                    $subject = 'Job #'.$row['complaintId'].'-'.$row['locName'].' Pending Action';
+                    $content = '<html><body><p>No Update on Job #'.$row['complaintId'].'-'.$row['locName'].' has 
+                        been performed since 48 hours.</p></body></html>';
+
+                    $this->sendemail_library->sendEmail(array('mandar@brewcraftsindia.com','taronish@brewcraftsindia.com'),'saha@brewcraftsindia.com,anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+                        ,'admin@brewcraftsindia.com',$subject,$content,array());
+                }
+            }
+        }
+
+        //Closed Jobs
+        $closeJobs = $this->maintenance_model->getOnlyClosedJobs();
+        if(isset($closeJobs) && myIsArray($closeJobs))
+        {
+            $subject = 'List of closed jobs for date '.date('Y_m_d',strtotime('-1 day'));
+            $content = '<html><body><p>';
+            foreach($closeJobs as $key => $row)
+            {
+                $content .= 'Job #'.$row['complaintId'].'-'.$row['locName'].'<br>';
+            }
+            $content .= '</p></body></html>';
+            $this->sendemail_library->sendEmail(array('mandar@brewcraftsindia.com','taronish@brewcraftsindia.com'),'saha@brewcraftsindia.com,anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+                ,'admin@brewcraftsindia.com',$subject,$content,array());
+        }
     }
 
 }

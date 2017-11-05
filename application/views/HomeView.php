@@ -11,50 +11,15 @@
         <?php
             if(isSessionVariableSet($this->isUserSession) === true)
             {
-                if($this->userType == WALLET_USER)
-                {
-                    ?>
+                ?>
                 <div class="container-fluid">
                     <div class="row">
                         <h2 class="text-center">Welcome <?php echo ucfirst($this->userName); ?></h2>
                         <br>
                         <div class="col-sm-12 text-center">
                             <ul class="list-inline my-mainMenuList">
-                                <li>
-                                    <a href="<?php echo base_url() . 'wallet'; ?>">
-                                        <div class="menuWrap">
-                                            <i class="fa fa-money fa-2x"></i>
-                                            <br>
-                                            <span>Wallet Check</span>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo base_url() . 'empDetails'; ?>">
-                                        <div class="menuWrap">
-                                            <i class="fa fa-users fa-2x"></i>
-                                            <br>
-                                            <span>Wallet Users</span>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <?php
-                }
-                elseif($this->userType != OFFERS_USER)
-                {
-                    ?>
-                    <div class="container-fluid">
-                        <div class="row">
-                            <h2 class="text-center">Welcome <?php echo ucfirst($this->userName); ?></h2>
-                            <br>
-                            <div class="col-sm-12 text-center">
-                                <ul class="list-inline my-mainMenuList">
-                                    <?php
-                                    if($this->userType != SERVER_USER)
+                                <?php
+                                    if(myInArray('mug_portal',$userModules))
                                     {
                                         ?>
                                         <li>
@@ -66,6 +31,11 @@
                                                 </div>
                                             </a>
                                         </li>
+                                        <?php
+                                    }
+                                    if(myInArray('dashboard_report',$userModules))
+                                    {
+                                        ?>
                                         <li>
                                             <a href="<?php echo base_url().'dashboard';?>">
                                                 <div class="menuWrap">
@@ -75,6 +45,11 @@
                                                 </div>
                                             </a>
                                         </li>
+                                        <?php
+                                    }
+                                    if(myInArray('wallet_check',$userModules))
+                                    {
+                                        ?>
                                         <li>
                                             <a href="<?php echo base_url().'wallet';?>">
                                                 <div class="menuWrap">
@@ -84,117 +59,122 @@
                                                 </div>
                                             </a>
                                         </li>
-                                    <?php
-                                        if($this->userType == ROOT_USER)
-                                        {
-                                            ?>
-                                            <li>
-                                                <a href="<?php echo base_url() . 'empDetails'; ?>">
-                                                    <div class="menuWrap">
-                                                        <i class="fa fa-users fa-2x"></i>
-                                                        <br>
-                                                        <span>Wallet Users</span>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="<?php echo base_url() . 'twitterPage'; ?>">
-                                                    <div class="menuWrap">
-                                                        <i class="fa fa-twitter fa-2x"></i>
-                                                        <br>
-                                                        <span>Twitter Page</span>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                            <?php
-                                        }
+                                        <?php
                                     }
-                                    else
+                                    if(myInArray('wallet_users',$userModules))
                                     {
                                         ?>
                                         <li>
-                                            <a href="<?php echo base_url().'mugclub';?>">
+                                            <a href="<?php echo base_url() . 'empDetails'; ?>">
                                                 <div class="menuWrap">
-                                                    <i class="fa fa-beer fa-2x"></i>
+                                                    <i class="fa fa-users fa-2x"></i>
                                                     <br>
-                                                    <span>Mug Club</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="<?php echo base_url() . 'check-ins/add'; ?>">
-                                                <div class="menuWrap">
-                                                    <i class="fa fa-calendar-check-o fa-2x"></i>
-                                                    <br>
-                                                    <span>Check-Ins</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="<?php echo base_url() . 'offers/check'; ?>">
-                                                <div class="menuWrap">
-                                                    <i class="fa fa-trophy fa-2x"></i>
-                                                    <br>
-                                                    <span>Offers Check</span>
+                                                    <span>Wallet Users</span>
                                                 </div>
                                             </a>
                                         </li>
                                         <?php
-                                        if($this->userType == SERVER_USER)
+                                    }
+                                    if(myInArray('twitter_page',$userModules))
+                                    {
+                                        ?>
+                                        <li>
+                                            <a href="<?php echo base_url() . 'twitterPage'; ?>">
+                                                <div class="menuWrap">
+                                                    <i class="fa fa-twitter fa-2x"></i>
+                                                    <br>
+                                                    <span>Twitter Page</span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <?php
+                                    }
+
+                                    if(myInArray('maintenance',$userModules))
+                                    {
+                                        ?>
+                                        <li>
+                                            <a href="<?php echo base_url() . 'maintenance'; ?>">
+                                                <div class="menuWrap">
+                                                    <i class="fa fa-cogs fa-2x"></i>
+                                                    <br>
+                                                    <span>Maintenance</span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <?php
+                                    }
+
+                                    if($this->userType == SERVER_USER)
+                                    {
+                                        ?>
+                                        <?php
+                                        if(myInArray('mug_club',$userModules))
                                         {
                                             ?>
                                             <li>
-                                                <a href="<?php echo base_url().'wallet';?>">
+                                                <a href="<?php echo base_url().'mugclub';?>">
                                                     <div class="menuWrap">
-                                                        <i class="fa fa-money fa-2x"></i>
+                                                        <i class="fa fa-beer fa-2x"></i>
                                                         <br>
-                                                        <span>Wallet Check</span>
+                                                        <span>Mug Club</span>
                                                     </div>
                                                 </a>
                                             </li>
                                             <?php
                                         }
+                                        if(myInArray('checkins',$userModules))
+                                        {
+                                            ?>
+                                            <li>
+                                                <a href="<?php echo base_url() . 'check-ins/add'; ?>">
+                                                    <div class="menuWrap">
+                                                        <i class="fa fa-calendar-check-o fa-2x"></i>
+                                                        <br>
+                                                        <span>Check-Ins</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <?php
+                                        }
+                                        if(myInArray('offers_check',$userModules))
+                                        {
+                                            ?>
+                                            <li>
+                                                <a href="<?php echo base_url() . 'offers/check'; ?>">
+                                                    <div class="menuWrap">
+                                                        <i class="fa fa-trophy fa-2x"></i>
+                                                        <br>
+                                                        <span>Offers Check</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <?php
+                                        }
+
+                                        ?>
+                                        <?php
                                     }
-                                    ?>
-                                    <!--<li>
-                                        <a href="<?php /*echo base_url().'maintenance';*/?>">
-                                            <div class="menuWrap">
-                                                <i class="fa fa-cogs fa-2x"></i>
-                                                <br>
-                                                <span>Maintenance</span>
-                                            </div>
-                                        </a>
-                                    </li>-->
-                                </ul>
-                            </div>
+                                    elseif($this->userType == OFFERS_USER)
+                                    {
+                                        ?>
+                                        <li>
+                                            <a href="<?php echo base_url() . 'offers'; ?>">
+                                                <div class="menuWrap">
+                                                    <i class="fa fa-trophy fa-2x"></i>
+                                                    <br>
+                                                    <span>Offers Page</span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <?php
+                                    }
+                                ?>
+                            </ul>
                         </div>
                     </div>
-                    <?php
-                }
-                else
-                {
-                    ?>
-                    <div class="container-fluid">
-                        <div class="row">
-                            <h2 class="text-center">Welcome <?php echo ucfirst($this->userName); ?></h2>
-                            <br>
-                            <div class="col-sm-12 text-center">
-                                <ul class="list-inline my-mainMenuList">
-                                    <li>
-                                        <a href="<?php echo base_url() . 'offers'; ?>">
-                                            <div class="menuWrap">
-                                                <i class="fa fa-trophy fa-2x"></i>
-                                                <br>
-                                                <span>Offers Page</span>
-                                            </div>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <?php
-                }
+                </div>
+                <?php
             }
             else
             {

@@ -8,6 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @property Mugclub_Model $mugclub_model
  * @property Users_Model $users_model
  * @property  Locations_Model $locations_model
+ * @property Login_Model $login_model
  */
 
 class Dashboard extends MY_Controller {
@@ -20,6 +21,7 @@ class Dashboard extends MY_Controller {
         $this->load->model('mugclub_model');
         $this->load->model('users_model');
         $this->load->model('locations_model');
+        $this->load->model('login_model');
         ini_set('memory_limit', "256M");
         ini_set('upload_max_filesize', "50M");
     }
@@ -33,6 +35,12 @@ class Dashboard extends MY_Controller {
         }
 
 		$data = array();
+
+        if(isSessionVariableSet($this->userId))
+        {
+            $rols = $this->login_model->getUserRoles($this->userId);
+            $data['userModules'] = explode(',',$rols['modulesAssigned']);
+        }
 
         $locArray = $this->locations_model->getAllLocations();
         $data['locations'] = $locArray;
@@ -1405,6 +1413,7 @@ class Dashboard extends MY_Controller {
             echo json_encode($data);
             return false;
         }
+
         $events = $this->dashboard_model->getEventById($eventId);
         $highId = $this->dashboard_model->getEventHighRecord($eventId);
         $details = array(
@@ -1720,17 +1729,22 @@ class Dashboard extends MY_Controller {
                     'doolallyFee' => $post['doolallyFee']
                 );
             }
+
         }
+
         $this->dashboard_model->updateEventRecord($postData,$eventId);
+
         $eventDetails = $this->dashboard_model->getFullEventInfoById($eventId);
         $externalAPIData = $eventDetails[0];
         // Instamojo Section Start
+
         /*$instaLinkFailed = false;
         if(isset($eventDetails[0]['instaSlug']) && isStringSet($eventDetails[0]['instaSlug']))
         {
             //Deleting old link
             $this->curl_library->archiveInstaLink($eventDetails[0]['instaSlug']);
         }
+
         // Getting image upload url from api;
         $instaImgLink = $this->curl_library->getInstaImageLink();
         $donePost = array();
@@ -1793,6 +1807,7 @@ class Dashboard extends MY_Controller {
             }
             $donePost = $this->curl_library->createInstaLink($postData);
         }
+
         $instaUpLink = array();
         if(isset($donePost['link']))
         {
@@ -1806,13 +1821,16 @@ class Dashboard extends MY_Controller {
                 $instaUpLink['eventPaymentLink'] = $donePost['link']['url'];
                 $instaUpLink['instaSlug'] = $donePost['link']['slug'];
             }
+
             $this->dashboard_model->updateEventRecord($instaUpLink,$eventId);
         }
         else
         {
             $instaLinkFailed = true;
         }*/
+
         //Instamojo Section End
+
         // Editing the event at meetup
         $meetupRecord = $this->dashboard_model->getMeetupRecord($eventId);
         if(isset($meetupRecord) && myIsArray($meetupRecord))
@@ -1823,10 +1841,12 @@ class Dashboard extends MY_Controller {
         {
             $meetupResponse = $this->meetMeUp($externalAPIData, $eventId);
         }
+
         if($meetupResponse['status'] === false)
         {
             $data['meetupError'] = $meetupResponse['errorMsg'];
         }
+
         //Checking any eventsHigh record in DB for corresponding event
         $eventHighRecord = $this->dashboard_model->getEventHighRecord($eventId);
         if(isset($eventHighRecord) && myIsArray($eventHighRecord))
@@ -1835,6 +1855,7 @@ class Dashboard extends MY_Controller {
         }
         $data['apiData'] = $externalAPIData;
         $data['status']= true;
+
         echo json_encode($data);
     }
 
@@ -1849,6 +1870,7 @@ class Dashboard extends MY_Controller {
             echo json_encode($data);
             return false;
         }
+
         if(isset($post['costType']) && $post['costType'] != '')
         {
             if($post['costType'] == '1')
@@ -1890,6 +1912,7 @@ class Dashboard extends MY_Controller {
             );
             $this->dashboard_model->updateEditRecord($upDetail,$editRecord['id']);
         }
+
         $eventDetail = $this->dashboard_model->getFullEventInfoById($eventId);
         $externalAPIData = $eventDetail[0];
         if(isset($post['from']) && isStringSet($post['from'])
@@ -1898,6 +1921,7 @@ class Dashboard extends MY_Controller {
             $eventDetail['fromEmail'] = $post['from'];
             $eventDetail['fromPass'] = $post['fromPass'];
         }
+
         if(isset($eventDetail[0]['eventPaymentLink']) && isStringSet($eventDetail[0]['eventPaymentLink']))
         {
             $this->dashboard_model->ApproveEvent($eventId);
@@ -1911,6 +1935,7 @@ class Dashboard extends MY_Controller {
             $eventDetail['senderName'] = $senderName;
             $eventDetail['senderEmail'] = $senderEmail;
             $eventDetail['eventStatus'] = $eventStatus;
+
             $this->sendemail_library->eventApproveMail($eventDetail);
         }
         else
@@ -1937,6 +1962,7 @@ class Dashboard extends MY_Controller {
                     $donePost = $this->curl_library->createInstaLink($postData);
                 }
             }
+
             if(!myIsMultiArray($donePost))
             {
                 if($eventDetail[0]['costType'] == EVENT_FREE)
@@ -1981,6 +2007,7 @@ class Dashboard extends MY_Controller {
             $eventDetail['senderEmail'] = $senderEmail;
             $eventDetail['eventStatus'] = $eventStatus;
             $this->sendemail_library->eventApproveMail($eventDetail);
+
             /*if(isset($donePost['link']))
             {
                 if(isset($donePost['link']['shorturl']))
@@ -1997,8 +2024,10 @@ class Dashboard extends MY_Controller {
                         'instaSlug' => $donePost['link']['slug']
                     );
                 }
+
             }*/
         }
+
         //Sending mails if event date is Modified!
         if(isset($editRecord) && myIsArray($editRecord))
         {
@@ -2012,6 +2041,7 @@ class Dashboard extends MY_Controller {
                     'costType' => $externalAPIData['costType'],
                     'eventPlace' => $externalAPIData['eventPlace']
                 );
+
                 $allAttendees = $this->dashboard_model->getJoinersInfo($eventId);
                 if(isset($allAttendees) && myIsArray($allAttendees))
                 {
@@ -2024,6 +2054,8 @@ class Dashboard extends MY_Controller {
                 }
             }
         }
+
+
         // Editing the event at meetup
         $meetupRecord = $this->dashboard_model->getMeetupRecord($eventId);
         if(isset($meetupRecord) && myIsArray($meetupRecord))
@@ -2147,6 +2179,7 @@ class Dashboard extends MY_Controller {
     {
         $post = $this->input->post();
         $data = array();
+
         if($post['status'] == 'error')
         {
             $postData = array(
@@ -2325,6 +2358,7 @@ class Dashboard extends MY_Controller {
             $data['joinData'] = $this->dashboard_model->getDoolallyJoinersInfo($eventId);
             $data['EHData'] = $this->dashboard_model->getEhJoinersInfo($eventId);
         }
+
         echo json_encode($data);
     }
 
@@ -2336,6 +2370,7 @@ class Dashboard extends MY_Controller {
         {
             $this->curl_library->disableEventsHigh($eventHighRecord['highId']);
         }
+
         //Creating new Instamojo link also
         /*if(isset($eventDetails[0]['instaSlug']) && isStringSet($eventDetails[0]['instaSlug']))
         {
@@ -2351,6 +2386,7 @@ class Dashboard extends MY_Controller {
         {
             $abc = $this->curl_library->enableEventsHigh($eventHighRecord['highId']);
         }
+
         /*$instaImgLink = $this->curl_library->getInstaImageLink();
         $donePost = array();
         if($instaImgLink['success'] === true)
@@ -2373,6 +2409,7 @@ class Dashboard extends MY_Controller {
                 $donePost = $this->curl_library->createInstaLink($postData);
             }
         }
+
         if(!myIsMultiArray($donePost))
         {
             if($eventDetails[0]['costType'] == EVENT_FREE)
@@ -2405,6 +2442,7 @@ class Dashboard extends MY_Controller {
             }
             $donePost = $this->curl_library->createInstaLink($postData);
         }
+
         if(isset($donePost['link']))
         {
             if(isset($donePost['link']['shorturl']))

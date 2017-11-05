@@ -15,6 +15,7 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>asset/js/doolally-local-session.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>asset/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>asset/js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>asset/js/jquery.timeago.js"></script>
 
 <!-- constants -->
 <script>
