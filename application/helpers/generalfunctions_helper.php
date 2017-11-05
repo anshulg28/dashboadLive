@@ -305,12 +305,6 @@ if(!function_exists('getExtraCCEmail'))
             case 'anuja@brewcraftsindia.com':
                 $ccMail = 'priyanka@brewcraftsindia.com';
                 break;
-            case 'shweta@brewcraftsindia.com':
-                $ccMail = 'neha@brewcraftsindia.com';
-                break;
-            case 'neha@brewcraftsindia.com':
-                $ccMail = 'shweta@brewcraftsindia.com';
-                break;
         }
         return $ccMail;
     }

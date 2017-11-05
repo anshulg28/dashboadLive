@@ -1372,19 +1372,20 @@ class Cron extends MY_Controller
             fclose($file1);
             $content = '<html><body><p>Monthly Employee Expenditure Report<br>PFA</p></body></html>';
 
-            $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com','savio@brewcraftsindia.com','amit@brewcraftsindia.com','pranjal.rathi@rubycapital.net'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
-                ,'admin@brewcraftsindia.com','Employee Monthly Report '.date('d_M_Y'),$content,array("./uploads/monthly_wallet_detail_transactions_".date('d_M_Y').".csv",
-                    "./uploads/monthly_wallet_usage_".date('d_M_Y').".csv"));
+            $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com','savio@brewcraftsindia.com','amit@brewcraftsindia.com','taronish@brewcraftsindia.com','pranjal.rathi@rubycapital.net'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+                ,'admin@brewcraftsindia.com','Staff wallet usage report '.date('m_Y', strtotime('-1 month')),$content,array("./uploads/monthly_wallet_detail_transactions_".date('m_Y', strtotime('-1 month')).".csv",
+                    "./uploads/monthly_wallet_usage_".date('m_Y', strtotime('-1 month')).".csv"));
             try
             {
-                unlink("./uploads/monthly_wallet_detail_transactions_".date('d_M_Y').".csv");
-                unlink("./uploads/monthly_wallet_usage_".date('d_M_Y').".csv");
+                unlink("./uploads/monthly_wallet_detail_transactions_for_".date('m_Y', strtotime('-1 month')).".csv");
+                unlink("./uploads/monthly_wallet_usage_for_".date('m_Y', strtotime('-1 month')).".csv");
             }
             catch(Exception $ex)
             {
 
             }
         }
+
     }
 
 }

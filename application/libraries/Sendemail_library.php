@@ -881,6 +881,11 @@ class Sendemail_library
             $errorMsg = $ex->getMessage();
         }
 
+        if(is_array($to))
+        {
+            $to = implode(',',$to);
+        }
+
 
         $logDetails = array(
             'messageId' => $message->getId(),

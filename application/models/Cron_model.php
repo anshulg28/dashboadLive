@@ -254,7 +254,7 @@ class Cron_Model extends CI_Model
     function getAllActiveEmps()
     {
         $query = "SELECT id,empId,firstName,middleName,lastName,walletBalance,userType, mobNum, insertedDT
-                    FROM `staffmaster` WHERE ifActive = 1 AND (NOT empId LIKE '%GUEST%') ";
+                    FROM `staffmaster` WHERE ifActive = 1 ";
         $result = $this->db->query($query)->result_array();
         return $result;
     }

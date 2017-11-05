@@ -142,8 +142,7 @@
                     }
                     else if(data.offerType == 'Workshop')
                     {
-                        bootbox.alert('<label class="my-success-text">Valid for One Beer<span class="my-danger-text"> OR </span>' +
-                            'Drink & Garlic Bread<span class="my-danger-text"> OR </span>House Fries. </label>', function(){
+                        bootbox.alert('<label class="my-success-text">Valid for F&B upto Rs.300</label>', function(){
                             redeemOffer(offerPrifix, finalCode, offerUrl);
                         });
                     }
@@ -201,8 +200,7 @@
                             }
                             else if(data.offerType == 'Workshop')
                             {
-                                bootbox.alert('<label class="my-success-text">Congrats, you are eligible for 330ml Beer! Mug Club members get 500ml' +
-                                    '<span class="my-danger-text"> OR </span>Drink & Garlic Bread<span class="my-danger-text"> OR </span>House Fires </label>');
+                                bootbox.alert('<label class="my-success-text">Congrats, you are eligible to redeem F&B upto Rs.300 (Mug Club members get 500ml if you redeem beer)</label>');
                             }
                             else
                             {

@@ -2045,6 +2045,11 @@ class Dashboard extends MY_Controller {
         {
             $externalAPIData['highId'] = $eventHighRecord['highId'];
         }
+        $comCheck = $this->dashboard_model->commEventCheck($externalAPIData['creatorEmail']);
+        if(isset($comCheck) && myIsArray($comCheck))
+        {
+            $externalAPIData['creatorPhone'] = DEFAULT_EVENTS_NUMBER;
+        }
         $data['apiData'] = $externalAPIData;
         echo json_encode($data);
     }

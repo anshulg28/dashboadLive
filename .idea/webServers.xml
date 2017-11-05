@@ -10,6 +10,14 @@
           <option name="port" value="22" />
         </fileTransfer>
       </webServer>
+      <webServer id="0247c7b5-ea81-4e29-9273-f0c7879c1fd4" name="live dash" url="http://doolally.io">
+        <fileTransfer host="doolally.io" port="22" privateKey="F:\Tech softs\doolProd.ppk" accessType="SFTP" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
     </option>
   </component>
 </project>
