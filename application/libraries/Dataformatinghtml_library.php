@@ -52,6 +52,13 @@ class Dataformatinghtml_library
     }
     public function getHeaderHtml($data)
     {
+        $this->CI->load->model('login_model');
+        if(isSessionVariableSet($this->CI->userId))
+        {
+            $rols = $this->CI->login_model->getUserRoles($this->CI->userId);
+            $data['userModules'] = explode(',',$rols['modulesAssigned']);
+        }
+
         $htmlPage = $this->CI->load->view('HeaderView', $data, true);
         return $htmlPage;
     }

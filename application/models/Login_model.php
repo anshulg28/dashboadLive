@@ -239,7 +239,7 @@ class Login_Model extends CI_Model
     {
         $query = "SELECT * "
             ."FROM doolally_usersmaster "
-            ."where userType IN(0,1,2,3,5,6)";
+            ."where userType IN(0,1,2,3,5,6,7,8,9,10)";
 
         $result = $this->db->query($query)->result_array();
 

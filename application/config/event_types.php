@@ -109,7 +109,13 @@ $config['defaultRoles'] = array(
         'dashboard_beerolympics',
         'wallet_check',
         'wallet_users',
-        'twitter_page'
+        'twitter_page',
+        'maintenance',
+        'maintenance_complaint',
+        'maintenance_logview',
+        'maintenance_workarea',
+        'maintenance_worktype',
+        'maintenance_useradd'
     ),
     ADMIN_USER => array(
         'mug_portal',
@@ -186,6 +192,16 @@ $config['defaultRoles'] = array(
         'maintenance',
         'maintenance_complaint',
         'maintenance_logview'
+    ),
+    FINANCE_APPROVER => array(
+        'maintenance',
+        'maintenance_logview'
     )
 
+);
+$config['payTypes'] = array(
+    'Happay Cash',
+    'Cash',
+    'NEFT/RTGS',
+    'Maintenance Balance'
 );
