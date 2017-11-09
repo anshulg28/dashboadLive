@@ -38,7 +38,7 @@ class Cron_Model extends CI_Model
     public function getAllFeeds()
     {
         $query = "SELECT * "
-            ."FROM socialfeedmaster";
+            . "FROM socialfeedmaster WHERE feedType IN(1,2,3)";
 
         $result = $this->db->query($query)->result_array();
 
@@ -95,6 +95,25 @@ class Cron_Model extends CI_Model
         $this->db->insert_batch('socialviewmaster', $details);
         return true;
     }
+    function insertTempFeedBatch($details)
+    {
+        $this->db->insert_batch('socialviewtempmaster', $details);
+        return true;
+    }
+    public function insertNewFeedsBatch($details)
+    {
+        $this->db->insert_batch('socialdemomaster', $details);
+        return true;
+    }
+
+    function getTempFeedView()
+    {
+        $query = "SELECT feedId,feedText,updateDateTime FROM socialviewtempmaster";
+        $result = $this->db->query($query)->result_array();
+
+        return $result;
+    }
+
     public function getTopViewFeed()
     {
         $query = "SELECT * "
@@ -118,6 +137,11 @@ class Cron_Model extends CI_Model
     {
         $this->db->truncate('socialviewmaster');
     }
+    public function clearTempViewFeeds()
+    {
+        $this->db->truncate('socialviewtempmaster');
+    }
+
     public function getLastMainFeed()
     {
         $query = "SELECT * FROM socialfeedmaster WHERE feedType = 0 ORDER BY id DESC LIMIT 1";
@@ -126,6 +150,14 @@ class Cron_Model extends CI_Model
 
         return $result;
     }
+
+    function getAllErrorFeeds()
+    {
+        $query = "SELECT feedText FROM socialfeedmaster WHERE feedType = 0";
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+
 
     public function getMoreLatestFeeds($count)
     {

@@ -271,7 +271,7 @@ input::-webkit-inner-spin-button {
     margin: 5px;
     padding: 10px;
 }
-.homePage .loginpin-list li , .pinChange .loginpin-list li
+.homePage .loginpin-list li , .pinChange .loginpin-list li, .loginPage .loginpin-list li
 {
     width:45px;
 }
@@ -470,6 +470,51 @@ input::-webkit-inner-spin-button {
     color:#337ab7;
     font-weight: bold;
     font-size:20px;
+}
+.breakfast-icons-holder li>input,
+.beer-icons-holder li>input
+{
+    display:none;
+}
+.breakfast-icons-holder li>label,
+.beer-icons-holder li>label
+{
+    cursor: pointer;
+    border: 1px solid #ccc;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 0 5px #ccc;
+    -moz-box-shadow: 0 0 5px #ccc;
+    box-shadow: 0 0 5px #ccc;
+    margin: 20px;
+    padding: 20px;
+    text-align: center;
+}
+.breakfast-icons-holder li>label.item-disabled,
+.beer-icons-holder li>label.item-disabled
+{
+    background-color:#ccc;
+    position: relative;
+}
+.breakfast-icons-holder li>label.item-disabled .overlay,
+.beer-icons-holder li>label.item-disabled .overlay
+{
+    position: absolute;
+    top:0;
+    left:0;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    width:100%;
+    height:100%;
+    background:rgba(255,255,255,0.6);
+    padding-top:50%;
+}
+.breakfast-icons-holder li input[type="checkbox"]:checked +label, .beer-icons-holder li input[type="checkbox"]:checked +label
+{
+    color: #A2C760;
+    border: 2px solid #A2C760;
 }
 .dashboard nav{
     margin-bottom:0;

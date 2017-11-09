@@ -648,7 +648,7 @@ class Dashboard_Model extends CI_Model
     }
     public function getJoinersInfo($eventId)
     {
-        $query = "SELECT um.firstName, um.lastName, um.emailId, um.mobNum, erm.paymentId, erm.quantity, erm.createdDT, erm.isDirectlyRegistered
+        $query = "SELECT um.firstName, um.lastName, um.emailId, um.mobNum, erm.paymentId, erm.quantity, erm.createdDT, erm.isDirectlyRegistered, erm.regPrice
                   FROM eventregistermaster erm
                   LEFT JOIN doolally_usersmaster um ON um.userId = erm.bookerUserId
                   WHERE erm.isUserCancel != 1 AND erm.eventId = $eventId ORDER BY erm.createdDT DESC";
@@ -677,6 +677,27 @@ class Dashboard_Model extends CI_Model
 
         $result = $this->db->query($query)->result_array();
 
+        return $result;
+    }
+    function getCancelList($eventId)
+    {
+        $query = "SELECT um.firstName, um.lastName, um.emailId, um.mobNum, erm.paymentId, erm.quantity, erm.createdDT,erm.isDirectlyRegistered
+                  FROM eventregistermaster erm
+                  LEFT JOIN doolally_usersmaster um ON um.userId = erm.bookerUserId
+                  WHERE erm.isUserCancel = 1 AND erm.eventId = $eventId ORDER BY erm.createdDT DESC";
+
+        $result = $this->db->query($query)->result_array();
+
+        return $result;
+    }
+    function getReminderList($eventId)
+    {
+        $query = "SELECT erm.emailId, erm.insertedDT
+                FROM eventremindermaster erm
+                WHERE erm.eventId = ".$eventId." AND erm.emailId NOT IN (SELECT dum.emailId FROM eventregistermaster ergm
+                LEFT JOIN doolally_usersmaster dum ON ergm.bookerUserId = dum.userId
+                WHERE ergm.eventId = ".$eventId.")";
+        $result = $this->db->query($query)->result_array();
         return $result;
     }
     public function ApproveEvent($eventId)
@@ -1521,6 +1542,19 @@ class Dashboard_Model extends CI_Model
     public function saveSmsWall($details)
     {
         $this->db->insert('smsreceivemaster', $details);
+        return true;
+    }
+    function getOrgCoupon($eventId)
+    {
+        $query = "SELECT * FROM offersmaster WHERE offerType != 'Workshop' AND isOrganiser = 1 AND offerEvent = ".$eventId;
+        $result = $this->db->query($query)->row_array();
+
+        return $result;
+    }
+    function updateOfferCode($details,$offerId)
+    {
+        $this->db->where('id',$offerId);
+        $this->db->update('offersmaster',$details);
         return true;
     }
 }

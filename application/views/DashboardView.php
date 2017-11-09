@@ -998,6 +998,10 @@
                                                                 {
                                                                     $imgs[] = MOBILE_URL.EVENT_PATH_THUMB.$attrow['filename'];
                                                                 }
+                                                                if(isset($row['eventData']['verticalImg']))
+                                                                {
+                                                                    $imgs[] = MOBILE_URL.EVENT_PATH_THUMB.$row['eventData']['verticalImg'];
+                                                                }
                                                                 ?>
                                                                 <a class="view-photos" data-toggle="tooltip" title="View Photos" href="#" data-imgs="<?php echo implode(',',$imgs);?>">
                                                                     <i class="fa fa-15x fa-file-image-o my-success-text"></i></a>
@@ -1827,7 +1831,7 @@
                     <h4 class="modal-title">Signup List for <b><span class="eventName"></span></b></h4>
                     <div class="signup-for-download hide"></div>
                 </div>
-                <div class="modal-body text-center signup-tab">
+                <div class="modal-body text-center signup-tab" style="overflow:auto">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary exportToExcel hide" onclick="exporttocsv()">Export To Excel</button>
@@ -3629,7 +3633,7 @@
                             tblHtml += '<td>'+formatJsDate(data.joinData[i].createdDT)+'</td>';
                             tblHtml += '</tr>';
                         }
-                        if(typeof data.EHData === 'undefined')
+                        if(typeof data.EHData === 'undefined' && typeof data.reminderData === 'undefined')
                         {
                             downTbl += '</tbody></table>';
                             $('#peopleView-modal .signup-for-download').html(downTbl);
@@ -3669,11 +3673,96 @@
                             tblHtml1 += '<td>'+formatJsDate(data.EHData[j].createdDT)+'</td>';
                             tblHtml1 += '</tr>';
                         }
-                        downTbl += '</tbody></table>';
+                        if(typeof data.canData === 'undefined')
+                        {
+                            downTbl += '</tbody></table>';
+                            $('#peopleView-modal .signup-for-download').html(downTbl);
+                        }
                         tblHtml1 += '</tbody></table>';
-                        $('#peopleView-modal .signup-for-download').html(downTbl);
                         $('#peopleView-modal .modal-body').append(tblHtml1);
+                    }
+                    else
+                    {
+                        $('#peopleView-modal .modal-body').append('No Sign ups');
+                    }
 
+                    $('#peopleView-modal .modal-body').append('<p class="alert-info">Cancel List</p>');
+                    if(typeof data.canData !== 'undefined' && data.canData != null && data.canData.length != 0)
+                    {
+                        var tblHtml3 = '<table class="table table-striped">';
+                        downTbl += '<tr><th>Cancel List</th></tr>';
+                        tblHtml3 += '<thead><tr><th>Name</th><th>Email</th><th>Mobile Number</th><th>Quantity</th><th>Gateway</th><th>Signup Date/time</th>';
+                        tblHtml3 += '</tr></thead><tbody>';
+                        for(var l=0;l<data.canData.length;l++)
+                        {
+                            downTbl += '<tr>';
+                            downTbl += '<td>'+data.canData[l].firstName+' '+data.canData[l].lastName+'</td>';
+                            downTbl += '<td>'+data.canData[l].emailId+'</td>';
+                            downTbl += '<td>'+data.canData[l].mobNum+'</td>';
+                            downTbl += '<td>'+data.canData[l].quantity+'</td>';
+                            if(data.canData[l].isDirectlyRegistered == '1')
+                            {
+                                downTbl += '<td>Doolally</td>';
+                            }
+                            else
+                            {
+                                downTbl += '<td>Eventshigh</td>';
+                            }
+                            downTbl += '<td>'+formatJsDate(data.canData[l].createdDT)+'</td>';
+                            downTbl += '</tr>';
+
+                            tblHtml3 += '<tr>';
+                            tblHtml3 += '<td>'+data.canData[l].firstName+' '+data.canData[l].lastName+'</td>';
+                            tblHtml3 += '<td>'+data.canData[l].emailId+'</td>';
+                            tblHtml3 += '<td>'+data.canData[l].mobNum+'</td>';
+                            tblHtml3 += '<td>'+data.canData[l].quantity+'</td>';
+                            if(data.canData[l].isDirectlyRegistered == '1')
+                            {
+                                tblHtml3 += '<td>Doolally</td>';
+                            }
+                            else
+                            {
+                                tblHtml3 += '<td>Eventshigh</td>';
+                            }
+                            tblHtml3 += '<td>'+formatJsDate(data.canData[l].createdDT)+'</td>';
+                            tblHtml3 += '</tr>';
+                        }
+                        if(typeof data.reminderData === 'undefined')
+                        {
+                            downTbl += '</tbody></table>';
+                            $('#peopleView-modal .signup-for-download').html(downTbl);
+                        }
+                        tblHtml3 += '</tbody></table>';
+                        $('#peopleView-modal .modal-body').append(tblHtml3);
+                    }
+                    else
+                    {
+                        $('#peopleView-modal .modal-body').append('No Cancel List');
+                    }
+
+                    $('#peopleView-modal .modal-body').append('<p class="alert-info">Events Reminders</p>');
+                    if(typeof data.reminderData !== 'undefined' && data.reminderData != null && data.reminderData.length != 0)
+                    {
+                        var tblHtml2 = '<table class="table table-striped">';
+                        downTbl += '<tr><th>Events Reminders</th></tr>';
+                        tblHtml2 += '<thead><tr><th>Email</th><th>Signup Date/time</th>';
+                        tblHtml2 += '</tr></thead><tbody>';
+                        for(var k=0;k<data.reminderData.length;k++)
+                        {
+                            downTbl += '<tr>';
+                            downTbl += '<td>'+data.reminderData[k].emailId+'</td>';
+                            downTbl += '<td>'+formatJsDate(data.reminderData[k].insertedDT)+'</td>';
+                            downTbl += '</tr>';
+
+                            tblHtml2 += '<tr>';
+                            tblHtml2 += '<td>'+data.reminderData[k].emailId+'</td>';
+                            tblHtml2 += '<td>'+formatJsDate(data.reminderData[k].insertedDT)+'</td>';
+                            tblHtml2 += '</tr>';
+                        }
+                        downTbl += '</tbody></table>';
+                        $('#peopleView-modal .signup-for-download').html(downTbl);
+                        tblHtml2 += '</tbody></table>';
+                        $('#peopleView-modal .modal-body').append(tblHtml2);
                     }
                     else
                     {

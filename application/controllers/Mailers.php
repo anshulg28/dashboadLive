@@ -306,7 +306,7 @@ class Mailers extends MY_Controller {
                     $mainBody .= $body .'</body></html>';
                     $newBody = $mainBody;
                 }
-
+                $cc        = implode(',',$this->config->item('ccList'));
                 $fromName  = 'Doolally';
                 if(isset($this->userFirstName))
                 {

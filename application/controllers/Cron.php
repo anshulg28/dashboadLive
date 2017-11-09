@@ -26,7 +26,7 @@ class Cron extends MY_Controller
         $this->load->view('Page404View');
     }
 
-        public function feedsFetch()
+    public function feedsFetch()
     {
 
         $twitter = $this->getTwitterFeeds();
@@ -38,58 +38,61 @@ class Cron extends MY_Controller
         if(myIsArray($facebook))
         {
             //facebook
-            $fbData = $this->cron_model->checkFeedByType("1");
+            //$fbData = $this->cron_model->checkFeedByType("1");
 
             $fbPost = array(
                 'feedText' => json_encode($facebook),
                 'feedType' => '1'
             );
-            if($fbData['status'] === true)
+            $this->cron_model->updateFeedByType($fbPost,"1");
+            /*if($fbData['status'] === true)
             {
                 $this->cron_model->updateFeedByType($fbPost,"1");
             }
             else
             {
                 $this->cron_model->insertFeedByType($fbPost);
-            }
+            }*/
         }
 
         if(myIsArray($twitter))
         {
             //twitter
-            $fbData = $this->cron_model->checkFeedByType("2");
+            //$fbData = $this->cron_model->checkFeedByType("2");
 
             $fbPost = array(
                 'feedText' => json_encode($twitter),
                 'feedType' => '2'
             );
-            if($fbData['status'] === true)
+            $this->cron_model->updateFeedByType($fbPost, "2");
+            /*if($fbData['status'] === true)
             {
                 $this->cron_model->updateFeedByType($fbPost, "2");
             }
             else
             {
                 $this->cron_model->insertFeedByType($fbPost);
-            }
+            }*/
         }
 
         if(myIsArray($instagram))
         {
             //Instagram
-            $fbData = $this->cron_model->checkFeedByType("3");
+            //$fbData = $this->cron_model->checkFeedByType("3");
 
             $fbPost = array(
                 'feedText' => json_encode($instagram),
                 'feedType' => '3'
             );
-            if($fbData['status'] === true)
+            $this->cron_model->updateFeedByType($fbPost, "3");
+            /*if($fbData['status'] === true)
             {
                 $this->cron_model->updateFeedByType($fbPost, "3");
             }
             else
             {
                 $this->cron_model->insertFeedByType($fbPost);
-            }
+            }*/
         }
 
         $this->storeAllFeeds();
@@ -504,10 +507,11 @@ class Cron extends MY_Controller
             }
 
             $allFeeds = $this->sortNjoin($twitter,$instagram, $facebook);
+            $this->splitAndStoreFeeds($allFeeds);
         }
 
         //$this->firstTimeFunc($allFeeds);
-        $this->splitAndStoreFeeds($allFeeds);
+
         /*$firstHalf = array_slice($allFeeds,0,20,true);
         $secondHalf = array_slice($allFeeds,20,count($allFeeds),true);*/
 
@@ -603,16 +607,43 @@ class Cron extends MY_Controller
 
     function splitAndStoreFeeds($allFeeds)
     {
+
         $topFeed = $this->cron_model->getAllViewFeeds();
+        $lastMainFeed = $this->cron_model->getLastMainFeed();
 
         $viewIds= array();
         foreach($topFeed as $key => $row)
         {
             $viewIds[] = $row['feedId'];
         }
+        if(isset($lastMainFeed) && myIsArray($lastMainFeed))
+        {
+            $moreIds = json_decode($lastMainFeed['feedText'],TRUE);
+            foreach($moreIds as $key => $row)
+            {
+                if(gettype($row) == 'string')
+                {
+                    $row = json_decode($row,TRUE);
+                }
+                switch($row['socialType'])
+                {
+                    case 'f':
+                        $viewIds[] = $row['id'];
+                        break;
+                    case 'i':
+                        $viewIds[] = $row['id'];
+                        break;
+                    case 't':
+                        $viewIds[] = $row['id_str'];
+                        break;
+                }
+            }
+        }
+
         $newFeeds = array();
         $newMainFeeds = array();
         $foundId = false;
+
         foreach($allFeeds as $key => $row)
         {
             switch($row['socialType'])
@@ -708,15 +739,65 @@ class Cron extends MY_Controller
             }
         }
 
-        if($foundId && myIsArray($newFeeds))
+        if(myIsArray($newFeeds))
         {
-            $mergedFeeds = array_merge($newFeeds,$topFeed);
-            $finalFeeds = array_slice($mergedFeeds,0,150);
-            $this->cron_model->clearViewFeeds();
-            $this->cron_model->insertFeedBatch($finalFeeds);
+            //Firstly append all new feeds to temp view table
+            $this->cron_model->insertTempFeedBatch($newFeeds);
+
+            //fetch all temp view feeds and check for following conditions
+            $tempFeeds = $this->cron_model->getTempFeedView();
+            if(isset($tempFeeds) && myIsArray($tempFeeds))
+            {
+                if(count($tempFeeds) > 150)
+                {
+                    //Dividing the temp view feeds
+                    $fixFeeds = array_slice($tempFeeds,0,150);
+                    $tempRemaining = array_slice($tempFeeds,150,(count($tempFeeds)-1));
+
+                    $finalFixFeeds = array();
+                    foreach($fixFeeds as $key => $row)
+                    {
+                        $finalFixFeeds[] = $row['feedText'];
+                    }
+                    //storing 150 chunk to data table
+                    $details = array(
+                        'feedText' => json_encode($finalFixFeeds),
+                        'feedType' => '0',
+                        'postsCount' => count($finalFixFeeds)
+                    );
+                    $this->cron_model->insertFeedByType($details);
+
+                    //flashing the temp view and main view
+                    $this->cron_model->clearTempViewFeeds();
+                    $this->cron_model->clearViewFeeds();
+
+                    //storing the remaining feeds to temp view and view table
+                    $this->cron_model->insertTempFeedBatch($tempRemaining);
+                    $this->cron_model->insertFeedBatch($tempRemaining);
+                }
+                elseif(count($tempFeeds) > 10)
+                {
+                    //Flash main view And replace with all temp view feeds
+                    $this->cron_model->clearViewFeeds();
+                    $this->cron_model->insertFeedBatch($tempFeeds);
+                }
+                else
+                {
+                    //Merge main view feeds and temp view feeds and upload to main view again
+                    $newMainViewFeeds = array_merge($newFeeds,$topFeed);
+                    $this->cron_model->clearViewFeeds();
+                    $this->cron_model->insertFeedBatch($newMainViewFeeds);
+                }
+            }
+
+
+            //$mergedFeeds = array_merge($newFeeds,$topFeed);
+            //$finalFeeds = array_slice($mergedFeeds,0,150);
+            //$this->cron_model->clearViewFeeds();
+            //$this->cron_model->insertFeedBatch($finalFeeds);
 
             //Fetch Main Feed
-            $mainFeed = $this->cron_model->getLastMainFeed();
+           /* $mainFeed = $this->cron_model->getLastMainFeed();
 
             $mainFeedRow = json_decode($mainFeed['feedText'],true);
             $mainFeedRow = array_merge($newMainFeeds,$mainFeedRow);
@@ -748,7 +829,7 @@ class Cron extends MY_Controller
                     'postsCount' => count($mainFeedRow)
                 );
                 $this->cron_model->updateFeedById($details,$mainFeed['id']);
-            }
+            }*/
 
         }
     }
@@ -799,6 +880,170 @@ class Cron extends MY_Controller
 
     }
 
+    public function fetchAllFeeds()
+    {
+        $allFeeds = $this->cron_model->getAllErrorFeeds();
+
+        if(isset($allFeeds) && myIsArray($allFeeds))
+        {
+            $finalFeeds = array();
+            foreach($allFeeds as $key => $row)
+            {
+                $finalFeeds[] = json_decode($row['feedText'],TRUE);
+            }
+
+            //var_dump($finalFeeds);
+            $combinedFeeds = array();
+            foreach($finalFeeds as $key => $row)
+            {
+                foreach($row as $subRow => $subKey)
+                {
+                    $subKey = json_encode($subKey);
+                    $combinedFeeds[] = json_decode($subKey,TRUE);
+                }
+            }
+
+            /*for($i=0;$i<count($combinedFeeds);$i++)
+            {
+                var_dump(gettype($combinedFeeds[$i]));
+                echo '<br>';
+            }*/
+            //echo json_encode($combinedFeeds);
+
+            usort($combinedFeeds,
+                function($a, $b) {
+                    $aNew = $a;
+                    $bNew = $b;
+                    if(gettype($a) == 'string')
+                    {
+                        $aNew = json_decode($a,TRUE);
+                    }
+                    if(gettype($b) == 'string')
+                    {
+                        $bNew = json_decode($b,TRUE);
+                    }
+                    $ts_a = strtotime($aNew['created_at']);
+                    $ts_b = strtotime($bNew['created_at']);
+
+                    return $ts_a > $ts_b;
+                }
+            );
+
+            $dupFeeds = array();
+            foreach($combinedFeeds as $key => $row)
+            {
+                if(gettype($row) == 'string')
+                {
+                    $row = json_decode($row,TRUE);
+                }
+                switch($row['socialType'])
+                {
+                    case 't':
+                        if(in_array($row['id_str'],$dupFeeds))
+                        {
+                            unset($combinedFeeds[$key]);
+                        }
+                        break;
+                    case 'i':
+                        if(in_array($row['id'],$dupFeeds))
+                        {
+                            unset($combinedFeeds[$key]);
+                        }
+                        break;
+                    case 'f':
+                        if(in_array($row['id'],$dupFeeds))
+                        {
+                            unset($combinedFeeds[$key]);
+                        }
+                        break;
+                }
+                switch($row['socialType'])
+                {
+                    case 't':
+                        $dupFeeds[] = $row['id_str'];
+                        break;
+                    case 'i':
+                        $dupFeeds[] = $row['id'];
+                        break;
+                    case 'f':
+                        $dupFeeds[] = $row['id'];
+                        break;
+                }
+            }
+
+            $fixedFeeds = array_values($combinedFeeds);
+
+            $upDates = array("2017-01-11 15:24:13","2017-01-15 15:14:15","2017-01-15 16:55:12","2017-01-20 14:15:11",
+                "2017-01-20 15:10:11","2017-01-27 14:15:10","2017-01-29 10:55:11","2017-02-03 14:15:10","2017-02-05 12:10:10",
+                "2017-02-10 14:20:09","2017-02-14 21:55:10","2017-02-17 14:15:11","2017-02-17 15:10:10","2017-02-24 14:10:09",
+                "2017-02-24 19:05:09","2017-03-03 13:40:10","2017-03-03 14:30:11","2017-03-10 13:55:10","2017-03-10 14:30:10",
+                "2017-03-17 14:10:09","2017-03-17 14:35:10","2017-03-24 14:05:10","2017-03-24 14:25:09","2017-03-29 21:10:10",
+                "2017-03-31 14:25:09","2017-04-03 15:55:11","2017-04-07 14:20:09","2017-04-08 22:20:08","2017-04-14 14:15:09",
+                "2017-04-14 18:40:09","2017-04-21 14:15:09","2017-04-21 15:45:09","2017-04-28 14:15:09","2017-04-29 19:35:12",
+                "2017-05-05 14:15:10","2017-05-06 20:20:10","2017-05-12 14:15:09","2017-05-15 01:40:09","2017-05-19 14:15:12",
+                "2017-05-20 06:15:14","2017-05-26 14:10:12","2017-05-28 00:40:13","2017-06-02 14:10:13","2017-06-02 15:15:13",
+                "2017-06-09 14:10:14","2017-06-09 15:15:14","2017-06-16 14:05:14","2017-06-16 14:30:15","2017-06-23 13:05:12",
+                "2017-06-23 14:30:13","2017-06-30 13:05:13","2017-06-30 14:30:14","2017-07-07 14:05:14","2017-07-07 15:05:14",
+                "2017-07-14 14:10:12","2017-07-14 15:00:12","2017-07-21 14:05:13","2017-07-21 14:50:13","2017-07-28 14:15:14",
+                "2017-07-29 15:40:13","2017-08-04 14:15:13","2017-08-04 15:25:13","2017-08-11 14:20:23","2017-08-14 15:05:18",
+                "2017-08-18 14:15:14","2017-08-19 21:30:14","2017-08-25 14:15:16","2017-08-26 21:10:15","2017-09-01 14:20:14",
+                "2017-09-02 18:10:13","2017-09-08 14:25:16","2017-09-13 23:30:17","2017-09-15 14:30:13","2017-09-20 15:05:16",
+                "2017-09-22 14:45:12","2017-09-29 14:10:13","2017-09-30 22:10:20","2017-10-06 14:20:12","2017-10-08 14:35:13",
+                "2017-10-13 14:20:13","2017-10-15 04:15:14","2017-10-20 14:20:11","2017-10-22 18:20:10","2017-10-27 14:20:32",
+                "2017-11-01 15:00:19","2017-11-03 14:31:42","2017-11-09 20:35:16");
+            $chunkArr = array_chunk($fixedFeeds, 150);
+            $saveArr = array();
+            for($i=0;$i<count($chunkArr);$i++)
+            {
+                $saveArr[] = array(
+                    'feedText' => json_encode($chunkArr[$i]),
+                    'feedType' => 0,
+                    'postsCount' => count($chunkArr[$i]),
+                    'updateDateTime' => $upDates[$i]
+                );
+            }
+            $this->cron_model->insertNewFeedsBatch($saveArr);
+            echo 'done';
+        }
+    }
+
+    public function transferToViewFeed()
+    {
+        $lastMainFeed = $this->cron_model->getLastMainFeed();
+
+        if(isset($lastMainFeed) && myIsArray($lastMainFeed))
+        {
+            $details = array();
+            $moreIds = json_decode($lastMainFeed['feedText'],TRUE);
+            foreach($moreIds as $key => $row)
+            {
+                if(gettype($row) == 'string')
+                {
+                    $row = json_decode($row,TRUE);
+                }
+                $viewId = '';
+                switch($row['socialType'])
+                {
+                    case 'f':
+                        $viewId = $row['id'];
+                        break;
+                    case 'i':
+                        $viewId = $row['id'];
+                        break;
+                    case 't':
+                        $viewId = $row['id_str'];
+                        break;
+                }
+                $details[] = array(
+                    'feedId' => $viewId,
+                    'feedText' => json_encode($row),
+                    'updateDateTime' => date('Y-m-d H:i:s')
+                );
+            }
+            $this->cron_model->insertFeedBatch($details);
+            $this->cron_model->insertTempFeedBatch($details);
+        }
+    }
     function creditMonthlyBalance()
     {
 
