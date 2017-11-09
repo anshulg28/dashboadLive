@@ -603,23 +603,16 @@ class Maintenance extends MY_Controller {
                 {
                     $post['venAddress'] = null;
                 }
-                if(!isset($post['venGst']))
-                {
-                    $post['venGst'] = null;
-                }
                 $details = array(
                     'vendorName' => $post['venName'],
                     'address' => $post['venAddress'],
-                    'bankAc' => $post['venBank'],
-                    'bankIfsc' => $post['venIfsc'],
-                    'bankName' => $post['venBName'],
                     'panCard' => $post['venPan'],
-                    'gstNum' => $post['venGst'],
+                    'bankCheque' => $post['bankCheque'],
                     'insertedDT' => date('Y-m-d H:i:s')
                 );
                 $this->maintenance_model->saveNewVendor($details);
                 $post['workAssignedTo'] = $post['venName'];
-                unset($post['venName'],$post['venAddress'],$post['venBank'],$post['venIfsc'],$post['venBName'],$post['venPan'],$post['venGst']);
+                unset($post['venName'],$post['venAddress'],$post['venPan'],$post['bankCheque']);
             }
 
             if(!$isVendorSaved)
@@ -630,11 +623,7 @@ class Maintenance extends MY_Controller {
                     {
                         $post['venAddress'] = null;
                     }
-                    if(!isset($post['venGst']))
-                    {
-                        $post['venGst'] = null;
-                    }
-                    unset($post['venName'],$post['venAddress'],$post['venBank'],$post['venIfsc'],$post['venBName'],$post['venPan'],$post['venGst']);
+                    unset($post['venName'],$post['venAddress'],$post['venPan'],$post['bankCheque']);
                 }
                 else
                 {
@@ -642,23 +631,16 @@ class Maintenance extends MY_Controller {
                     {
                         $post['venAddress'] = null;
                     }
-                    if(!isset($post['venGst']))
-                    {
-                        $post['venGst'] = null;
-                    }
                     $details = array(
                         'vendorName' => $post['venName'],
                         'address' => $post['venAddress'],
-                        'bankAc' => $post['venBank'],
-                        'bankIfsc' => $post['venIfsc'],
-                        'bankName' => $post['venBName'],
                         'panCard' => $post['venPan'],
-                        'gstNum' => $post['venGst'],
+                        'bankCheque' => $post['bankCheque'],
                         'insertedDT' => date('Y-m-d H:i:s')
                     );
                     $this->maintenance_model->saveNewVendor($details);
                     $post['workAssignedTo'] = $post['venName'];
-                    unset($post['venName'],$post['venAddress'],$post['venBank'],$post['venIfsc'],$post['venBName'],$post['venPan'],$post['venGst']);
+                    unset($post['venName'],$post['venAddress'],$post['venPan'],$post['bankCheque']);
                 }
             }
 
@@ -1577,5 +1559,67 @@ class Maintenance extends MY_Controller {
         }
         echo json_encode($data);
 
+    }
+
+    public function uploadVendorFiles()
+    {
+        $data = array();
+        if(isSessionVariableSet($this->isUserSession) === false)
+        {
+            $data['status'] = false;
+            $data['errorMsg'] = 'Session Timeout, Please Login Again!';
+            echo json_encode($data);
+            return false;
+        }
+        $attchmentArr = '';
+        $this->load->library('upload');
+        if(isset($_FILES))
+        {
+            if($_FILES['attachment']['error'] != 1)
+            {
+                $config = array();
+                $config['upload_path'] = '../dashboad/'.JOB_MEDIA_PATH; // FOOD_PATH_THUMB; //'uploads/food/';
+                $config['allowed_types'] = 'gif|jpg|png|jpeg';
+                $config['max_size']      = '0';
+                $config['overwrite']     = TRUE;
+
+                $this->upload->initialize($config);
+                if(!$this->upload->do_upload('attachment'))
+                {
+                    log_message('error','Upload: '.$this->upload->display_errors());
+                    $data['status'] = false;
+                    $data['errorMsg'] = $this->upload->display_errors();
+                    echo json_encode($data);
+                    return false;
+                }
+                else
+                {
+                    $upload_data = $this->upload->data();
+                    $attchmentArr= $this->image_thumb($upload_data['file_path'],$upload_data['file_name']);
+                    if($attchmentArr == 'error')
+                    {
+                        $data['status'] = false;
+                        $data['errorMsg'] = 'Error in resizing image!';
+                        echo json_encode($data);
+                        return false;
+                    }
+                    else
+                    {
+                        echo $attchmentArr;
+                    }
+                }
+            }
+            else
+            {
+                echo 'Some Error Occurred!';
+            }
+        }
+        else
+        {
+            $data['status'] = false;
+            $data['errorMsg'] = 'No Image File Received!';
+            echo json_encode($data);
+            return false;
+        }
     }
 }

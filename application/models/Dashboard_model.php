@@ -1450,7 +1450,7 @@ class Dashboard_Model extends CI_Model
     }
     public function updateEditRecord($details,$id)
     {
-        $this->db->where('id', $id);
+        $this->db->where('eventId', $id);
         $this->db->update('eventchangesmaster', $details);
         return true;
     }

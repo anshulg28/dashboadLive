@@ -1910,7 +1910,7 @@ class Dashboard extends MY_Controller {
             $upDetail = array(
                 'isPending' => 1
             );
-            $this->dashboard_model->updateEditRecord($upDetail,$editRecord['id']);
+            $this->dashboard_model->updateEditRecord($upDetail,$eventId);
         }
 
         $eventDetail = $this->dashboard_model->getFullEventInfoById($eventId);

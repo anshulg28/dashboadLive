@@ -671,6 +671,24 @@ class Sendemail_library
         $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
     }
 
+    public function sendCompOpenMail($userData)
+    {
+        $data['mailData'] = $userData;
+
+        $content = $this->CI->load->view('emailtemplates/compOpenMailView', $data, true);
+
+        $fromEmail = ADMIN_SENDER_EMAIL;
+        $fromPass = ADMIN_SENDER_PASS;
+        $replyTo = $fromEmail;
+        $cc = '';
+        $fromName  = 'Doolally';
+
+        $subject = 'New Complaint #'.$userData['compId'].'-'.$userData['location'];
+        $toEmail = $userData['toMail'];
+
+        $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
+    }
+
     //Done
     public function checkinMissMail($userData)
     {

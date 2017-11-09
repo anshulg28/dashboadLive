@@ -796,7 +796,7 @@
                                     <label for="venAddress">Vendor's Address:</label>
                                     <textarea id="venAddress" name="venAddress" rows="5" cols="10" class="form-control"></textarea>
                                 </div>
-                                <div class="form-group">
+                                <!--<div class="form-group">
                                     <label for="venBName">Vendor's Bank Name:</label>
                                     <input type="text" id="venBName" name="venBName" class="form-control"/>
                                 </div>
@@ -807,14 +807,22 @@
                                 <div class="form-group">
                                     <label for="venIfsc">Vendor's IFSC Code:</label>
                                     <input type="text" id="venIfsc" name="venIfsc" class="form-control"/>
+                                </div>-->
+                                <div class="form-group">
+                                    <label for="bankCheque">Cancel Cheque Photo</label>
+                                    <input type="file" class="form-control" id="bankCheque" onchange="uploadVendorChange(this,1)" />
+                                    <input type="hidden" name="bankCheque" value=""/>
                                 </div>
                                 <div class="form-group">
-                                    <label for="venPan">Vendor's Pan #:</label>
-                                    <input type="text" id="venPan" name="venPan" class="form-control"/>
+                                    <label for="venPan">Vendor's Pan Or GST Photo :</label>
+                                    <input type="file" class="form-control" id="venPan" multiple onchange="uploadVendorChange(this,2)" />
+                                    <input type="hidden" name="venPan" value=""/>
                                 </div>
-                                <div class="form-group">
-                                    <label for="venGst">Vendor's GST #:</label>
-                                    <input type="text" id="venGst" name="venGst" class="form-control"/>
+                                <br>
+                                <div class="progress hide">
+                                    <div class="progress-bar progress-bar-striped active" role="progressbar"
+                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                    </div>
                                 </div>
                             </div>
 
@@ -1085,14 +1093,40 @@
 
         if($('#userAssignId').val() == 'other' && $('#workAssignedTo').val() == '')
         {
-            if($('#openCompModal .vendor-details-wrapper #venName').val() == '' &&
-                $('#openCompModal .vendor-details-wrapper #venBName').val() == '' &&
-                $('#openCompModal .vendor-details-wrapper #venBank').val() == '' &&
-                $('#openCompModal .vendor-details-wrapper #venIfsc').val() == '')
+            if($('#openCompModal .vendor-details-wrapper #venName').val() == '')
             {
-                bootbox.alert('Error: Vendor payment details required!');
+                bootbox.alert('Error: Vendor Name required!');
                 return false;
             }
+            if($('#openCompModal .vendor-details-wrapper input[name="venPan"]').val() == '')
+            {
+                bootbox.alert('Error: Vendor Pan Image required!');
+                return false;
+            }
+            if($('#openCompModal .vendor-details-wrapper input[name="bankCheque"]').val() == '')
+            {
+                bootbox.alert('Error: Vendor Cheque Image required!');
+                return false;
+            }
+            /*if(!$.isNumeric($('#openCompModal .vendor-details-wrapper #venBank').val()))
+            {
+                bootbox.alert('Error: Enter a Valid a/c number!');
+                return false;
+            }
+            var ifscReg = /^[^\s]{4}\d{7}$/;
+            if(!ifscReg.test($('#openCompModal .vendor-details-wrapper #venIfsc').val()))
+            {
+                bootbox.alert('Error: Valid Ifsc code is required!');
+                return false;
+            }
+
+            var regpan = /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/;
+            if(!regpan.test($('#openCompModal .vendor-details-wrapper #venPan').val()))
+            {
+                bootbox.alert('Error: Enter a Valid Pan number!');
+                return false;
+            }*/
+
         }
         var errUrl = $(this).attr('action');
 
@@ -1729,13 +1763,12 @@
                 {
                     var venHtml = '<b>Vendor Name:</b> '+data.venInfo.vendorName;
                     venHtml += '<br><b>Vendor Address:</b> '+data.venInfo.address;
-                    venHtml += '<br><b>Vendor Bank Name:</b> '+data.venInfo.bankName;
-                    venHtml += '<br><b>Vendor Bank A/c:</b> '+data.venInfo.bankAc;
-                    venHtml += '<br><b>Vendor IFSC:</b> '+data.venInfo.bankIfsc;
-                    venHtml += '<br><b>Vendor Pan Card:</b> '+data.venInfo.panCard;
-                    if(data.venInfo.gstNum != null)
+                    venHtml += '<br><b>Cheque Image:</b><br><img src="'+base_url+'uploads/jobs/'+data.venInfo.bankCheque+'" class="img-responsive"/>';
+                    venHtml += '<br><b>Vendor Pan Card:</b><br>';
+                    var pImgs = data.venInfo.panCard.split(',');
+                    for(var i=0;i<pImgs.length;i++)
                     {
-                        venHtml += '<br><b>Vendor GST #:</b> '+data.venInfo.gstNum;
+                        venHtml += '<img src="'+base_url+'uploads/jobs/'+pImgs[i]+'" class="img-responsive"/><br>';
                     }
 
                     bootbox.alert(venHtml);
@@ -2000,6 +2033,81 @@
 
         });
     });
+
+    var fileChequeArr = [];
+    var filesPanArr = [];
+    function uploadVendorChange(ele,isCheque)
+    {
+        $('#openCompModal #moveToProgress button[type="submit"]').attr('disabled','true');
+        $('#openCompModal .vendor-details-wrapper .progress').removeClass('hide');
+        if(isCheque == 1)
+        {
+            fileChequeArr = [];
+        }
+        else
+        {
+            filesPanArr = [];
+        }
+        $('#openCompModal .vendor-details-wrapper .progress-bar').css('width','0%').attr('aria-valuenow', 0).html('0%');
+        var xhr = [];
+        var totalFiles = ele.files.length;
+        for(var i=0;i<totalFiles;i++)
+        {
+            xhr[i] = new XMLHttpRequest();
+            (xhr[i].upload || xhr[i]).addEventListener('progress', function(e) {
+                var done = e.position || e.loaded;
+                var total = e.totalSize || e.total;
+                $('#openCompModal .vendor-details-wrapper .progress-bar').css('width', Math.round(done/total*100)+'%').attr('aria-valuenow', Math.round(done/total*100)).html(parseInt(Math.round(done/total*100))+'%');
+            });
+            xhr[i].addEventListener('load', function(e) {
+                $('#openCompModal #moveToProgress button[type="submit"]').removeAttr('disabled');
+            });
+            xhr[i].open('post', '<?php echo base_url();?>maintenance/uploadVendorFiles', true);
+
+            var data = new FormData;
+            data.append('attachment', ele.files[i]);
+            xhr[i].send(data);
+            xhr[i].onreadystatechange = function(e) {
+                if (e.srcElement.readyState == 4 && e.srcElement.status == 200) {
+                    if(e.srcElement.responseText == 'Some Error Occurred!')
+                    {
+                        bootbox.alert('File size Limit 30MB');
+                        return false;
+                    }
+                    try
+                    {
+                        var obj = $.parseJSON(e.srcElement.responseText);
+                        if(obj.status == false)
+                        {
+                            bootbox.alert('<label class="my-danger-text">Error: '+obj.errorMsg+'</label>');
+                            return false;
+                        }
+                    }
+                    catch(excep)
+                    {
+                        if(isCheque == 1)
+                        {
+                            fileChequeArr.push(e.srcElement.responseText);
+                            fillChequeImgs();
+                        }
+                        else
+                        {
+                            filesPanArr.push(e.srcElement.responseText);
+                            fillPanImgs();
+                        }
+                    }
+                }
+            }
+        }
+    }
+    function fillChequeImgs()
+    {
+        $('#openCompModal .vendor-details-wrapper input[name="bankCheque"]').val(fileChequeArr.join());
+    }
+    function fillPanImgs()
+    {
+        $('#openCompModal .vendor-details-wrapper input[name="venPan"]').val(filesPanArr.join());
+    }
 
 </script>
 </html>

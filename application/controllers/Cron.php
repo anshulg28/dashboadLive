@@ -194,7 +194,9 @@ class Cron extends MY_Controller
         $fbFeeds[] = $this->curl_library->getFacebookPosts('godoolallyandheri',$params);
         $fbFeeds[] = $this->curl_library->getFacebookPosts('godoolallybandra',$params);
         //kemps
-        $fbFeeds[] = $this->curl_library->getFacebookPosts('1741740822733140',$params);
+        $fbFeeds[] = $this->curl_library->getFacebookPosts('godoolallykemps', $params);
+        $fbFeeds[] = $this->curl_library->getFacebookPosts('godoolallyColaba', $params);
+        $fbFeeds[] = $this->curl_library->getFacebookPosts('godoolallykhar', $params);
         $fbFeeds[] = $this->curl_library->getFacebookPosts('godoolally',$params);
 
         if(isset($fbFeeds) && myIsMultiArray($fbFeeds) && isset($fbFeeds[0]['data']))
@@ -1411,19 +1413,25 @@ class Cron extends MY_Controller
         $openJobs = $this->maintenance_model->getOnlyOpenJobs();
         if(isset($openJobs) && myIsArray($openJobs))
         {
+            $subject = "Jobs Pending Action";
+            $content = '<html><body><br><table border="2"><tr><th>Job #</th><th>Problem</th><th>logged By</th><th>logged date/time</th></tr><tbody>';
             foreach($openJobs as $key => $row)
             {
                 $oldTime = strtotime($row['lastUpdateDT']) + (2 * 24 * 60 * 60);
                 if($oldTime <= strtotime(date('Y-m-d H:i:s')))
                 {
-                    $subject = 'Job #'.$row['complaintId'].'-'.$row['locName'].' Pending Action';
-                    $content = '<html><body><p>No Update on Job #'.$row['complaintId'].'-'.$row['locName'].' has 
-                        been performed since 48 hours.</p></body></html>';
-
-                    $this->sendemail_library->sendEmail(array('mandar@brewcraftsindia.com','taronish@brewcraftsindia.com'),'saha@brewcraftsindia.com,anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
-                        ,'admin@brewcraftsindia.com',$subject,$content,array());
+                    $content .= '<tr>';
+                    $content .= '<td>Job #'.$row['complaintId'].'-'.$row['locName'].'</td>';
+                    $content .= '<td>'.$row['problemDescription'].'</td>';
+                    $content .= '<td>'.$row['loggedUser'].'</td>';
+                    $d = date_create($row['loggedDT']);
+                    $content .= '<td>'.date_format($d,DATE_TIME_FORMAT_UI).'</td>';
+                    $content .= '</tr>';
                 }
             }
+            $content .= '</tbody></table>';
+            $this->sendemail_library->sendEmail(array('mandar@brewcraftsindia.com','taronish@brewcraftsindia.com','anil.jadhav@brewcraftsindia.com'),'saha@brewcraftsindia.com,anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+                ,'admin@brewcraftsindia.com',$subject,$content,array());
         }
 
         //Closed Jobs

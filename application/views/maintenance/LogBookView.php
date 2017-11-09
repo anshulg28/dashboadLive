@@ -180,6 +180,7 @@
         }
 
         var errUrl = $(this).attr('action');
+        $('button[type="submit"]').attr('disabled','disabled');
         showCustomLoader();
         $.ajax({
             type: 'POST',
