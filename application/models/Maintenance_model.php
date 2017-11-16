@@ -423,4 +423,26 @@ class Maintenance_Model extends CI_Model
         $this->db->insert('complaintstatusstamp',$details);
         return true;
     }
+    function showTotTapAmt()
+    {
+        $query = "SELECT lm.locName,SUM(fsm.payAmount) as 'locAmount'
+                FROM `complaintlogmaster` clm
+                LEFT JOIN locationmaster lm ON clm.locId = lm.id
+                LEFT JOIN financestatusmaster fsm ON clm.complaintId = fsm.jobId
+                WHERE clm.approxCost <= 5000 AND clm.status IN(".LOG_STATUS_IN_PROGRESS.") AND fsm.receiveDate IS NULL
+                GROUP BY lm.locName";
+
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+    function filterPayment($startDate, $endDate)
+    {
+        $query = "SELECT lm.locName,fsm.jobId,fsm.payAmount,fsm.payType
+                FROM financestatusmaster fsm
+                LEFT JOIN complaintlogmaster clm ON fsm.jobId = clm.complaintId
+                LEFT JOIN locationmaster lm ON clm.locId = lm.id
+                WHERE DATE(fsm.payDate) >= '".$startDate."' AND DATE(fsm.payDate) <= '".$endDate."' AND fsm.receiveDate IS NULL";
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
 }

@@ -3618,7 +3618,14 @@
                         for(var i=0;i<data.joinData.length;i++)
                         {
                             downTbl += '<tr>';
-                            downTbl += '<td>'+data.joinData[i].firstName+' '+data.joinData[i].lastName+'</td>';
+                            if(eventId == '<?php echo SPECIAL_EVENT_DOOLALLYID;?>' && data.joinData[i].regPrice != null)
+                            {
+                                downTbl += '<td>'+data.joinData[i].firstName+' '+data.joinData[i].lastName+'(Rs '+data.joinData[i].regPrice+')'+'</td>';
+                            }
+                            else
+                            {
+                                downTbl += '<td>'+data.joinData[i].firstName+' '+data.joinData[i].lastName+'</td>';
+                            }
                             downTbl += '<td>'+data.joinData[i].emailId+'</td>';
                             downTbl += '<td>'+data.joinData[i].mobNum+'</td>';
                             downTbl += '<td>'+data.joinData[i].quantity+'</td>';
@@ -3626,7 +3633,14 @@
                             downTbl += '</tr>';
 
                             tblHtml += '<tr>';
-                            tblHtml += '<td>'+data.joinData[i].firstName+' '+data.joinData[i].lastName+'</td>';
+                            if(eventId == '<?php echo SPECIAL_EVENT_DOOLALLYID;?>' && data.joinData[i].regPrice != null)
+                            {
+                                tblHtml += '<td>'+data.joinData[i].firstName+' '+data.joinData[i].lastName+'(Rs '+data.joinData[i].regPrice+')'+'</td>';
+                            }
+                            else
+                            {
+                                tblHtml += '<td>'+data.joinData[i].firstName+' '+data.joinData[i].lastName+'</td>';
+                            }
                             tblHtml += '<td>'+data.joinData[i].emailId+'</td>';
                             tblHtml += '<td>'+data.joinData[i].mobNum+'</td>';
                             tblHtml += '<td>'+data.joinData[i].quantity+'</td>';
@@ -3658,7 +3672,14 @@
                         for(var j=0;j<data.EHData.length;j++)
                         {
                             downTbl += '<tr>';
-                            downTbl += '<td>'+data.EHData[j].firstName+' '+data.EHData[j].lastName+'</td>';
+                            if(eventId == '<?php echo SPECIAL_EVENT_DOOLALLYID;?>' && data.EHData[j].regPrice != null)
+                            {
+                                downTbl += '<td>'+data.EHData[j].firstName+' '+data.EHData[j].lastName+'(Rs '+data.EHData[j].regPrice+')'+'</td>';
+                            }
+                            else
+                            {
+                                downTbl += '<td>'+data.EHData[j].firstName+' '+data.EHData[j].lastName+'</td>';
+                            }
                             downTbl += '<td>'+data.EHData[j].emailId+'</td>';
                             downTbl += '<td>'+data.EHData[j].mobNum+'</td>';
                             downTbl += '<td>'+data.EHData[j].quantity+'</td>';
@@ -3666,7 +3687,14 @@
                             downTbl += '</tr>';
 
                             tblHtml1 += '<tr>';
-                            tblHtml1 += '<td>'+data.EHData[j].firstName+' '+data.EHData[j].lastName+'</td>';
+                            if(eventId == '<?php echo SPECIAL_EVENT_DOOLALLYID;?>' && data.EHData[j].regPrice != null)
+                            {
+                                tblHtml1 += '<td>'+data.EHData[j].firstName+' '+data.EHData[j].lastName+'(Rs '+data.EHData[j].regPrice+')'+'</td>';
+                            }
+                            else
+                            {
+                                tblHtml1 += '<td>'+data.EHData[j].firstName+' '+data.EHData[j].lastName+'</td>';
+                            }
                             tblHtml1 += '<td>'+data.EHData[j].emailId+'</td>';
                             tblHtml1 += '<td>'+data.EHData[j].mobNum+'</td>';
                             tblHtml1 += '<td>'+data.EHData[j].quantity+'</td>';
@@ -3696,7 +3724,14 @@
                         for(var l=0;l<data.canData.length;l++)
                         {
                             downTbl += '<tr>';
-                            downTbl += '<td>'+data.canData[l].firstName+' '+data.canData[l].lastName+'</td>';
+                            if(eventId == '<?php echo SPECIAL_EVENT_DOOLALLYID;?>' && data.canData[l].regPrice != null)
+                            {
+                                downTbl += '<td>'+data.canData[l].firstName+' '+data.canData[l].lastName+'(Rs '+data.canData[l].regPrice+')'+'</td>';
+                            }
+                            else
+                            {
+                                downTbl += '<td>'+data.canData[l].firstName+' '+data.canData[l].lastName+'</td>';
+                            }
                             downTbl += '<td>'+data.canData[l].emailId+'</td>';
                             downTbl += '<td>'+data.canData[l].mobNum+'</td>';
                             downTbl += '<td>'+data.canData[l].quantity+'</td>';
@@ -3712,7 +3747,14 @@
                             downTbl += '</tr>';
 
                             tblHtml3 += '<tr>';
-                            tblHtml3 += '<td>'+data.canData[l].firstName+' '+data.canData[l].lastName+'</td>';
+                            if(eventId == '<?php echo SPECIAL_EVENT_DOOLALLYID;?>' && data.canData[l].regPrice != null)
+                            {
+                                tblHtml3 += '<td>'+data.canData[l].firstName+' '+data.canData[l].lastName+'(Rs '+data.canData[l].regPrice+')'+'</td>';
+                            }
+                            else
+                            {
+                                tblHtml3 += '<td>'+data.canData[l].firstName+' '+data.canData[l].lastName+'</td>';
+                            }
                             tblHtml3 += '<td>'+data.canData[l].emailId+'</td>';
                             tblHtml3 += '<td>'+data.canData[l].mobNum+'</td>';
                             tblHtml3 += '<td>'+data.canData[l].quantity+'</td>';

@@ -252,6 +252,7 @@
                                         if(isset($row['eventAtt']) && myIsMultiArray($row['eventAtt']))
                                         {
                                             ?>
+                                            <input type="hidden" id="hasEventImg" value="1"/>
                                             <div class="text-left">
                                                 <?php
                                                     foreach($row['eventAtt'] as $imgkey => $imgrow)
@@ -260,7 +261,7 @@
                                                         <div class="pics-preview-panel col-sm-2 col-xs-5">
                                                             <img src="<?php echo MOBILE_URL.EVENT_PATH_THUMB.$imgrow['filename'];?>"
                                                                  class="img-thumbnail"/>
-                                                            <i class="fa fa-times img-remove-icon" data-picId="<?php echo $imgrow['id'];?>"></i>
+                                                            <i class="fa fa-times img-remove-icon" data-img="<?php echo $imgrow['filename'] ?>" data-picId="<?php echo $imgrow['id'];?>"></i>
                                                         </div>
                                                         <?php
                                                     }
@@ -270,7 +271,7 @@
                                         }
                                     ?>
                                     <div class="myUploadPanel text-left">
-                                        <input type="file" multiple class="form-control" onchange="eventUploadChange(this)" />
+                                        <input type="file" class="form-control" onchange="eventUploadChange(this)" />
                                         <input type="hidden" name="attachment"/>
                                     </div>
                                     <br>
@@ -331,15 +332,25 @@
     });
     $(document).on('click','.img-remove-icon', function(){
         var picId = $(this).attr('data-picId');
+        var img  = $(this).attr('data-img');
         var parent = $(this).parent();
         bootbox.confirm("Remove Image?", function(result) {
-            var errUrl = base_url+'dashboard/deleteEventAtt';
+            var oldImg = '<input type="hidden" name="oldEventImg" value="'+img+'"/>';
+            var oldImgId = '<input type="hidden" name="oldEventImgId" value="'+picId+'"/>';
+            if($('input[name="oldEventImg"]').length == 0)
+            {
+                $('#event-dash-edit').append(oldImg);
+                $('#event-dash-edit').append(oldImgId);
+            }
+            //var errUrl = base_url+'dashboard/deleteEventAtt';
             if(result === true)
             {
-                $.ajax({
+                $(parent).fadeOut();
+                $(parent).remove();
+                /*$.ajax({
                     type:"POST",
                     dataType:"json",
-                    url:"<?php echo base_url();?>dashboard/deleteEventAtt",
+                    url:"dashboard/deleteEventAtt",
                     data:{picId:picId},
                     success: function(data)
                     {
@@ -354,7 +365,7 @@
                         var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                         saveErrorLog(err);
                     }
-                });
+                });*/
             }
         });
     });
@@ -407,6 +418,12 @@
                     }
                     catch(excep)
                     {
+                        if($('.pics-preview-panel').length > 0)
+                        {
+                            $('input[type="file"]').val('');
+                            bootbox.alert('Please remove previous images!');
+                            return false;
+                        }
                         filesEventsArr.push(e.srcElement.responseText);
                         fillEventImgs();
                     }
@@ -605,7 +622,7 @@
                             {
                                 if(typeof data.meetupError !== 'undefined')
                                 {
-                                    bootbox.alert('Meetup Error: '+data.meetupError);
+                                    //bootbox.alert('Meetup Error: '+data.meetupError);
                                 }
                                 if(typeof data.apiData !== 'undefined')
                                 {
@@ -646,7 +663,7 @@
                     {
                         if(typeof data.meetupError !== 'undefined')
                         {
-                            bootbox.alert('Meetup Error: '+data.meetupError);
+                            //bootbox.alert('Meetup Error: '+data.meetupError);
                         }
                         if(typeof data.apiData !== 'undefined')
                         {

@@ -659,7 +659,7 @@ class Dashboard_Model extends CI_Model
     }
     public function getDoolallyJoinersInfo($eventId)
     {
-        $query = "SELECT um.firstName, um.lastName, um.emailId, um.mobNum, erm.paymentId, erm.quantity, erm.createdDT
+        $query = "SELECT um.firstName, um.lastName, um.emailId, um.mobNum, erm.paymentId, erm.quantity, erm.regPrice, erm.createdDT
                   FROM eventregistermaster erm
                   LEFT JOIN doolally_usersmaster um ON um.userId = erm.bookerUserId
                   WHERE erm.isUserCancel != 1 AND erm.isDirectlyRegistered = 1 AND erm.eventId = $eventId ORDER BY erm.createdDT DESC";
@@ -670,7 +670,7 @@ class Dashboard_Model extends CI_Model
     }
     public function getEhJoinersInfo($eventId)
     {
-        $query = "SELECT um.firstName, um.lastName, um.emailId, um.mobNum, erm.paymentId, erm.quantity, erm.createdDT
+        $query = "SELECT um.firstName, um.lastName, um.emailId, um.mobNum, erm.paymentId, erm.quantity, erm.regPrice, erm.createdDT
                   FROM eventregistermaster erm
                   LEFT JOIN doolally_usersmaster um ON um.userId = erm.bookerUserId
                   WHERE erm.isUserCancel != 1 AND erm.isDirectlyRegistered = 0 AND erm.eventId = $eventId ORDER BY erm.createdDT DESC";
@@ -681,7 +681,7 @@ class Dashboard_Model extends CI_Model
     }
     function getCancelList($eventId)
     {
-        $query = "SELECT um.firstName, um.lastName, um.emailId, um.mobNum, erm.paymentId, erm.quantity, erm.createdDT,erm.isDirectlyRegistered
+        $query = "SELECT um.firstName, um.lastName, um.emailId, um.mobNum, erm.paymentId, erm.regPrice, erm.quantity, erm.createdDT,erm.isDirectlyRegistered
                   FROM eventregistermaster erm
                   LEFT JOIN doolally_usersmaster um ON um.userId = erm.bookerUserId
                   WHERE erm.isUserCancel = 1 AND erm.eventId = $eventId ORDER BY erm.createdDT DESC";

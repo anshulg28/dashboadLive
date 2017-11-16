@@ -748,6 +748,26 @@ class Cron extends MY_Controller
             $tempFeeds = $this->cron_model->getTempFeedView();
             if(isset($tempFeeds) && myIsArray($tempFeeds))
             {
+
+                usort($tempFeeds,
+                    function($a, $b) {
+                        $aNew = $a['feedText'];
+                        $bNew = $b['feedText'];
+                        if(gettype($a['feedText']) == 'string')
+                        {
+                            $aNew = json_decode($a['feedText'],TRUE);
+                        }
+                        if(gettype($b['feedText']) == 'string')
+                        {
+                            $bNew = json_decode($b['feedText'],TRUE);
+                        }
+                        $ts_a = strtotime($aNew['created_at']);
+                        $ts_b = strtotime($bNew['created_at']);
+
+                        return $ts_a > $ts_b;
+                    }
+                );
+
                 if(count($tempFeeds) > 150)
                 {
                     //Dividing the temp view feeds
@@ -1656,7 +1676,7 @@ class Cron extends MY_Controller
 
         //If more than 48 hours
         $openJobs = $this->maintenance_model->getOnlyOpenJobs();
-        if(isset($openJobs) && myIsArray($openJobs))
+        if(isset($openJobs) && myIsArray($openJobs) && isset($openJobs[0]['complaintId']) && $openJobs[0]['complaintId'] != '')
         {
             $subject = "Jobs Pending Action";
             $content = '<html><body><br><table border="2"><tr><th>Job #</th><th>Problem</th><th>logged By</th><th>logged date/time</th></tr><tbody>';

@@ -865,6 +865,7 @@ class Dashboard extends MY_Controller {
                 $fileName = preg_replace('/\(|\)/','',$filePath);
                 $fileName = preg_replace('/[^a-zA-Z0-9.]\.]/', '', $fileName);
                 $fileName = str_replace(' ','_',$fileName);
+                $fileName = time().'_'.$fileName;
                 $config = array();
                 $config['upload_path'] = '../mobile/uploads/events/';
                 $config['allowed_types'] = 'gif|jpg|png|jpeg';
@@ -1090,6 +1091,7 @@ class Dashboard extends MY_Controller {
         $post = $this->input->post();
         $data = array();
         $isImpChange = false;
+        $oldImgId = '';
         $impChanges = array('eventName','eventDescription','eventDate','startTime','endTime','costType',
                         'eventPrice','eventPlace');
         $changeCheck = array();
@@ -1104,13 +1106,18 @@ class Dashboard extends MY_Controller {
         //Separating attachment
         if(isset($post['attachment']))
         {
-            $isImpChange = true;
-            if($eventDetails[0]['filename'] != $post['attachment'])
+            if($post['attachment'] != '')
             {
-                $changesMade['attachment'] = $eventDetails[0]['filename'].';#;'.$post['attachment'];
+                $isImpChange = true;
+                $changesMade['attachment'] = $post['oldEventImg'].';#;'.$post['attachment'];
+                $attachement = $post['attachment'];
+                $oldImgId = $post['oldEventImgId'];
+                unset($post['attachment'],$post['oldEventImg'],$post['oldEventImgId']);
             }
-            $attachement = $post['attachment'];
-            unset($post['attachment']);
+            else
+            {
+                unset($post['attachment']);
+            }
         }
 
         $eventOldInfo = $eventDetails[0];
@@ -1190,6 +1197,10 @@ class Dashboard extends MY_Controller {
                         'attachmentType' => '1'
                     );
                     $this->dashboard_model->saveEventAttachment($attArr);
+                }
+                if($oldImgId != '')
+                {
+                    $this->dashboard_model->eventAttDelete($oldImgId);
                 }
             }
             $changesRecord['eventId'] = $eventId;
@@ -1395,6 +1406,10 @@ class Dashboard extends MY_Controller {
                         'attachmentType' => '1'
                     );
                     $this->dashboard_model->saveEventAttachment($attArr);
+                }
+                if($oldImgId != '')
+                {
+                    $this->dashboard_model->eventAttDelete($oldImgId);
                 }
             }
 
@@ -2248,7 +2263,7 @@ class Dashboard extends MY_Controller {
         return $meetData;
     }
 
-    function saveEventHighData($eventId)
+    public function saveEventHighData($eventId)
     {
         $post = $this->input->post();
         $data = array();
@@ -2265,17 +2280,25 @@ class Dashboard extends MY_Controller {
         }
         else
         {
-            $postData = array(
-                'highId' => $post['id'],
-                'eventId' => $eventId,
-                'highStatus' => 1,
-                'highError' => null,
-                'insertedDT' => date('Y-m-d H:i:s')
-            );
-            $details = array(
-                'eventPaymentLink' => 'https://ticketing.eventshigh.com/ticketModal.jsp?eid='.$post['id'].'&src=fbTicketWidget&theme=jet-black&bg0=1'
-            );
-            $this->dashboard_model->updateEventRecord($details, $eventId);
+            if(isset($post['id']) && $post['id'] != '')
+            {
+                $extraMsg = '';
+                if(isset($post['extraMsg']))
+                {
+                    $extraMsg = $post['extraMsg'];
+                }
+                $postData = array(
+                    'highId' => $post['id'],
+                    'eventId' => $eventId,
+                    'highStatus' => 1,
+                    'highError' => $extraMsg,
+                    'insertedDT' => date('Y-m-d H:i:s')
+                );
+                $details = array(
+                    'eventPaymentLink' => 'https://ticketing.eventshigh.com/ticketModal.jsp?eid='.$post['id'].'&src=fbTicketWidget&theme=jet-black&bg0=1'
+                );
+                $this->dashboard_model->updateEventRecord($details, $eventId);
+            }
         }
         $this->dashboard_model->saveEventHigh($postData);
         $data['status'] = true;

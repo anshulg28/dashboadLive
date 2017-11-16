@@ -474,6 +474,32 @@ $(document).on('click','.homePage .request-otp', function(){
                 {
                     if(typeof data.message !== 'undefined')
                     {
+                        if(typeof data.message_from_server !== 'undefined')
+                        {
+                            var jPar = $.parseJSON(data.message_from_server);
+                            if(typeof jPar.dupes !== 'undefined')
+                            {
+                                errUrl = base_url+'dashboard/saveEventHighData/'+eventData.eventId;
+                                $.ajax({
+                                    type:'POST',
+                                    dataType:'json',
+                                    url:base_url+'dashboard/saveEventHighData/'+eventData.eventId,
+                                    data: {id:jPar.dupes[0],status:'success',extraMsg:data.message_from_server},
+                                    success: function(subData){
+                                        //hideCustomLoader();
+                                    },
+                                    error: function(xhr, status, error){
+                                        //hideCustomLoader();
+                                        //bootbox.alert('Some Error Occurred!');
+                                        var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                                        saveErrorLog(err);
+                                    }
+                                });
+                                eventData['highId'] = jPar.dupes[0];
+                                createEventsHigh(eventData);
+                                return false;
+                            }
+                        }
                         hideCustomLoader();
                         ifError = data.message;
                         bootbox.alert(data.message);

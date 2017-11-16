@@ -1048,6 +1048,7 @@ class Sendemail_library
         $allCodes = $this->CI->offers_model->getAllCodes();
         $usedCodes = array();
         $toBeInserted = array();
+        $dt = $eveDate.' '.$eveTime;
         if($allCodes['status'] === true)
         {
             foreach($allCodes['codes'] as $key => $row)
@@ -1069,7 +1070,7 @@ class Sendemail_library
                 'isRedeemed' => 0,
                 'ifActive' => 1,
                 'createDateTime' => date('Y-m-d H:i:s'),
-                'expiryDateTime' => date($eveDate.' '.$eveTime, strtotime('+12 hours')),
+                'expiryDateTime' => date('Y-m-d H:i',strtotime('+12 hours', strtotime($dt))),
                 'validFromDate' => $eveDate,
                 'validFromTime' => $eveTime,
                 'useDateTime' => null,
@@ -1089,7 +1090,7 @@ class Sendemail_library
                 'isRedeemed' => 0,
                 'ifActive' => 1,
                 'createDateTime' => date('Y-m-d H:i:s'),
-                'expiryDateTime' => date($eveDate.' '.$eveTime, strtotime('+12 hours')),
+                'expiryDateTime' => date('Y-m-d H:i',strtotime('+12 hours', strtotime($dt))),
                 'validFromDate' => $eveDate,
                 'validFromTime' => $eveTime,
                 'useDateTime' => null,

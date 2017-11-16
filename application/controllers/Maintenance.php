@@ -236,6 +236,7 @@ class Maintenance extends MY_Controller {
         $data['closeComplaints'] = $this->maintenance_model->getCloseComplaints();
         $data['postponeComplaints'] = $this->maintenance_model->getPostponeComplaints();
         $data['mainBalance'] = $this->calcMainBalance();
+        $data['tapsTotal'] = $this->maintenance_model->showTotTapAmt();
 
         $data['globalStyle'] = $this->dataformatinghtml_library->getGlobalStyleHtml($data);
         $data['globalJs'] = $this->dataformatinghtml_library->getGlobalJsHtml($data);
@@ -644,9 +645,18 @@ class Maintenance extends MY_Controller {
                 }
             }
 
-            if((double)$post['approxCost'] == 0)
+            if((double)$post['approxCost'] <= 5000)
             {
                 $post['status']  = LOG_STATUS_IN_PROGRESS;
+                $details = array(
+                    'jobId' => $compId,
+                    'payAmount' => $post['approxCost'],
+                    'payDate' => date('Y-m-d H:i:s'),
+                    'payType' => 'Happay Cash',
+                    'addedDT' => date('Y-m-d H:i:s')
+                );
+
+                $this->maintenance_model->saveBudget($details);
             }
             elseif((double)$post['approxCost'] <= 10000 )
             {
@@ -801,7 +811,7 @@ class Maintenance extends MY_Controller {
                         'lastUpdateDT' => date('Y-m-d H:i:s')
                     );
                     $this->maintenance_model->updateComplaint($details,$post['compId']);
-                    if($post['payType'] == 'Happy Cash')
+                    if($post['payType'] == 'Happay Cash')
                     {
                         $locDetails = $this->locations_model->getLocationDetailsById($compInfo['locId']);
                         $d = date_create(date('Y-m-d H:i:s',strtotime($post['budDate'])));
@@ -1402,7 +1412,7 @@ class Maintenance extends MY_Controller {
         if(isset($post['finId']) && isset($post['finDate']))
         {
             $details = array(
-                'receiveDate' => $post['finDate'],
+                'receiveDate' => date('Y-m-d H:i:s',strtotime($post['finDate'])),
                 'receiveDT' => date('Y-m-d H:i:s')
             );
             $this->maintenance_model->updateFinRecord($details,$post['finId']);
@@ -1620,6 +1630,44 @@ class Maintenance extends MY_Controller {
             $data['errorMsg'] = 'No Image File Received!';
             echo json_encode($data);
             return false;
+        }
+    }
+
+    public function filterBudget()
+    {
+        $data = array();
+        if(isSessionVariableSet($this->isUserSession) === false)
+        {
+            $data['status'] = false;
+            $data['errorMsg'] = 'Session Timeout, Please Login Again!';
+            echo json_encode($data);
+            return false;
+        }
+        $post = $this->input->post();
+
+        if(isset($post['payEndDate']) && isStringSet($post['payEndDate'])
+            && isset($post['payStartDate']) && isStringSet($post['payStartDate']))
+        {
+            $data['payLogs'] = $this->maintenance_model->filterPayment($post['payStartDate'],$post['payEndDate']);
+            $data['status'] = true;
+        }
+        else
+        {
+            $data['status'] = false;
+            $data['errorMsg'] = 'Start and end date required!';
+        }
+        echo json_encode($data);
+    }
+
+    public function changePri()
+    {
+        $post = $this->input->post();
+        if(isset($post['complaintId']) && isset($post['jobPriority']))
+        {
+            $compId = $post['complaintId'];
+            unset($post['complaintId']);
+            $this->maintenance_model->updateComplaint($post,$compId);
+            redirect(base_url().'maintenance/actionLog');
         }
     }
 }

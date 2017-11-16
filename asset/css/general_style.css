@@ -213,6 +213,7 @@ input::-webkit-inner-spin-button {
 }
 
 /* Custom Loader */
+.modal { overflow: auto !important; }
 .custom-loader-body {
     overflow:hidden;
     position: relative;
@@ -774,24 +775,24 @@ display:block;
 {
     margin:0 auto;
 }
-.logComplaint .pri-group .job-high-pri
+.pri-group .job-high-pri
 {
     background-color:#FF1919;
     color:#fff;
     padding:0 5px;
 }
-.logComplaint .pri-group .job-medium-pri
+.pri-group .job-medium-pri
 {
     background-color:#FFFF00;
     padding:0 5px;
 }
-.logComplaint .pri-group .job-low-pri
+.pri-group .job-low-pri
 {
     background-color:#00CC00;
     color:#fff;
     padding:0 5px;
 }
-.logComplaint .pri-group ul>li
+.pri-group ul>li
 {
     padding-left:10px;
     padding-right:10px;

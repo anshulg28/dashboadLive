@@ -27,6 +27,7 @@
                         <li><a data-toggle="tab" href="#inProgress">In Progress Issues</a></li>
                         <li><a data-toggle="tab" href="#closed">Closed Issues</a></li>
                         <li><a data-toggle="tab" href="#postpone">Postponed Issues</a></li>
+                        <li><a data-toggle="tab" href="#payfilter">Payment Filters</a></li>
                     </ul>
                     <div class="tab-content">
                         <div id="open" class="tab-pane fade in active">
@@ -76,23 +77,53 @@
                                             <tr>
                                                 <td scope="row">
                                                     <?php
-                                                        switch($row['jobPriority'])
+                                                        if($this->userType == MAINTENANCE_MANAGER)
                                                         {
-                                                            case JOB_PRIORITY_HIGH:
-                                                                ?>
-                                                                <div class="job-with-high"><?php echo $row['complaintId'];?></div>
-                                                                <?php
-                                                                break;
-                                                            case JOB_PRIORITY_MEDIUM:
-                                                                ?>
-                                                                <div class="job-with-medium"><?php echo $row['complaintId'];?></div>
-                                                                <?php
-                                                                break;
-                                                            case JOB_PRIORITY_LOW:
-                                                                ?>
-                                                                <div class="job-with-low"><?php echo $row['complaintId'];?></div>
-                                                                <?php
-                                                                break;
+                                                            ?>
+                                                            <a href="#" data-compId="<?php echo $row['complaintId'];?>" data-priority="<?php echo $row['jobPriority'];?>" class="change-job-priority my-noUnderline">
+                                                            <?php
+                                                            switch($row['jobPriority'])
+                                                            {
+                                                                case JOB_PRIORITY_HIGH:
+                                                                    ?>
+                                                                    <div class="job-with-high"><?php echo $row['complaintId'];?></div>
+                                                                    <?php
+                                                                    break;
+                                                                case JOB_PRIORITY_MEDIUM:
+                                                                    ?>
+                                                                    <div class="job-with-medium"><?php echo $row['complaintId'];?></div>
+                                                                    <?php
+                                                                    break;
+                                                                case JOB_PRIORITY_LOW:
+                                                                    ?>
+                                                                    <div class="job-with-low"><?php echo $row['complaintId'];?></div>
+                                                                    <?php
+                                                                    break;
+                                                            }
+                                                            ?>
+                                                            </a>
+                                                            <?php
+                                                        }
+                                                        else
+                                                        {
+                                                            switch($row['jobPriority'])
+                                                            {
+                                                                case JOB_PRIORITY_HIGH:
+                                                                    ?>
+                                                                    <div class="job-with-high"><?php echo $row['complaintId'];?></div>
+                                                                    <?php
+                                                                    break;
+                                                                case JOB_PRIORITY_MEDIUM:
+                                                                    ?>
+                                                                    <div class="job-with-medium"><?php echo $row['complaintId'];?></div>
+                                                                    <?php
+                                                                    break;
+                                                                case JOB_PRIORITY_LOW:
+                                                                    ?>
+                                                                    <div class="job-with-low"><?php echo $row['complaintId'];?></div>
+                                                                    <?php
+                                                                    break;
+                                                            }
                                                         }
                                                     ?>
                                                 </td>
@@ -738,6 +769,87 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div id="payfilter" class="tab-pane fade">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <?php
+                                    if(isset($tapsTotal) && myIsArray($tapsTotal))
+                                    {
+                                        ?>
+                                        <table class="table table-responsive">
+                                            <thead>
+                                            <tr>
+                                                <th>Taproom</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php
+                                            foreach($tapsTotal as $key => $row)
+                                            {
+                                                ?>
+                                                <tr>
+                                                    <td><?php echo $row['locName'];?></td>
+                                                    <td>
+                                                        <?php
+                                                        if(isset($row['locAmount']))
+                                                        {
+                                                            echo 'Rs. '. $row['locAmount'];
+                                                        }
+                                                        else
+                                                        {
+                                                            echo 'Rs. 0';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                </tr>
+                                                <?php
+
+                                            }
+                                            ?>
+                                            </tbody>
+                                        </table>
+                                        <?php
+                                    }
+                                    else
+                                    {
+                                        echo 'Nothing To pay!';
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row text-center">
+                                <div class="col-xs-12">
+                                    <form id="payDateFilter" action="<?php echo base_url().'maintenance/filterBudget';?>" class="form-inline">
+                                        <div class="form-group">
+                                            <label for="payStartDate">Start Date</label>
+                                            <input type="text" class="form-control" name="payStartDate" id="payStartDate"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="payEndDate">End Date</label>
+                                            <input type="text" class="form-control" name="payEndDate" id="payEndDate"/>
+                                        </div>
+                                        <button type="submit" class="btn btn-warning">Submit</button>
+                                    </form>
+                                    <br>
+                                    <span class="no-result hide">No Result Found!</span>
+                                    <div class="pay-display hide text-left">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Job Id</th>
+                                                    <th>Location</th>
+                                                    <th>Amount</th>
+                                                    <th>Pay Method</th>
+                                                </tr>
+                                            </thead>
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-sm-1 col-xs-0"></div>
@@ -1039,6 +1151,36 @@
         </div>
     </div>
 
+    <div id="priorityModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Complaint #<span class="complaint-num"></span> Priority Change</h4>
+                </div>
+                <div class="modal-body details-body">
+                    <form action="<?php echo base_url().'maintenance/changePri';?>" method="POST" class="form">
+                        <input type="hidden" name="complaintId" value=""/>
+                        <div class="form-group pri-group">
+                            <ul class="list-inline">
+                                <li>
+                                    <label class="radio-inline job-high-pri"><input type="radio" name="jobPriority" value="1">High</label>
+                                </li>
+                                <li>
+                                    <label class="radio-inline job-medium-pri"><input type="radio" name="jobPriority" value="2">Medium</label>
+                                </li>
+                                <li>
+                                    <label class="radio-inline job-low-pri"><input type="radio" name="jobPriority" value="3">Low</label>
+                                </li>
+                            </ul>
+                        </div>
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <?php echo $footerView;?>
 </body>
 <?php echo $globalJs; ?>
@@ -1059,6 +1201,9 @@
     });
     postponeTab = $('#postponeTab').DataTable({
         "ordering": false
+    });
+    $('#payStartDate,#payEndDate').datetimepicker({
+        format: 'YYYY-MM-DD'
     });
     $(document).ready(function(){
         if(localStorageUtil.getLocal('currTab') != null)
@@ -2109,5 +2254,79 @@
         $('#openCompModal .vendor-details-wrapper input[name="venPan"]').val(filesPanArr.join());
     }
 
+    $(document).on('submit','#payDateFilter', function(e){
+        e.preventDefault();
+
+        if($('#payStartDate').val() == '' && $('#payEndDate').val() == '')
+        {
+            bootbox.alert('All Fields are required!');
+            return false;
+        }
+
+        showCustomLoader();
+        $.ajax({
+            type:'POST',
+            url: $(this).attr('action'),
+            dataType: 'json',
+            data: $(this).serialize(),
+            success: function(data){
+                hideCustomLoader();
+                if(data.status === true)
+                {
+                    if(data.payLogs.length>0)
+                    {
+                        var tbody = '<tbody>';
+                        for(var i=0;i<data.payLogs.length;i++)
+                        {
+                            tbody += '<tr>';
+                            tbody += '<td>'+data.payLogs[i].jobId+'</td>';
+                            tbody += '<td>'+data.payLogs[i].locName+'</td>';
+                            tbody += '<td>'+data.payLogs[i].payAmount+'</td>';
+                            tbody += '<td>'+data.payLogs[i].payType+'</td>';
+                            tbody += '</tr>';
+                        }
+                        tbody += '</tbody>';
+                        $('.pay-display table').append(tbody);
+                        $('.pay-display').removeClass('hide');
+                    }
+                    else
+                    {
+                        $('.no-result').removeClass('hide');
+                        $('.pay-display').addClass('hide');
+                    }
+                }
+                else
+                {
+                    bootbox.alert(data.errorMsg);
+                }
+            },
+            error:function(xhr, status, error)
+            {
+                hideCustomLoader();
+                bootbox.alert('Some Error Occurred, Try Again!');
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                saveErrorLog(err);
+            }
+        });
+    });
+
+    $(document).on('click','.change-job-priority', function(){
+        var compId = $(this).attr('data-compId');
+        var pri = $(this).attr('data-priority');
+
+        if(compId != '' && pri != '')
+        {
+            $('#priorityModal form input[name="complaintId"]').val(compId);
+            $('#priorityModal .complaint-num').html(compId);
+            $('#priorityModal form input[name="jobPriority"]').each(function(i,val){
+                if($(val).val() == pri)
+                {
+                    $(val).attr('checked',true);
+                    return false;
+                }
+            });
+            $('#priorityModal').modal('show');
+        }
+    });
 </script>
 </html>

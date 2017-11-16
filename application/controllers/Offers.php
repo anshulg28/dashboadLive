@@ -518,8 +518,9 @@ class Offers extends MY_Controller {
                                     }
                                     else
                                     {
+                                        $d = date_create($offerStatus['codeCheck']['validFromDate'].' '.$offerStatus['codeCheck']['validFromTime']);
                                         $data['status'] = false;
-                                        $data['errorMsg'] = 'This code isn\'t active yet.';
+                                        $data['errorMsg'] = 'This code isn\'t active yet. Will be active on '.date_format($d,DATE_TIME_FORMAT_UI);
                                     }
                                 }
                                 else
@@ -542,7 +543,15 @@ class Offers extends MY_Controller {
                             else
                             {
                                 $data['status'] = false;
-                                $data['errorMsg'] = 'This code isn\'t active yet. Will be active on '.date_format($d,DATE_MAIL_FORMAT_UI);
+                                if(isset($offerStatus['codeCheck']['validFromTime']))
+                                {
+                                    $d = date_create($offerStatus['codeCheck']['validFromDate'].' '.$offerStatus['codeCheck']['validFromTime']);
+                                    $data['errorMsg'] = 'This code isn\'t active yet. Will be active on '.date_format($d,DATE_TIME_FORMAT_UI);
+                                }
+                                else
+                                {
+                                    $data['errorMsg'] = 'This code isn\'t active yet. Will be active on '.date_format($d,DATE_MAIL_FORMAT_UI);
+                                }
                             }
                         }
                         else
@@ -579,8 +588,9 @@ class Offers extends MY_Controller {
                             }
                             else
                             {
+                                $d = date_create($offerStatus['codeCheck']['validFromDate'].' '.$offerStatus['codeCheck']['validFromTime']);
                                 $data['status'] = false;
-                                $data['errorMsg'] = 'This code isn\'t active yet.';
+                                $data['errorMsg'] = 'This code isn\'t active yet. Will be active on '.date_format($d,DATE_TIME_FORMAT_UI);
                             }
                         }
                         else
@@ -603,7 +613,15 @@ class Offers extends MY_Controller {
                     else
                     {
                         $data['status'] = false;
-                        $data['errorMsg'] = 'This code isn\'t active yet. Will be active on '.date_format($d,DATE_MAIL_FORMAT_UI);
+                        if(isset($offerStatus['codeCheck']['validFromTime']))
+                        {
+                            $d = date_create($offerStatus['codeCheck']['validFromDate'].' '.$offerStatus['codeCheck']['validFromTime']);
+                            $data['errorMsg'] = 'This code isn\'t active yet. Will be active on '.date_format($d,DATE_TIME_FORMAT_UI);
+                        }
+                        else
+                        {
+                            $data['errorMsg'] = 'This code isn\'t active yet. Will be active on '.date_format($d,DATE_MAIL_FORMAT_UI);
+                        }
                     }
                 }
                 else
