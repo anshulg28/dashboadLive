@@ -1577,8 +1577,8 @@ class Cron extends MY_Controller
 
         if( isset($allFeedbacks) && myIsArray($allFeedbacks))
         {
-            $file1 = fopen("./uploads/monthly_wallet_detail_transactions_".date('d_M_Y').".csv","w");
-            $file2 = fopen("./uploads/monthly_wallet_usage_".date('d_M_Y').".csv","w");
+            $file1 = fopen("./uploads/monthly_wallet_detail_transactions_".date('m_Y', strtotime('-1 month')).".csv","w");
+            $file2 = fopen("./uploads/monthly_wallet_usage_".date('m_Y', strtotime('-1 month')).".csv","w");
             $otherRow = true;
             $firstRow = true;
             foreach($allFeedbacks as $key => $row)
@@ -1641,13 +1641,13 @@ class Cron extends MY_Controller
             fclose($file1);
             $content = '<html><body><p>Monthly Employee Expenditure Report<br>PFA</p></body></html>';
 
-            $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com','savio@brewcraftsindia.com','amit@brewcraftsindia.com','taronish@brewcraftsindia.com','pranjal.rathi@rubycapital.net'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+            $this->sendemail_library->sendEmail(array('purva@brewcraftsindia.com','hasti@brewcraftsindia.com','saha@brewcraftsindia.com','savio@brewcraftsindia.com','amit@brewcraftsindia.com','taronish@brewcraftsindia.com','pranjal.rathi@rubycapital.net'),'','admin@brewcraftsindia.com','ngks2009','Doolally'
                 ,'admin@brewcraftsindia.com','Staff wallet usage report '.date('m_Y', strtotime('-1 month')),$content,array("./uploads/monthly_wallet_detail_transactions_".date('m_Y', strtotime('-1 month')).".csv",
                     "./uploads/monthly_wallet_usage_".date('m_Y', strtotime('-1 month')).".csv"));
             try
             {
-                unlink("./uploads/monthly_wallet_detail_transactions_for_".date('m_Y', strtotime('-1 month')).".csv");
-                unlink("./uploads/monthly_wallet_usage_for_".date('m_Y', strtotime('-1 month')).".csv");
+                unlink("./uploads/monthly_wallet_detail_transactions_".date('m_Y', strtotime('-1 month')).".csv");
+                unlink("./uploads/monthly_wallet_usage_".date('m_Y', strtotime('-1 month')).".csv");
             }
             catch(Exception $ex)
             {

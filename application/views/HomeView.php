@@ -75,6 +75,20 @@
                                         </li>
                                         <?php
                                     }
+                                    if(myInArray('spot_award',$userModules))
+                                    {
+                                        ?>
+                                        <li>
+                                            <a href="<?php echo base_url() . 'spotaward'; ?>">
+                                                <div class="menuWrap">
+                                                    <i class="fa fa-trophy fa-2x"></i>
+                                                    <br>
+                                                    <span>Spot Awards</span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <?php
+                                    }
                                     if(myInArray('twitter_page',$userModules))
                                     {
                                         ?>
