@@ -156,6 +156,15 @@ class Mugclub_Model extends CI_Model
 
         return $data;
     }
+    public function getBreakfastOfMug($mugId)
+    {
+        $query = "SELECT ifActive, isRedeemed FROM offersmaster
+                  WHERE offerType LIKE '%Breakfast%' AND offerMug = ".$mugId;
+
+        $result = $this->db->query($query)->row_array();
+
+        return $result;
+    }
 
     function checkMugExists($mugId)
     {
@@ -217,7 +226,7 @@ class Mugclub_Model extends CI_Model
 
     public function getMugIdForRenew($mugId)
     {
-        $query = "SELECT emailId, firstName, invoiceDate, invoiceNo, membershipStart, membershipEnd "
+        $query = "SELECT emailId, firstName, invoiceDate, invoiceNo,homeBase, membershipStart, membershipEnd "
             ."FROM mugmaster "
             ."where mugId = ".$mugId;
 
@@ -255,7 +264,7 @@ class Mugclub_Model extends CI_Model
     }
     public function getMugDataForMailById($mugId)
     {
-        $query = "SELECT mugId, firstName, lastName, mobileNo, emailId, birthDate, membershipEnd "
+        $query = "SELECT mugId, firstName, lastName, mobileNo,homeBase, emailId, birthDate, membershipEnd "
             ."FROM mugmaster "
             ."where mugId = ".$mugId;
 

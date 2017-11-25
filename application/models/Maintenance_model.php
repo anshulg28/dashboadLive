@@ -435,6 +435,17 @@ class Maintenance_Model extends CI_Model
         $result = $this->db->query($query)->result_array();
         return $result;
     }
+    function showOpenTotAmt()
+    {
+        $query = "SELECT lm.locName,SUM(clm.approxCost) as 'locAmount'
+                FROM `complaintlogmaster` clm
+                LEFT JOIN locationmaster lm ON clm.locId = lm.id
+                WHERE clm.status IN(".LOG_STATUS_PENDING_BUDGET_APPROVAL.")
+                GROUP BY lm.locName";
+
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
     function filterPayment($startDate, $endDate)
     {
         $query = "SELECT lm.locName,fsm.jobId,fsm.payAmount,fsm.payType

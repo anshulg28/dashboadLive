@@ -16,8 +16,22 @@
                     $tempLocs = explode(',',$secLocs);
                     if(count($tempLocs) > 1)
                     {
+                        $locName = '';
+                        //var_dump($userInfo[1]['locData'][0]['locName']);
+                        if(isset($userInfo))
+                        {
+                            foreach($userInfo as $key => $row)
+                            {
+                                if($row['locData'][0]['id'] == $this->commSecLoc)
+                                {
+                                    $locName = $row['locData'][0]['locName'];
+                                    break;
+                                }
+                            }
+                            //$locName = $userInfo[0]['locData'][0]['locName'];
+                        }
                         ?>
-                        <a href="<?php echo base_url().'dashboard/getCommLocation/'.base64_encode($secLocs);?>" id="change-sec-loc">(Change Location)</a>
+                        <a href="<?php echo base_url().'dashboard/getCommLocation/'.base64_encode($secLocs);?>" id="change-sec-loc"><?php echo $locName;?> (Change Location)</a>
                         <?php
                     }
                 }
@@ -2791,47 +2805,63 @@
             "mugEmail":mugEmail
         };
         var senderEmail = '<?php echo $this->userEmail;?>';
-        bootbox.prompt({
-            title: "Please provide your Gmail("+senderEmail+") password",
-            inputType: 'password',
-            callback: function (result) {
-                if(result != null && result != '')
-                {
-                    showCustomLoader();
-                    var senderPass = result;
-
-                    var errUrl = base_url+'mailers/checkGmaillogin';
-                    $.ajax({
-                        type:'POST',
-                        dataType:'json',
-                        url: base_url+'mailers/checkGmailLogin',
-                        data:{from:senderEmail,fromPass:senderPass},
-                        success: function(data)
-                        {
-                            hideCustomLoader();
-                            if(data.status === false)
-                            {
-                                bootbox.alert('Invalid Gmail Credentials!');
-                            }
-                            else
-                            {
-                                postData['senderPass'] = senderPass;
-                                postData['senderEmail'] = senderEmail;
-                                renewThisMug(postData,selectedCard);
-                            }
-                        },
-                        error: function(xhr,status, error){
-                            hideCustomLoader();
-                            bootbox.alert('Some Error Occurred!');
-                            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
-                            saveErrorLog(err);
-                        }
-                    });
-                }
+        var senderPass = '';
+        <?php
+            if($this->userEmail == DEFAULT_COMM_EMAIL)
+            {
+                ?>
+                senderPass = '<?php echo DEFAULT_COMM_PASS;?>';
+                <?php
             }
-        });
+        ?>
+        if(senderPass == '')
+        {
+            bootbox.prompt({
+                title: "Please provide your Gmail("+senderEmail+") password",
+                inputType: 'password',
+                callback: function (result) {
+                    if(result != null && result != '')
+                    {
+                        showCustomLoader();
+                        senderPass = result;
 
-
+                        var errUrl = base_url+'mailers/checkGmaillogin';
+                        $.ajax({
+                            type:'POST',
+                            dataType:'json',
+                            url: base_url+'mailers/checkGmailLogin',
+                            data:{from:senderEmail,fromPass:senderPass},
+                            success: function(data)
+                            {
+                                hideCustomLoader();
+                                if(data.status === false)
+                                {
+                                    bootbox.alert('Invalid Gmail Credentials!');
+                                }
+                                else
+                                {
+                                    postData['senderPass'] = senderPass;
+                                    postData['senderEmail'] = senderEmail;
+                                    renewThisMug(postData,selectedCard);
+                                }
+                            },
+                            error: function(xhr,status, error){
+                                hideCustomLoader();
+                                bootbox.alert('Some Error Occurred!');
+                                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                                saveErrorLog(err);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        else
+        {
+            postData['senderPass'] = senderPass;
+            postData['senderEmail'] = senderEmail;
+            renewThisMug(postData,selectedCard);
+        }
     });
 
     function renewThisMug(postData,selectedCard)
@@ -3511,67 +3541,108 @@
         }
 
         var senderEmail = $(this).find('#senderEmail').val();
-        bootbox.prompt({
-            title: "Please provide your Gmail("+senderEmail+") password",
-            inputType: 'password',
-            callback: function (result) {
-                if(result != null && result != '')
-                {
-                    showCustomLoader();
-                    var senderPass = result;
-                    var errUrl = base_url+'mailers/checkGmailLogin';
-                    $.ajax({
-                        type:'POST',
-                        dataType:'json',
-                        url: base_url+'mailers/checkGmailLogin',
-                        data:{from:senderEmail,fromPass:senderPass},
-                        success: function(data)
-                        {
-                            hideCustomLoader();
-                            if(data.status === false)
+        var senderPass = '';
+        <?php
+        if($this->userEmail == DEFAULT_COMM_EMAIL)
+        {
+            ?>
+            senderPass = '<?php echo DEFAULT_COMM_PASS;?>';
+            <?php
+        }
+        ?>
+        if(senderPass == '')
+        {
+            bootbox.prompt({
+                title: "Please provide your Gmail("+senderEmail+") password",
+                inputType: 'password',
+                callback: function (result) {
+                    if(result != null && result != '')
+                    {
+                        showCustomLoader();
+                        senderPass = result;
+                        var errUrl = base_url+'mailers/checkGmailLogin';
+                        $.ajax({
+                            type:'POST',
+                            dataType:'json',
+                            url: base_url+'mailers/checkGmailLogin',
+                            data:{from:senderEmail,fromPass:senderPass},
+                            success: function(data)
                             {
-                                bootbox.alert('Invalid Gmail Credentials!');
-                            }
-                            else
-                            {
-                                var errUrl = $(eventVar).attr('action');
-                                $(eventVar).find('#senderPass').val(senderPass);
-                                showCustomLoader();
-                                $.ajax({
-                                    type:"POST",
-                                    dataType:'json',
-                                    url: $(eventVar).attr('action'),
-                                    data: $(eventVar).serialize(),
-                                    success: function(data){
-                                        hideCustomLoader();
-                                        if(data.status === true)
-                                        {
-                                            window.location.reload();
+                                hideCustomLoader();
+                                if(data.status === false)
+                                {
+                                    bootbox.alert('Invalid Gmail Credentials!');
+                                }
+                                else
+                                {
+                                    var errUrl = $(eventVar).attr('action');
+                                    $(eventVar).find('#senderPass').val(senderPass);
+                                    showCustomLoader();
+                                    $.ajax({
+                                        type:"POST",
+                                        dataType:'json',
+                                        url: $(eventVar).attr('action'),
+                                        data: $(eventVar).serialize(),
+                                        success: function(data){
+                                            hideCustomLoader();
+                                            if(data.status === true)
+                                            {
+                                                window.location.reload();
+                                            }
+                                            else
+                                            {
+                                                bootbox.alert(data.errorMsg);
+                                            }
+                                        },
+                                        error: function(xhr, status, error){
+                                            hideCustomLoader();
+                                            bootbox.alert('Some Error Occurred!');
+                                            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                                            saveErrorLog(err);
                                         }
-                                        else
-                                        {
-                                            bootbox.alert(data.errorMsg);
-                                        }
-                                    },
-                                    error: function(xhr, status, error){
-                                        hideCustomLoader();
-                                        bootbox.alert('Some Error Occurred!');
-                                        var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
-                                        saveErrorLog(err);
-                                    }
-                                });
+                                    });
+                                }
+                            },
+                            error: function(xhr, status, error){
+                                hideCustomLoader();
+                                bootbox.alert('Some Error Occurred!');
+                                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                                saveErrorLog(err);
                             }
-                        },
-                        error: function(xhr, status, error){
-                            hideCustomLoader();
-                            bootbox.alert('Some Error Occurred!');
-                            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
-                            saveErrorLog(err);
-                        }
-                    });
+                        });
+                    }
                 }
-            }
-        });
+            });
+        }
+        else
+        {
+            var errUrl = $(eventVar).attr('action');
+            $(eventVar).find('#senderPass').val(senderPass);
+            showCustomLoader();
+            $.ajax({
+                type:"POST",
+                dataType:'json',
+                url: $(eventVar).attr('action'),
+                data: $(eventVar).serialize(),
+                success: function(data){
+                    hideCustomLoader();
+                    if(data.status === true)
+                    {
+                        window.location.reload();
+                    }
+                    else
+                    {
+                        bootbox.alert(data.errorMsg);
+                    }
+                },
+                error: function(xhr, status, error){
+                    hideCustomLoader();
+                    bootbox.alert('Some Error Occurred!');
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                    saveErrorLog(err);
+                }
+            });
+        }
 
     });
 
@@ -3959,69 +4030,111 @@
     $(document).on('click','#eventView .declineThis-event', function(){
         var declineUrl = $(this).attr('data-url');
         var senderEmail = $('#eventView #senderEmail').val();
+        var senderPass = '';
+        <?php
+        if($this->userEmail == DEFAULT_COMM_EMAIL)
+        {
+            ?>
+            senderPass = '<?php echo DEFAULT_COMM_PASS;?>';
+            <?php
+        }
+        ?>
 
-        bootbox.prompt({
-            title: "Please provide your Gmail("+senderEmail+") password",
-            inputType: 'password',
-            callback: function (result) {
-                if(result != null && result != '')
-                {
-                    var errUrl = base_url+'mailers/checkGmailLogin';
-                    showCustomLoader();
-                    var senderPass = result;
-                    $.ajax({
-                        type:'POST',
-                        dataType:'json',
-                        url: base_url+'mailers/checkGmailLogin',
-                        data:{from:senderEmail,fromPass:senderPass},
-                        success: function(data)
-                        {
-                            hideCustomLoader();
-                            if(data.status === false)
+        if(senderPass == '')
+        {
+            bootbox.prompt({
+                title: "Please provide your Gmail("+senderEmail+") password",
+                inputType: 'password',
+                callback: function (result) {
+                    if(result != null && result != '')
+                    {
+                        var errUrl = base_url+'mailers/checkGmailLogin';
+                        showCustomLoader();
+                        senderPass = result;
+                        $.ajax({
+                            type:'POST',
+                            dataType:'json',
+                            url: base_url+'mailers/checkGmailLogin',
+                            data:{from:senderEmail,fromPass:senderPass},
+                            success: function(data)
                             {
-                                bootbox.alert('Invalid Gmail Credentials!');
-                            }
-                            else
-                            {
-                                var errUrl = declineUrl;
-                                showCustomLoader();
-                                $.ajax({
-                                    type:'POST',
-                                    dataType:'json',
-                                    url: declineUrl,
-                                    data:{from:senderEmail,fromPass:senderPass},
-                                    success: function(data){
-                                        hideCustomLoader();
-                                        if(data.status == true)
-                                        {
-                                            window.location.reload();
-                                        }
-                                        else
-                                        {
-                                            bootbox.alert(data.errorMsg, function(){
+                                hideCustomLoader();
+                                if(data.status === false)
+                                {
+                                    bootbox.alert('Invalid Gmail Credentials!');
+                                }
+                                else
+                                {
+                                    var errUrl = declineUrl;
+                                    showCustomLoader();
+                                    $.ajax({
+                                        type:'POST',
+                                        dataType:'json',
+                                        url: declineUrl,
+                                        data:{from:senderEmail,fromPass:senderPass},
+                                        success: function(data){
+                                            hideCustomLoader();
+                                            if(data.status == true)
+                                            {
                                                 window.location.reload();
-                                            });
+                                            }
+                                            else
+                                            {
+                                                bootbox.alert(data.errorMsg, function(){
+                                                    window.location.reload();
+                                                });
+                                            }
+                                        },
+                                        error: function(xhr, status, error){
+                                            hideCustomLoader();
+                                            bootbox.alert('Some Error Occurred!');
+                                            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                                            saveErrorLog(err);
                                         }
-                                    },
-                                    error: function(xhr, status, error){
-                                        hideCustomLoader();
-                                        bootbox.alert('Some Error Occurred!');
-                                        var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
-                                        saveErrorLog(err);
-                                    }
-                                });
+                                    });
+                                }
+                            },
+                            error: function(xhr, status, error){
+                                hideCustomLoader();
+                                bootbox.alert('Some Error Occurred!');
+                                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                                saveErrorLog(err);
                             }
-                        },
-                        error: function(xhr, status, error){
-                            hideCustomLoader();
-                            bootbox.alert('Some Error Occurred!');
-                            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
-                            saveErrorLog(err);
-                        }
-                    });
+                        });
+                    }
                 }
-            }
-        });
+            });
+        }
+        else
+        {
+            var errUrl = declineUrl;
+            showCustomLoader();
+            $.ajax({
+                type:'POST',
+                dataType:'json',
+                url: declineUrl,
+                data:{from:senderEmail,fromPass:senderPass},
+                success: function(data){
+                    hideCustomLoader();
+                    if(data.status == true)
+                    {
+                        window.location.reload();
+                    }
+                    else
+                    {
+                        bootbox.alert(data.errorMsg, function(){
+                            window.location.reload();
+                        });
+                    }
+                },
+                error: function(xhr, status, error){
+                    hideCustomLoader();
+                    bootbox.alert('Some Error Occurred!');
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                    saveErrorLog(err);
+                }
+            });
+        }
     });
 
     $(document).on('click','#eventPrice-modal .save-event-price', function(){
@@ -4082,82 +4195,138 @@
         else
         {
             var senderEmail = $('#eventView #senderEmail').val();
-            bootbox.prompt({
-                title: "Please provide your Gmail("+senderEmail+") password",
-                inputType: 'password',
-                callback: function (result) {
-                    if(result != null && result != '')
-                    {
-                        var errUrl = base_url+'mailers/checkGmailLogin';
-                        showCustomLoader();
-                        var senderPass = result;
-                        $.ajax({
-                            type:'POST',
-                            dataType:'json',
-                            url: base_url+'mailers/checkGmailLogin',
-                            data:{from:senderEmail,fromPass:senderPass},
-                            success: function(data)
-                            {
-                                hideCustomLoader();
-                                if(data.status === false)
+            var senderPass = '';
+            <?php
+            if($this->userEmail == DEFAULT_COMM_EMAIL)
+            {
+                ?>
+                senderPass = '<?php echo DEFAULT_COMM_PASS;?>';
+                <?php
+            }
+            ?>
+            if(senderPass == '')
+            {
+                bootbox.prompt({
+                    title: "Please provide your Gmail("+senderEmail+") password",
+                    inputType: 'password',
+                    callback: function (result) {
+                        if(result != null && result != '')
+                        {
+                            var errUrl = base_url+'mailers/checkGmailLogin';
+                            showCustomLoader();
+                            senderPass = result;
+                            $.ajax({
+                                type:'POST',
+                                dataType:'json',
+                                url: base_url+'mailers/checkGmailLogin',
+                                data:{from:senderEmail,fromPass:senderPass},
+                                success: function(data)
                                 {
-                                    bootbox.alert('Invalid Gmail Credentials!');
-                                }
-                                else
-                                {
-                                    var errUrl = eveApprovUrl;
-                                    showCustomLoader();
-                                    $.ajax({
-                                        type:'POST',
-                                        dataType:'json',
-                                        url: eveApprovUrl,
-                                        data:{costType: $('#eventPrice-modal input[name="costType"]:checked').val(),
-                                            costPrice: costEntered,
-                                            doolallyFee: customFee,
-                                            from:senderEmail,fromPass:senderPass},
-                                        success: function(subData){
-                                            hideCustomLoader();
-                                            if(subData.status == true)
-                                            {
-                                                if(typeof subData.meetupError !== 'undefined')
+                                    hideCustomLoader();
+                                    if(data.status === false)
+                                    {
+                                        bootbox.alert('Invalid Gmail Credentials!');
+                                    }
+                                    else
+                                    {
+                                        var errUrl = eveApprovUrl;
+                                        showCustomLoader();
+                                        $.ajax({
+                                            type:'POST',
+                                            dataType:'json',
+                                            url: eveApprovUrl,
+                                            data:{costType: $('#eventPrice-modal input[name="costType"]:checked').val(),
+                                                costPrice: costEntered,
+                                                doolallyFee: customFee,
+                                                from:senderEmail,fromPass:senderPass},
+                                            success: function(subData){
+                                                hideCustomLoader();
+                                                if(subData.status == true)
                                                 {
-                                                    bootbox.alert('Meetup Error: '+subData.meetupError);
-                                                }
-                                                if(typeof subData.apiData !== 'undefined')
-                                                {
-                                                    createEventsHigh(subData.apiData);
+                                                    if(typeof subData.meetupError !== 'undefined')
+                                                    {
+                                                        bootbox.alert('Meetup Error: '+subData.meetupError);
+                                                    }
+                                                    if(typeof subData.apiData !== 'undefined')
+                                                    {
+                                                        createEventsHigh(subData.apiData);
+                                                    }
+                                                    else
+                                                    {
+                                                        window.location.reload();
+                                                    }
                                                 }
                                                 else
                                                 {
-                                                    window.location.reload();
+                                                    bootbox.alert(subData.errorMsg, function(){
+                                                        window.location.reload();
+                                                    });
                                                 }
+                                            },
+                                            error: function(xhr, status, error){
+                                                hideCustomLoader();
+                                                bootbox.alert('Some Error Occurred!');
+                                                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                                                saveErrorLog(err);
                                             }
-                                            else
-                                            {
-                                                bootbox.alert(subData.errorMsg, function(){
-                                                    window.location.reload();
-                                                });
-                                            }
-                                        },
-                                        error: function(xhr, status, error){
-                                            hideCustomLoader();
-                                            bootbox.alert('Some Error Occurred!');
-                                            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
-                                            saveErrorLog(err);
-                                        }
-                                    });
+                                        });
+                                    }
+                                },
+                                error: function(xhr, status, error){
+                                    hideCustomLoader();
+                                    bootbox.alert('Some Error Occurred!');
+                                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                                    saveErrorLog(err);
                                 }
-                            },
-                            error: function(xhr, status, error){
-                                hideCustomLoader();
-                                bootbox.alert('Some Error Occurred!');
-                                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
-                                saveErrorLog(err);
-                            }
-                        });
+                            });
+                        }
                     }
-                }
-            });
+                });
+            }
+            else
+            {
+                var errUrl = eveApprovUrl;
+                showCustomLoader();
+                $.ajax({
+                    type:'POST',
+                    dataType:'json',
+                    url: eveApprovUrl,
+                    data:{costType: $('#eventPrice-modal input[name="costType"]:checked').val(),
+                        costPrice: costEntered,
+                        doolallyFee: customFee,
+                        from:senderEmail,fromPass:senderPass},
+                    success: function(subData){
+                        hideCustomLoader();
+                        if(subData.status == true)
+                        {
+                            if(typeof subData.meetupError !== 'undefined')
+                            {
+                                bootbox.alert('Meetup Error: '+subData.meetupError);
+                            }
+                            if(typeof subData.apiData !== 'undefined')
+                            {
+                                createEventsHigh(subData.apiData);
+                            }
+                            else
+                            {
+                                window.location.reload();
+                            }
+                        }
+                        else
+                        {
+                            bootbox.alert(subData.errorMsg, function(){
+                                window.location.reload();
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error){
+                        hideCustomLoader();
+                        bootbox.alert('Some Error Occurred!');
+                        var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                        saveErrorLog(err);
+                    }
+                });
+            }
         }
 
     });
@@ -4338,59 +4507,104 @@
     $(document).on('click','#eventView .cancel-this-event', function(){
         var eveId = $(this).attr('data-eventId');
         var senderEmail = $('#eventView #senderEmail').val();
-        bootbox.prompt({
-            title: "Please provide your Gmail("+senderEmail+") password",
-            inputType: 'password',
-            callback: function (result) {
-                if(result != null && result != '')
+        var senderPass = '';
+        <?php
+        if($this->userEmail == DEFAULT_COMM_EMAIL)
+        {
+            ?>
+            senderPass = '<?php echo DEFAULT_COMM_PASS;?>';
+            <?php
+        }
+        ?>
+        if(senderPass == '')
+        {
+            bootbox.prompt({
+                title: "Please provide your Gmail("+senderEmail+") password",
+                inputType: 'password',
+                callback: function (result) {
+                    if(result != null && result != '')
+                    {
+                        var errUrl = base_url+'mailers/checkGmailLogin';
+                        showCustomLoader();
+                        senderPass = result;
+                        $.ajax({
+                            type:'POST',
+                            dataType:'json',
+                            url: base_url+'mailers/checkGmailLogin',
+                            data:{from:senderEmail,fromPass:senderPass},
+                            success: function(data)
+                            {
+                                hideCustomLoader();
+                                if(data.status === false)
+                                {
+                                    bootbox.alert('Invalid Gmail Credentials!');
+                                }
+                                else
+                                {
+                                    bootbox.confirm("Are you sure you want to Cancel Event?", function(result) {
+                                        if(result === true)
+                                        {
+                                            var errUrl = base_url+'dashboard/cancelEvent/'+eveId;
+                                            showCustomLoader();
+                                            $.ajax({
+                                                type:'POST',
+                                                dataType:'json',
+                                                url:base_url+'dashboard/cancelEvent/'+eveId,
+                                                data:{from:senderEmail,fromPass:senderPass},
+                                                success: function(data){
+                                                    hideCustomLoader();
+                                                    if(data.status == true)
+                                                    {
+                                                        window.location.reload();
+                                                    }
+                                                    else
+                                                    {
+                                                        bootbox.alert('<label class="my-danger-text">'+data.errorMsg+'</label>');
+                                                    }
+                                                },
+                                                error: function(xhr, status, error){
+                                                    hideCustomLoader();
+                                                    bootbox.alert('Some Error Occurred!');
+                                                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                                                    saveErrorLog(err);
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            },
+                            error: function(xhr, status, error){
+                                hideCustomLoader();
+                                bootbox.alert('Some Error Occurred!');
+                                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                                saveErrorLog(err);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        else
+        {
+            bootbox.confirm("Are you sure you want to Cancel Event?", function(result) {
+                if(result === true)
                 {
-                    var errUrl = base_url+'mailers/checkGmailLogin';
+                    var errUrl = base_url+'dashboard/cancelEvent/'+eveId;
                     showCustomLoader();
-                    var senderPass = result;
                     $.ajax({
                         type:'POST',
                         dataType:'json',
-                        url: base_url+'mailers/checkGmailLogin',
+                        url:base_url+'dashboard/cancelEvent/'+eveId,
                         data:{from:senderEmail,fromPass:senderPass},
-                        success: function(data)
-                        {
+                        success: function(data){
                             hideCustomLoader();
-                            if(data.status === false)
+                            if(data.status == true)
                             {
-                                bootbox.alert('Invalid Gmail Credentials!');
+                                window.location.reload();
                             }
                             else
                             {
-                                bootbox.confirm("Are you sure you want to Cancel Event?", function(result) {
-                                    if(result === true)
-                                    {
-                                        var errUrl = base_url+'dashboard/cancelEvent/'+eveId;
-                                        showCustomLoader();
-                                        $.ajax({
-                                            type:'POST',
-                                            dataType:'json',
-                                            url:base_url+'dashboard/cancelEvent/'+eveId,
-                                            data:{from:senderEmail,fromPass:senderPass},
-                                            success: function(data){
-                                                hideCustomLoader();
-                                                if(data.status == true)
-                                                {
-                                                    window.location.reload();
-                                                }
-                                                else
-                                                {
-                                                    bootbox.alert('<label class="my-danger-text">'+data.errorMsg+'</label>');
-                                                }
-                                            },
-                                            error: function(xhr, status, error){
-                                                hideCustomLoader();
-                                                bootbox.alert('Some Error Occurred!');
-                                                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
-                                                saveErrorLog(err);
-                                            }
-                                        });
-                                    }
-                                });
+                                bootbox.alert('<label class="my-danger-text">'+data.errorMsg+'</label>');
                             }
                         },
                         error: function(xhr, status, error){
@@ -4401,8 +4615,8 @@
                         }
                     });
                 }
-            }
-        });
+            });
+        }
 
     });
 

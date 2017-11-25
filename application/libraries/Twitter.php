@@ -345,7 +345,7 @@ class tmhOAuth {
 				'secret'                     => ACCESS_SECRET,
 
 				// OAuth2 bearer token. This should already be URL encoded
-				'bearer'                     => BEARER_TOKEN,
+				'bearer'                     => '',
 
 				// oauth signing variables that are not dynamic
 				'oauth_version'              => '1.0',

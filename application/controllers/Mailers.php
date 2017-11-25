@@ -222,7 +222,14 @@ class Mailers extends MY_Controller {
             if($this->userType == EXECUTIVE_USER)
             {
                 $userInfo = $this->users_model->getUserDetailsById($this->userId);
-                $expiredMails = $this->mugclub_model->getExpiredMugsList(true,$userInfo['userData'][0]['assignedLoc']);
+                if(isset($userInfo['userData'][0]['assignedLoc']))
+                {
+                    $expiredMails = $this->mugclub_model->getExpiredMugsList(true,$userInfo['userData'][0]['assignedLoc']);
+                }
+                else
+                {
+                    $expiredMails = $this->mugclub_model->getExpiredMugsList(true,$userInfo['userData'][0]['secondaryLoc']);
+                }
             }
             else
             {
@@ -235,7 +242,14 @@ class Mailers extends MY_Controller {
             if($this->userType == EXECUTIVE_USER)
             {
                 $userInfo = $this->users_model->getUserDetailsById($this->userId);
-                $expiringMails = $this->mugclub_model->getExpiringMugsList(1,'week',true,$userInfo['userData'][0]['assignedLoc']);
+                if(isset($userInfo['userData'][0]['assignedLoc']))
+                {
+                    $expiringMails = $this->mugclub_model->getExpiringMugsList(1,'week',true,$userInfo['userData'][0]['assignedLoc']);
+                }
+                else
+                {
+                    $expiringMails = $this->mugclub_model->getExpiringMugsList(1,'week',true,$userInfo['userData'][0]['secondaryLoc']);
+                }
             }
             else
             {
@@ -248,7 +262,14 @@ class Mailers extends MY_Controller {
             if($this->userType == EXECUTIVE_USER)
             {
                 $userInfo = $this->users_model->getUserDetailsById($this->userId);
-                $expiringMails = $this->mugclub_model->getBirthdayMugsList(true,$userInfo['userData'][0]['assignedLoc']);
+                if(isset($userInfo['userData'][0]['assignedLoc']))
+                {
+                    $expiringMails = $this->mugclub_model->getBirthdayMugsList(true,$userInfo['userData'][0]['assignedLoc']);
+                }
+                else
+                {
+                    $expiringMails = $this->mugclub_model->getBirthdayMugsList(true,$userInfo['userData'][0]['secondaryLoc']);
+                }
             }
             else
             {
@@ -288,6 +309,7 @@ class Mailers extends MY_Controller {
             if(isset($key) && isStringSet($key))
             {
                 $mugInfo = $this->mugclub_model->getMugDataForMailById($key);
+                $commDetail = $this->users_model->searchUserByLoc($mugInfo['mugList'][0]['homeBase']);
                 if($post['mailType'] == BIRTHDAY_MAIL)
                 {
                     $newDate =array("membershipEnd"=> date('Y-m-d', strtotime($mugInfo['mugList'][0]['membershipEnd'].' +3 month')));
@@ -306,26 +328,33 @@ class Mailers extends MY_Controller {
                     $mainBody .= $body .'</body></html>';
                     $newBody = $mainBody;
                 }
-                $cc        = implode(',',$this->config->item('ccList'));
+                //$cc        = implode(',',$this->config->item('ccList'));
                 $fromName  = 'Doolally';
-                if(isset($this->userFirstName))
+                if($commDetail['status'] == true && $this->userEmail == DEFAULT_COMM_EMAIL)
                 {
-                    $fromName = trim(ucfirst($this->userFirstName));
+                    $fromName = ucfirst(trim($commDetail['userData']['firstName']));
+                }
+                else
+                {
+                    if(isset($this->userFirstName))
+                    {
+                        $fromName = trim(ucfirst($this->userFirstName));
+                    }
                 }
                 $fromEmail = DEFAULT_SENDER_EMAIL;
                 $fromPass = DEFAULT_SENDER_PASS;
                 $replyTo = $fromEmail;
 
-                if(isset($this->userEmail))
+                if($commDetail['status'] == true && $this->userEmail == DEFAULT_COMM_EMAIL)
                 {
-                    $replyTo = $this->userEmail;
-                    /*$userInfo = $this->login_model->checkEmailSender($this->userEmail);
-                    if(isset($userInfo) && myIsArray($userInfo))
+                    $replyTo = $commDetail['userData']['emailId'];
+                }
+                else
+                {
+                    if(isset($this->userEmail))
                     {
-                        $fromPass = $userInfo['gmailPass'];
-                        $fromEmail = $this->userEmail;
-                    }*/
-
+                        $replyTo = $this->userEmail;
+                    }
                 }
 
                 if(isset($post['senderEmail']) && isStringSet($post['senderEmail'])
@@ -336,11 +365,15 @@ class Mailers extends MY_Controller {
                 }
 
                 $cc        = implode(',',$this->config->item('ccList'));
-                $extraCc = getExtraCCEmail($fromEmail);
+                if($commDetail['status'] == true && $this->userEmail != $commDetail['userData']['emailId'])
+                {
+                    $cc .= ','.$commDetail['userData']['emailId'];
+                }
+                /*$extraCc = getExtraCCEmail($fromEmail);
                 if(isStringSet($extraCc))
                 {
                     $cc = $cc.','.$extraCc;
-                }
+                }*/
 
                 $this->sendemail_library->sendEmail($mugInfo['mugList'][0]['emailId'],$cc,$fromEmail, $fromPass,$fromName,$replyTo,$newSubject,$newBody);
                 $this->mailers_model->setMailSend($key,$post['mailType']);

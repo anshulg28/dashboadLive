@@ -67,7 +67,7 @@ class Locations_Model extends CI_Model
     {
         $query = "SELECT * "
             ."FROM locationmaster "
-            ."WHERE locUniqueLink = '".$locUnqiueLink."'";
+            ."WHERE locUniqueLink LIKE '%".$locUnqiueLink."%'";
 
         $result = $this->db->query($query)->result_array();
 

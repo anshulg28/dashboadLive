@@ -630,6 +630,7 @@
                                                         {
                                                             $inPics = explode(',',$row['invoicePics']);
                                                             foreach($inPics as $pic)
+                                                            $imgs = array();
                                                             {
                                                                 $imgs[] = base_url().JOB_MEDIA_PATH.$pic;
                                                             }
@@ -770,6 +771,56 @@
                             </table>
                         </div>
                         <div id="payfilter" class="tab-pane fade">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <br>
+                                    <p>Open Complaint Location wise Amount Balance for accounts approval:</p>
+                                    <?php
+                                    if(isset($openTot) && myIsArray($openTot))
+                                    {
+                                        ?>
+                                        <table class="table table-responsive">
+                                            <thead>
+                                            <tr>
+                                                <th>Taproom</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php
+                                            foreach($openTot as $key => $row)
+                                            {
+                                                ?>
+                                                <tr>
+                                                    <td><?php echo $row['locName'];?></td>
+                                                    <td>
+                                                        <?php
+                                                        if(isset($row['locAmount']))
+                                                        {
+                                                            echo 'Rs. '. $row['locAmount'];
+                                                        }
+                                                        else
+                                                        {
+                                                            echo 'Rs. 0';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                </tr>
+                                                <?php
+
+                                            }
+                                            ?>
+                                            </tbody>
+                                        </table>
+                                        <?php
+                                    }
+                                    else
+                                    {
+                                        echo 'Nothing To pay!';
+                                    }
+                                    ?>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-xs-12">
                                     <?php

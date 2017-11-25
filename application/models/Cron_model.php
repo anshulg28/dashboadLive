@@ -323,4 +323,14 @@ class Cron_Model extends CI_Model
         $result = $this->db->query($query)->result_array();
         return $result;
     }
+
+    function getMusicReqData($date)
+    {
+        $query = "SELECT mrm.*,lm.locName FROM musicrequestmaster mrm
+                  LEFT JOIN locationmaster lm ON mrm.taproomId = lm.jukeboxId
+                  WHERE DATE(insertedDateTime) = '".$date."'";
+
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
 }

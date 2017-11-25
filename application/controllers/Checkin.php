@@ -247,7 +247,16 @@ class Checkin extends MY_Controller {
 
         if(isset($post['mugNum']))
         {
-            $verifyMugData = $this->mugclub_model->getMugDataWithOfferById($post['mugNum']);
+            $verifyMugData = $this->mugclub_model->getMugDataById($post['mugNum']);
+            $offerDetail = $this->mugclub_model->getBreakfastOfMug($post['mugNum']);
+            if(isset($offerDetail) && myIsArray($offerDetail))
+            {
+                $verifyMugData['mugList']['offerDetails']= $offerDetail;
+            }
+            else
+            {
+                $verifyMugData['mugList']['offerNotFound'] = true;
+            }
 
             echo json_encode($verifyMugData);
         }

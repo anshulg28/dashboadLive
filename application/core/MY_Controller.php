@@ -57,6 +57,7 @@ class MY_Controller extends CI_Controller
         $this->load->library('Twitter');
         $this->load->library('meetup');
         $this->load->library('GoogleUrlApi');
+        $this->load->library('PHPExcel');
 
 		//
 		if($this->agent->is_referral() == false)

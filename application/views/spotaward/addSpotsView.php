@@ -14,8 +14,8 @@
                     <div class="col-xs-1"></div>
                     <div class="col-xs-10">
                         <div class="form-group">
-                            <label for="awardDate">Select Award Date</label>
-                            <input type="text" name="awardDate" id="awardDate"/>
+                            <label for="awardDate">Select Award Month</label>
+                            <input type="text" class="form-control" name="awardDate" id="awardDate"/>
                         </div>
                         <div class="form-group">
                             <label for="problemMedia">Excel File Upload</label>
@@ -30,6 +30,27 @@
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                         <br>
+                        <br>
+                        <span>
+                            <b>Valid Locations:</b>
+                            <?php
+                            echo implode(', ',array_map(function($foo){return $foo['locName'];}, $locs));
+                            ?>
+                        </span>
+                        <br>
+                        <span>
+                            <b>Valid Departments:</b>
+                            <?php
+                            echo implode(', ',array_map(function($foo){return $foo['dName'];}, $departs));
+                            ?>
+                        </span>
+                        <br>
+                        <span>
+                            <b>Valid Designations:</b>
+                            <?php
+                            echo implode(', ',array_map(function($foo){return $foo['dName'];}, $designations));
+                            ?>
+                        </span>
                     </div>
                     <div class="col-xs-1"></div>
                 </div>
@@ -42,11 +63,17 @@
 
 <script>
     $('#awardDate').datetimepicker({
-        format: 'YYYY-MM-DD'
+        format: 'MM-YYYY'
     });
 
     $(document).on('submit','#spotForm', function(e){
         e.preventDefault();
+
+        if($('#awardDate').val() == '')
+        {
+            bootbox.alert('Award Date is required!');
+            return false;
+        }
 
         if($('input[name="excelFile"]').val() == '')
         {
@@ -71,16 +98,14 @@
                 }
                 else
                 {
-                    if(typeof data.pageUrl !== 'undefined')
+                    var errors = data.errorMsg.split(',');
+                    var errTxt = '';
+                    for(var i=0;i<errors.length;i++)
                     {
-                        bootbox.alert(data.errorMsg,function(){
-                            window.location.href=data.pageUrl;
-                        });
+                        errTxt += errors[i]+'<br>';
                     }
-                    else
-                    {
-                        bootbox.alert(data.errorMsg);
-                    }
+                    bootbox.alert(errTxt);
+                    $('button[type="submit"]').removeAttr('disabled');
                 }
             },
             error:function(xhr, status, error)

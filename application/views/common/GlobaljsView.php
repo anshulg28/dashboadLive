@@ -522,7 +522,7 @@ $(document).on('click','.homePage .request-otp', function(){
                         },
                         error: function(xhr, status, error){
                             hideCustomLoader();
-                            bootbox.alert('Some Error Occurred!');
+                            bootbox.alert('Enable/Disable Failed On Eventshigh, Please try again!');
                             var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                             saveErrorLog(err);
                         }
@@ -554,7 +554,7 @@ $(document).on('click','.homePage .request-otp', function(){
                         },
                         error: function(xhr, status, error){
                             hideCustomLoader();
-                            bootbox.alert('Some Error Occurred!');
+                            bootbox.alert('Failed to save Eventshigh data, Please Try again');
                             var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                             saveErrorLog(err);
                         }
@@ -563,7 +563,7 @@ $(document).on('click','.homePage .request-otp', function(){
             },
             error: function(xhr, status, error){
                 hideCustomLoader();
-                bootbox.alert('Some Error Occurred!');
+                bootbox.alert('Failed to push event data on Eventshigh, Please try again!');
                 var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }

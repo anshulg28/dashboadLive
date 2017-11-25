@@ -16,7 +16,7 @@
         Don't hurry or anything, it's valid till hell freezes over! Also, this is valid at any of our Mumbai taprooms.<br><br>
 
         Thanks,<br>
-        <?php echo trim(ucfirst($this->userFirstName));?>, Doolally
+        <?php echo $fromName;?>, Doolally
     </p>
 
 </body>

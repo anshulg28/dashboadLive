@@ -588,6 +588,11 @@
             bootbox.alert('Event Price Cannot be Zero');
             return false;
         }
+        if($(this).find('#eventDate').val() == '')
+        {
+            bootbox.alert('Event Date is Required!');
+        }
+
         var d = new Date($(this).find('#eventDate').val());
         var startT = $(this).find('#startTime').val();
         var endT = $(this).find('#endTime').val();

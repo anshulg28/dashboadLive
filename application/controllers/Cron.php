@@ -101,6 +101,36 @@ class Cron extends MY_Controller
     {
         $twitterFeeds = '';
         $this->twitter->tmhOAuth->reconfigure();
+        $bearer = $this->twitter->tmhOAuth->bearer_token_credentials();
+        $params = array(
+            'grant_type' => 'client_credentials',
+        );
+
+        $code = $this->twitter->tmhOAuth->request(
+            'POST',
+            $this->twitter->tmhOAuth->url('/oauth2/token', null),
+            $params,
+            false,
+            false,
+            array(
+                'Authorization' => "Basic ${bearer}"
+            )
+        );
+        if ($code == 200)
+        {
+            $data = json_decode($this->twitter->tmhOAuth->response['response']);
+            if (isset($data->token_type) && strcasecmp($data->token_type, 'bearer') === 0)
+            {
+                $new_bearer = $data->access_token;
+            }
+        }
+        else
+        {
+            echo $code;
+        }
+        $this->twitter->tmhOAuth->reconfigure(array(
+           'bearer' => $new_bearer
+        ));
         $oldparmas = array(
             'count' => '20',
             'exclude_replies' => 'true',
@@ -114,14 +144,25 @@ class Cron extends MY_Controller
             'lang' => 'en',
             'result_type' => 'recent'
         );
+        $rsp = $this->twitter->tmhOAuth->apponly_request(array(
+            'method'=> 'GET',
+            'url' => $this->twitter->tmhOAuth->url('1.1/search/tweets'),
+            'params' => $parmas
+        ));
+
         //$responseCode = $this->twitter->tmhOAuth->request('GET','https://api.twitter.com/1.1/statuses/user_timeline.json',$parmas);
-        $responseCode = $this->twitter->tmhOAuth->request('GET','https://api.twitter.com/1.1/search/tweets.json',$parmas);
-        if($responseCode == 200)
+        //$responseCode = $this->twitter->tmhOAuth->request('GET','https://api.twitter.com/1.1/search/tweets.json',$parmas);
+        if($rsp == 200)
         {
             $twitterFeeds = $this->twitter->tmhOAuth->response['response'];
-            $oldresponseCode = $this->twitter->tmhOAuth->request('GET','https://api.twitter.com/1.1/statuses/user_timeline.json',$oldparmas);
+            $oldrsp = $this->twitter->tmhOAuth->apponly_request(array(
+                'method'=> 'GET',
+                'url' => $this->twitter->tmhOAuth->url('1.1/statuses/user_timeline.json'),
+                'params' => $oldparmas
+            ));
+            //$oldresponseCode = $this->twitter->tmhOAuth->request('GET','https://api.twitter.com/1.1/statuses/user_timeline.json',$oldparmas);
 
-            if($oldresponseCode == 200)
+            if($oldrsp == 200)
             {
                 $oldTwitterFeeds = $this->twitter->tmhOAuth->response['response'];
                 $oldTwitterFeeds = json_decode($oldTwitterFeeds,true);
@@ -192,7 +233,7 @@ class Cron extends MY_Controller
         $params = array(
             'access_token' => FACEBOOK_TOKEN,
             'limit' => '15',
-            'fields' => 'message,permalink_url,id,from,name,picture,source,updated_time'
+            'fields' => 'message,permalink_url,id,from,name,full_picture,source,updated_time'
         );
         $fbFeeds[] = $this->curl_library->getFacebookPosts('godoolallyandheri',$params);
         $fbFeeds[] = $this->curl_library->getFacebookPosts('godoolallybandra',$params);
@@ -651,14 +692,14 @@ class Cron extends MY_Controller
                 case 'f':
                     if(!myInArray($row['id'],$viewIds))
                     {
-                        if(isset($row['picture']))
+                        if(isset($row['full_picture']))
                         {
-                            preg_match('/(=http:|=https:|http:|https:)\/\/.+?(\.jpg|\.png|\.gif|\.jpeg)/',urldecode($row['picture']),$matches);
+                            preg_match('/(=http:|=https:|http:|https:)\/\/.+?(\.jpg|\.png|\.gif|\.jpeg)/',urldecode($row['full_picture']),$matches);
                             if(myIsArray($matches))
                             {
                                 $fileArray = explode('/',$matches[0]);
                                 $fileName= $fileArray[count($fileArray)-1];
-                                if(copy($row['picture'],'../mobile/socialimages/facebook/'.$fileName))
+                                if(copy($row['full_picture'],'../mobile/socialimages/facebook/'.$fileName))
                                 {
                                     $row['picture'] = MOBILE_URL.'socialimages/facebook/'.$fileName;
                                 }
@@ -1025,6 +1066,71 @@ class Cron extends MY_Controller
             $this->cron_model->insertNewFeedsBatch($saveArr);
             echo 'done';
         }
+    }
+
+    public function fixDupFeeds()
+    {
+        $lastFeeds = $this->cron_model->getMoreLatestFeeds(0);
+        $allTemps = $this->cron_model->getTempFeedView();
+
+        $lastErr = json_decode($lastFeeds['feedText'],TRUE);
+        $finalFeeds = $lastErr;
+        foreach($allTemps as $key => $row)
+        {
+            $finalFeeds[] = $row['feedText'];
+        }
+        //$finalFeeds = array_merge($lastErr,$allTemps);
+
+        $unique = array_map("unserialize", array_unique(array_map("serialize", $finalFeeds)));
+
+        $newFixFeeds = array();
+        foreach($unique as $key => $row)
+        {
+            if(gettype($row) == 'string')
+            {
+                $row = json_decode($row,TRUE);
+            }
+            $newFixFeeds[] = $row;
+        }
+        //Dividing the temp view feeds
+        $fixFeeds = array_slice($newFixFeeds,0,150);
+        $tempRemaining = array_slice($newFixFeeds,150,(count($newFixFeeds)-1));
+
+        //storing 150 chunk to data table
+        $details = array(
+            'feedText' => json_encode($fixFeeds),
+            'feedType' => '0',
+            'postsCount' => count($fixFeeds)
+        );
+        $this->cron_model->insertFeedByType($details);
+
+        //flashing the temp view and main view
+        $this->cron_model->clearTempViewFeeds();
+        $this->cron_model->clearViewFeeds();
+        foreach($tempRemaining as $key => $row)
+        {
+            $viewIds = '';
+            switch($row['socialType'])
+            {
+                case 'f':
+                    $viewIds = $row['id'];
+                    break;
+                case 'i':
+                    $viewIds = $row['id'];
+                    break;
+                case 't':
+                    $viewIds = $row['id_str'];
+                    break;
+            }
+            $viewBatch[] = array(
+                'feedId' => $viewIds,
+                'feedText' => json_encode($row),
+                'updateDateTime' => date('Y-m-d H:i:s')
+            );
+        }
+        $this->cron_model->insertFeedBatch($viewBatch);
+        $this->cron_model->insertTempFeedBatch($viewBatch);
+
     }
 
     public function transferToViewFeed()
@@ -1492,11 +1598,12 @@ class Cron extends MY_Controller
                 }
 
                 $cc        = implode(',',$this->config->item('ccList'));
-                $extraCc = getExtraCCEmail($fromEmail);
+                $cc .= ','.$replyTo;
+                /*$extraCc = getExtraCCEmail($fromEmail);
                 if(isStringSet($extraCc))
                 {
                     $cc = $cc.','.$extraCc;
-                }
+                }*/
 
                 $this->sendemail_library->sendEmail($mugInfo['mugList'][0]['emailId'],$cc,$fromEmail, $fromPass,$fromName,$replyTo,$newSubject,$newBody);
                 $this->mailers_model->setMailSend($row['mugId'],BIRTHDAY_MAIL);
@@ -1715,4 +1822,47 @@ class Cron extends MY_Controller
         }
     }
 
+    public function sendMusicReqReport()
+    {
+        $colsArray = array('Song Name','Location','EmailId','Date/Time');
+
+        $file = fopen("./uploads/musicReqReport_".date('d_M_Y',strtotime('-1 day')).'.csv',"w");
+        fputcsv($file,$colsArray);
+        $date = date('Y-m-d',strtotime('-1 day'));
+        $musicData = $this->cron_model->getMusicReqData($date);
+        if(isset($musicData) && myIsArray($musicData) && isset($musicData[0]['id']))
+        {
+            $subject = "Daily Jukebox Music Request Report for ".date('Y_m_d',strtotime('-1 day'));
+            $content = '<html><body><p>Daily Jukebox Music Request Report<br>PFA</p></body></html>';
+            foreach($musicData as $key => $row)
+            {
+                $d = date_create($row['insertedDateTime']);
+                $fData = array(
+                    $row['songName'],
+                    $row['locName'],
+                    $row['userEmail'],
+                    date_format($d,DATE_TIME_FORMAT_UI)
+                );
+                fputcsv($file,$fData);
+            }
+            fclose($file);
+            $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+                ,'admin@brewcraftsindia.com',$subject,$content,array("./uploads/musicReqReport_".date('d_M_Y',strtotime('-1 day')).".csv"));
+            try
+            {
+                unlink("./uploads/musicReqReport_".date('d_M_Y',strtotime('-1 day')).".csv");
+            }
+            catch(Exception $ex)
+            {
+
+            }
+        }
+        else
+        {
+            $subject = "No Music Request Report for ".date('Y_m_d',strtotime('-1 day'));
+            $content = '<html><body><p>No Music Request Report</p>';
+            $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+                ,'admin@brewcraftsindia.com',$subject,$content,array());
+        }
+    }
 }

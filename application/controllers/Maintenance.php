@@ -148,6 +148,13 @@ class Maintenance extends MY_Controller {
             $media = $post['problemMedia'];
             unset($post['problemMedia']);
         }
+        if($media == '')
+        {
+            $data['errorMsg'] = 'Error: No Job Media Provided!';
+            $data['status'] = false;
+            echo json_encode($data);
+            return false;
+        }
         if(!isset($post['locId']))
         {
             $post['locId'] = $this->currentLocation;
@@ -237,6 +244,7 @@ class Maintenance extends MY_Controller {
         $data['postponeComplaints'] = $this->maintenance_model->getPostponeComplaints();
         $data['mainBalance'] = $this->calcMainBalance();
         $data['tapsTotal'] = $this->maintenance_model->showTotTapAmt();
+        $data['openTot'] = $this->maintenance_model->showOpenTotAmt();
 
         $data['globalStyle'] = $this->dataformatinghtml_library->getGlobalStyleHtml($data);
         $data['globalJs'] = $this->dataformatinghtml_library->getGlobalJsHtml($data);

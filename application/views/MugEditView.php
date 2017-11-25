@@ -25,7 +25,21 @@
                                     <br>
                                     <form action="<?php echo base_url();?>mugclub/save" method="post" class="form-horizontal" role="form">
                                         <input type="hidden" name="senderEmail" id="senderEmail" value="<?php echo $this->userEmail;?>" />
-                                        <input type="hidden" name="senderPass" id="senderPass" value="" />
+                                        <?php
+                                        if($this->userEmail == DEFAULT_COMM_EMAIL)
+                                        {
+                                            ?>
+                                            <input type="hidden" name="senderPass" id="senderPass" value="<?php echo DEFAULT_COMM_PASS;?>" />
+                                            <?php
+                                        }
+                                        else
+                                        {
+                                            ?>
+                                            <input type="hidden" name="senderPass" id="senderPass" value="" />
+                                            <?php
+                                        }
+                                        ?>
+                                        <!--<input type="hidden" name="senderPass" id="senderPass" value="" />-->
                                         <div class="mugNumber-status text-center"></div>
                                         <div class="form-group">
                                             <label class="control-label col-sm-2" for="mugNum">Mug No. :</label>
@@ -180,7 +194,7 @@
 
     $(document).on('change','#mugMail', function(){
         var mailCheck = $(this);
-        if($(this).is(':checked'))
+        if($(this).is(':checked') && $('#senderPass').val() == '')
         {
             $('form button[type="submit"]').attr('disabled','true');
             var senderEmail = $('#senderEmail').val();

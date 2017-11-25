@@ -161,6 +161,8 @@ class Mugclub extends MY_Controller {
                 unset($mugDetails['emailId']);
             }
 
+            $homeBase = $mugDetails['homeBase'];
+            unset($mugDetails['homeBase']);
             $this->mugclub_model->saveRenewRecord($mugDetails);
 
             $post['membershipStart'] = date($mugDetails['membershipEnd']);
@@ -199,7 +201,8 @@ class Mugclub extends MY_Controller {
                     "mugId" => $post['mugId'],
                     "firstName" => $userFirstName,
                     "newEndDate" => $post['membershipEnd'],
-                    "emailId" => $userEmail
+                    "emailId" => $userEmail,
+                    "homeBase" => $homeBase
                 );
                 if($isUserSet)
                 {

@@ -22,7 +22,20 @@
                                 <form action="<?php echo base_url();?>mailers/sendAllMails/json" id="mainMailerForm" method="post" role="form">
                                     <input type="hidden" name="mailType" value="<?php echo $mailType;?>"/>
                                     <input type="hidden" name="senderEmail" id="senderEmail" value="<?php echo $loggedEmail;?>"/>
-                                    <input type="hidden" name="senderPass" id="senderPass" value=""/>
+                                    <?php
+                                        if($this->userEmail == DEFAULT_COMM_EMAIL)
+                                        {
+                                            ?>
+                                            <input type="hidden" name="senderPass" id="senderPass" value="<?php echo DEFAULT_COMM_PASS;?>"/>
+                                            <?php
+                                        }
+                                        else
+                                        {
+                                            ?>
+                                            <input type="hidden" name="senderPass" id="senderPass" value=""/>
+                                            <?php
+                                        }
+                                    ?>
                                     <nav class="col-sm-2 custom-mugs-list">
                                         <ul class="nav nav-pills nav-stacked text-left">
                                             <?php
@@ -538,43 +551,50 @@
 
         var senderEmail = $('#senderEmail').val();
 
-        bootbox.prompt({
-            title: "Please provide your Gmail("+senderEmail+") password",
-            inputType: 'password',
-            callback: function (result) {
-                if(result != null && result != '')
-                {
-                    var errUrl = base_url+'mailers/checkGmailLogin';
-                    showCustomLoader();
-                    var senderPass = result;
-                    $.ajax({
-                        type:'POST',
-                        dataType:'json',
-                        url: base_url+'mailers/checkGmailLogin',
-                        data:{from:senderEmail,fromPass:senderPass},
-                        success: function(data)
-                        {
-                            hideCustomLoader();
-                            if(data.status === false)
+        if($('#senderPass').val() == '')
+        {
+            bootbox.prompt({
+                title: "Please provide your Gmail("+senderEmail+") password",
+                inputType: 'password',
+                callback: function (result) {
+                    if(result != null && result != '')
+                    {
+                        var errUrl = base_url+'mailers/checkGmailLogin';
+                        showCustomLoader();
+                        var senderPass = result;
+                        $.ajax({
+                            type:'POST',
+                            dataType:'json',
+                            url: base_url+'mailers/checkGmailLogin',
+                            data:{from:senderEmail,fromPass:senderPass},
+                            success: function(data)
                             {
-                                bootbox.alert('Invalid Gmail Credentials!');
+                                hideCustomLoader();
+                                if(data.status === false)
+                                {
+                                    bootbox.alert('Invalid Gmail Credentials!');
+                                }
+                                else
+                                {
+                                    $('#senderPass').val(senderPass);
+                                    SubmitMailForm(formVar);
+                                }
+                            },
+                            error: function(xhr,status,error){
+                                hideCustomLoader();
+                                bootbox.alert('Some Error Occurred!');
+                                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                                saveErrorLog(err);
                             }
-                            else
-                            {
-                                $('#senderPass').val(senderPass);
-                                SubmitMailForm(formVar);
-                            }
-                        },
-                        error: function(xhr,status,error){
-                            hideCustomLoader();
-                            bootbox.alert('Some Error Occurred!');
-                            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
-                            saveErrorLog(err);
-                        }
-                    });
+                        });
+                    }
                 }
-            }
-        });
+            });
+        }
+        else
+        {
+            SubmitMailForm(formVar);
+        }
 
     });
 

@@ -15,7 +15,20 @@
                 <br>
                 <form id="mug-renew-form" action="<?php echo base_url();?>mugclub/mugRenew/return" method="post" class="form-horizontal" role="form">
                     <input type="hidden" name="senderEmail" id="senderEmail" value="<?php echo $this->userEmail;?>"/>
-                    <input type="hidden" name="senderPass" id="senderPass" />
+                    <?php
+                    if($this->userEmail == DEFAULT_COMM_EMAIL)
+                    {
+                        ?>
+                        <input type="hidden" name="senderPass" id="senderPass" value="<?php echo DEFAULT_COMM_PASS;?>" />
+                        <?php
+                    }
+                    else
+                    {
+                        ?>
+                        <input type="hidden" name="senderPass" id="senderPass" value="" />
+                        <?php
+                    }
+                    ?>
                     <input type="hidden" value="<?php echo $mugId;?>" name="mugId"/>
                     <!--<div class="form-group">
                         <label class="control-label col-sm-2" for="memEnd">Membership End Date :</label>
@@ -49,45 +62,51 @@
         e.preventDefault();
         var renewForm = $(this);
         var senderEmail = $(this).find('#senderEmail').val();
-        bootbox.prompt({
-            title: "Please provide your Gmail("+senderEmail+") password",
-            inputType: 'password',
-            callback: function (result) {
-                if(result != null && result != '')
-                {
-                    showCustomLoader();
-                    var senderPass = result;
+        if($('#senderPass').val() == '')
+        {
+            bootbox.prompt({
+                title: "Please provide your Gmail("+senderEmail+") password",
+                inputType: 'password',
+                callback: function (result) {
+                    if(result != null && result != '')
+                    {
+                        showCustomLoader();
+                        var senderPass = result;
 
-                    var errUrl = base_url+'mailers/checkGmailLogin';
-                    $.ajax({
-                        type:'POST',
-                        dataType:'json',
-                        url: base_url+'mailers/checkGmailLogin',
-                        data:{from:senderEmail,fromPass:senderPass},
-                        success: function(data)
-                        {
-                            hideCustomLoader();
-                            if(data.status === false)
+                        var errUrl = base_url+'mailers/checkGmailLogin';
+                        $.ajax({
+                            type:'POST',
+                            dataType:'json',
+                            url: base_url+'mailers/checkGmailLogin',
+                            data:{from:senderEmail,fromPass:senderPass},
+                            success: function(data)
                             {
-                                bootbox.alert('Invalid Gmail Credentials!');
+                                hideCustomLoader();
+                                if(data.status === false)
+                                {
+                                    bootbox.alert('Invalid Gmail Credentials!');
+                                }
+                                else
+                                {
+                                    $(renewForm).find('#senderPass').val(senderPass);
+                                    renewThisMug(renewForm);
+                                }
+                            },
+                            error: function(xhr, status, error){
+                                hideCustomLoader();
+                                bootbox.alert('Some Error Occurred!');
+                                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                                saveErrorLog(err);
                             }
-                            else
-                            {
-                                $(renewForm).find('#senderPass').val(senderPass);
-                                renewThisMug(renewForm);
-                            }
-                        },
-                        error: function(xhr, status, error){
-                            hideCustomLoader();
-                            bootbox.alert('Some Error Occurred!');
-                            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
-                            saveErrorLog(err);
-                        }
-                    });
+                        });
+                    }
                 }
-            }
-        });
-
+            });
+        }
+        else
+        {
+            renewThisMug(renewForm);
+        }
     });
 
     function renewThisMug(postData)

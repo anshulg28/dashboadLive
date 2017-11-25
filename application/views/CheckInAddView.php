@@ -429,12 +429,15 @@
                     checkedInMugNum = mugList[0].mugId;
                     $('.mugCheckIn .final-checkIn-row').removeClass('hide');
 
-                    if(mugList[0].ifActive == '1')
+                    if(typeof mugList.offerDetails !== 'undefined')//mugList[0].ifActive == '1')
                     {
-                        if(mugList[0].isRedeemed == '0')
-                            $('.new-breakfast-status').css('color','green').html('Breakfast Not Redeemed!');
-                        else
-                            $('.new-breakfast-status').css('color','red').html('Breakfast Already Redeemed!');
+                        if(mugList.offerDetails.ifActive == '1')
+                        {
+                            if(mugList.offerDetails.isRedeemed == '0')
+                                $('.new-breakfast-status').css('color','green').html('Breakfast Not Redeemed!');
+                            else
+                                $('.new-breakfast-status').css('color','red').html('Breakfast Already Redeemed!');
+                        }
                     }
 
                     //validity and location check
