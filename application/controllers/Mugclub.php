@@ -80,8 +80,23 @@ class Mugclub extends MY_Controller {
             redirect(base_url());
         }
 
-        $locations = $this->mydatafetch_library->getBaseLocations();
-        $data['baseLocations'] = $locations;
+        if($this->userType == EXECUTIVE_USER)
+        {
+            if(!is_null($this->commSecLoc) && isSessionVariableSet($this->commSecLoc))
+            {
+                $locations = $this->locations_model->getLocationDetailsById($this->commSecLoc);
+                $data['baseLocations'] = $locations['locData'];
+            }
+            else
+            {
+                redirect(base_url().'dashboard/setCommLoc');
+            }
+        }
+        else
+        {
+            $locations = $this->mydatafetch_library->getBaseLocations();
+            $data['baseLocations'] = $locations;
+        }
 
         $data['globalStyle'] = $this->dataformatinghtml_library->getGlobalStyleHtml($data);
         $data['globalJs'] = $this->dataformatinghtml_library->getGlobalJsHtml($data);
@@ -794,22 +809,40 @@ class Mugclub extends MY_Controller {
         {
             if($this->userType == EXECUTIVE_USER)
             {
-                $userInfo = $this->users_model->getUserDetailsById($this->userId);
+                if(!is_null($this->commSecLoc) && isSessionVariableSet($this->commSecLoc))
+                {
+                    $mugData = $this->mugclub_model->getExpiringMugsList($intervalNum, $intervalSpan,true,$this->commSecLoc);
+                }
+                else
+                {
+                    if($responseType == RESPONSE_JSON)
+                    {
+                        $data['status'] = false;
+                        $data['errorMsg'] = 'Location Error!';
+                        echo json_encode($data);
+                        return false;
+                    }
+                    else
+                    {
+                        redirect(base_url().'dashboard/setCommLoc');
+                    }
+                }
+                /*$userInfo = $this->users_model->getUserDetailsById($this->userId);
                 if(!isset($userInfo['userData'][0]['assignedLoc']))
                 {
                     if(isset($userInfo['userData'][0]['secondaryLoc']))
                     {
                         $userInfo['userData'][0]['assignedLoc'] = $userInfo['userData'][0]['secondaryLoc'];
                     }
-                }
-                $mugData = $this->mugclub_model->getExpiringMugsList($intervalNum, $intervalSpan,true,$userInfo['userData'][0]['assignedLoc']);
+                }*/
+                //$mugData = $this->mugclub_model->getExpiringMugsList($intervalNum, $intervalSpan,true,$userInfo['userData'][0]['assignedLoc']);
             }
             else
             {
                 $mugData = $this->mugclub_model->getExpiringMugsList($intervalNum, $intervalSpan);
             }
 
-            if($mugData['status'] === false)
+            if(isset($mugData) && $mugData['status'] === false)
             {
                 $data['status'] = false;
                 $data['errorMsg'] = "No Result Found!";
@@ -843,7 +876,25 @@ class Mugclub extends MY_Controller {
         {
             if($this->userType == EXECUTIVE_USER)
             {
-                $userInfo = $this->users_model->getUserDetailsById($this->userId);
+                if(!is_null($this->commSecLoc) && isSessionVariableSet($this->commSecLoc))
+                {
+                    $mugData = $this->mugclub_model->getExpiredMugsList(true,$this->commSecLoc);
+                }
+                else
+                {
+                    if($responseType == RESPONSE_JSON)
+                    {
+                        $data['status'] = false;
+                        $data['errorMsg'] = 'Location Error!';
+                        echo json_encode($data);
+                        return false;
+                    }
+                    else
+                    {
+                        redirect(base_url().'dashboard/setCommLoc');
+                    }
+                }
+                /*$userInfo = $this->users_model->getUserDetailsById($this->userId);
                 if(!isset($userInfo['userData'][0]['assignedLoc']))
                 {
                     if(isset($userInfo['userData'][0]['secondaryLoc']))
@@ -851,14 +902,14 @@ class Mugclub extends MY_Controller {
                         $userInfo['userData'][0]['assignedLoc'] = $userInfo['userData'][0]['secondaryLoc'];
                     }
                 }
-                $mugData = $this->mugclub_model->getExpiredMugsList(true,$userInfo['userData'][0]['assignedLoc']);
+                $mugData = $this->mugclub_model->getExpiredMugsList(true,$userInfo['userData'][0]['assignedLoc']);*/
             }
             else
             {
                 $mugData = $this->mugclub_model->getExpiredMugsList();
             }
 
-            if($mugData['status'] === false)
+            if(isset($mugData) && $mugData['status'] === false)
             {
                 $data['status'] = false;
                 $data['errorMsg'] = "No Mugs Expired!";
@@ -892,7 +943,25 @@ class Mugclub extends MY_Controller {
         {
             if($this->userType == EXECUTIVE_USER)
             {
-                $userInfo = $this->users_model->getUserDetailsById($this->userId);
+                if(!is_null($this->commSecLoc) && isSessionVariableSet($this->commSecLoc))
+                {
+                    $mugData = $this->mugclub_model->getBirthdayMugsList(true,$this->commSecLoc);
+                }
+                else
+                {
+                    if($responseType == RESPONSE_JSON)
+                    {
+                        $data['status'] = false;
+                        $data['errorMsg'] = 'Location Error!';
+                        echo json_encode($data);
+                        return false;
+                    }
+                    else
+                    {
+                        redirect(base_url().'dashboard/setCommLoc');
+                    }
+                }
+                /*$userInfo = $this->users_model->getUserDetailsById($this->userId);
                 if(!isset($userInfo['userData'][0]['assignedLoc']))
                 {
                     if(isset($userInfo['userData'][0]['secondaryLoc']))
@@ -900,14 +969,14 @@ class Mugclub extends MY_Controller {
                         $userInfo['userData'][0]['assignedLoc'] = $userInfo['userData'][0]['secondaryLoc'];
                     }
                 }
-                $mugData = $this->mugclub_model->getBirthdayMugsList(true,$userInfo['userData'][0]['assignedLoc']);
+                $mugData = $this->mugclub_model->getBirthdayMugsList(true,$userInfo['userData'][0]['assignedLoc']);*/
             }
             else
             {
                 $mugData = $this->mugclub_model->getBirthdayMugsList();
             }
 
-            if($mugData['status'] === false)
+            if(isset($mugData) && $mugData['status'] === false)
             {
                 $data['status'] = false;
                 $data['errorMsg'] = "No Mugs Found!";

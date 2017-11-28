@@ -25,7 +25,7 @@
             <?php
         }
     ?>
-    In case you have any questions/queries please don't hesitate to write to me at this (<?php echo $mailData['senderEmail'];?>) mail address.
+    In case you have any questions/queries please don't hesitate to write to me at this (<?php echo $mailData['senderEmail'];?>) mail address.<br><br>
     <!--For queries, contact <?php /*echo $mailData['senderPhone'] .' ('.$mailData['senderName'].')';*/?><br><br>-->
 
     Thanks,<br>

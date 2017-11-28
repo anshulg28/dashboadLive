@@ -9,11 +9,12 @@
     <?php echo $headerView; ?>
     <main class="locSelectPage">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row text-center">
                 <h2 class="text-center">Select Your Location</h2>
                 <br>
 
                 <form id="locationForm" method="post" action="<?php echo base_url().'dashboard/setCommLocation';?>">
+                    <input type="hidden" name="refUrl" value="<?php echo $refUrl;?>"
                     <div class="col-sm-12 text-center">
                         <ul class="list-inline my-mainMenuList">
                             <?php

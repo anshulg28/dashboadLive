@@ -9,33 +9,33 @@
     <?php echo $headerView; ?>
     <!-- No header, and the drawer stays open on larger screens (fixed drawer). -->
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
-        <div class="mdl-layout__drawer">
-            <?php
-                if(isset($secLocs))
+        <?php
+/*        if(isset($secLocs))
+        {
+            $tempLocs = explode(',',$secLocs);
+            if(count($tempLocs) > 1)
+            {
+                $locName = '';
+                //var_dump($userInfo[1]['locData'][0]['locName']);
+                if(isset($userInfo))
                 {
-                    $tempLocs = explode(',',$secLocs);
-                    if(count($tempLocs) > 1)
+                    foreach($userInfo as $key => $row)
                     {
-                        $locName = '';
-                        //var_dump($userInfo[1]['locData'][0]['locName']);
-                        if(isset($userInfo))
+                        if($row['locData'][0]['id'] == $this->commSecLoc)
                         {
-                            foreach($userInfo as $key => $row)
-                            {
-                                if($row['locData'][0]['id'] == $this->commSecLoc)
-                                {
-                                    $locName = $row['locData'][0]['locName'];
-                                    break;
-                                }
-                            }
-                            //$locName = $userInfo[0]['locData'][0]['locName'];
+                            $locName = $row['locData'][0]['locName'];
+                            break;
                         }
-                        ?>
-                        <a href="<?php echo base_url().'dashboard/getCommLocation/'.base64_encode($secLocs);?>" id="change-sec-loc"><?php echo $locName;?> (Change Location)</a>
-                        <?php
                     }
+                    //$locName = $userInfo[0]['locData'][0]['locName'];
                 }
-            ?>
+                */?><!--
+                <a href="<?php /*echo base_url().'dashboard/getCommLocation/'.base64_encode($secLocs);*/?>" id="change-sec-loc"><?php /*echo $locName;*/?> (Change Location)</a>
+                --><?php
+/*            }
+        }
+        */?>
+        <div class="mdl-layout__drawer">
             <span class="mdl-layout-title">Dashboard</span>
             <ul class="nav nav-pills nav-stacked">
                 <li class="active"><a data-toggle="pill" class="my-noBorderRadius" href="#mugclub">Mug Club</a></li>

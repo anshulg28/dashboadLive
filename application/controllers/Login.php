@@ -313,6 +313,19 @@ class Login extends MY_Controller {
                     $data['status'] = true;
                     $data['isUserSession'] = $this->isUserSession;
                     $data['userName'] = $this->userName;
+                    if($this->userType == EXECUTIVE_USER)
+                    {
+                        $userInfo = $this->users_model->getUserDetailsById($this->userId);
+                        if($userInfo['status'] === true && isset($userInfo['userData'][0]['assignedLoc']))
+                        {
+                            $this->generalfunction_library->setSessionVariable("commSecLoc",$userInfo['userData'][0]['assignedLoc']);
+                            $this->commSecLoc = $userInfo['userData'][0]['assignedLoc'];
+                        }
+                        else
+                        {
+                            $data['locError'] = true;
+                        }
+                    }
                 }
             }
             else

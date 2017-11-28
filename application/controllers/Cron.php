@@ -1787,21 +1787,33 @@ class Cron extends MY_Controller
         {
             $subject = "Jobs Pending Action";
             $content = '<html><body><br><table border="2"><tr><th>Job #</th><th>Problem</th><th>logged By</th><th>logged date/time</th></tr><tbody>';
+            $goneIn = false;
             foreach($openJobs as $key => $row)
             {
-                $oldTime = strtotime($row['lastUpdateDT']) + (2 * 24 * 60 * 60);
-                if($oldTime <= strtotime(date('Y-m-d H:i:s')))
+                if(isset($row['complaintId']) && isStringSet($row['complaintId']))
                 {
-                    $content .= '<tr>';
-                    $content .= '<td>Job #'.$row['complaintId'].'-'.$row['locName'].'</td>';
-                    $content .= '<td>'.$row['problemDescription'].'</td>';
-                    $content .= '<td>'.$row['loggedUser'].'</td>';
-                    $d = date_create($row['loggedDT']);
-                    $content .= '<td>'.date_format($d,DATE_TIME_FORMAT_UI).'</td>';
-                    $content .= '</tr>';
+                    $oldTime = strtotime($row['lastUpdateDT']) + (2 * 24 * 60 * 60);
+                    if($oldTime <= strtotime(date('Y-m-d H:i:s')))
+                    {
+                        $goneIn = true;
+                        $content .= '<tr>';
+                        $content .= '<td>Job #'.$row['complaintId'].'-'.$row['locName'].'</td>';
+                        $content .= '<td>'.$row['problemDescription'].'</td>';
+                        $content .= '<td>'.$row['loggedUser'].'</td>';
+                        $d = date_create($row['loggedDT']);
+                        $content .= '<td>'.date_format($d,DATE_TIME_FORMAT_UI).'</td>';
+                        $content .= '</tr>';
+                    }
                 }
             }
-            $content .= '</tbody></table>';
+            if(!$goneIn)
+            {
+                $content = 'No Jobs Pending';
+            }
+            else
+            {
+                $content .= '</tbody></table>';
+            }
             $this->sendemail_library->sendEmail(array('mandar@brewcraftsindia.com','taronish@brewcraftsindia.com','anil.jadhav@brewcraftsindia.com'),'saha@brewcraftsindia.com,anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
                 ,'admin@brewcraftsindia.com',$subject,$content,array());
         }

@@ -7,7 +7,7 @@
 
 <body>
     <p>
-        Dear <?php echo ucfirst(trim($mailData['attendeeName'])); ?><br><br>
+        Dear <?php echo ucfirst(trim($mailData['attendeeName'])); ?>,<br><br>
 
         The organiser has rescheduled "<?php echo trim($mailData['eventName']); ?>" from
         "<?php $d = date_create($mailData['oldDate']); echo date_format($d,DATE_FORMAT_UI);?>" to

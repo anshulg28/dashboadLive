@@ -13,8 +13,7 @@
         Just show this code <?php echo trim($breakfastCode);?> to the person taking your order the next time you're in the mood for breakfast.<br><br>
 
         Cheers!<br>
-        <?php echo $fromName;?>,<br>
-        Doolally<br><br>
+        <?php echo $fromName;?>, Doolally<br><br>
         P.S. We promise to never spam you or give out your information to anyone. If you don't wish to receive these emails, do let me know by replying to this mail. The offers will still always be valid for you. Just inquire at the bar for Mug Club goodies.
     </p>
 

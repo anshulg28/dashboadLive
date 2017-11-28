@@ -471,7 +471,7 @@ div.tablediv > .table-bordered {
 	width: 500px; 
 	position: absolute; 
 	/*padding: 5px; */
-	overflow:visible;
+	overflow:visible !important;
 }
 .ui-jqdialog .ui-jqdialog-titlebar {
 	padding: .1em .1em; 

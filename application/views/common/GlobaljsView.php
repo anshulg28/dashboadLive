@@ -69,7 +69,14 @@
                 $('#mainLoginForm button[type="submit"]').removeAttr("disabled");
                 if(data.status == true)
                 {
-                    window.location.reload();
+                    if(typeof data.locError !== 'undefined' && data.locError === true)
+                    {
+                        window.location.href=base_url+'dashboard/setCommLoc';
+                    }
+                    else
+                    {
+                        window.location.reload();
+                    }
                 }
                 else
                 {
@@ -568,5 +575,14 @@ $(document).on('click','.homePage .request-otp', function(){
                 saveErrorLog(err);
             }
         });
+    }
+
+    if(typeof $('#userActive').val() != 'undefined')
+    {
+        var ifActive = $('#userActive').val();
+        if( ifActive == '0')
+        {
+            window.location.href = base_url+'login/logout';
+        }
     }
 </script>

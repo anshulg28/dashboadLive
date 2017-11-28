@@ -19,7 +19,7 @@
                 <?php
             }
         ?>
-        In case you have any questions/queries please don't hesitate to write to me at this mail address<!-- or you can reach me at
+        In case you have any questions/queries please don't hesitate to reply to this mail.<!-- or you can reach me at
         --><?php /*echo $mailData['senderPhone'] .' ('.$mailData['senderName'].')';*/?><br><br>
 
         Cheers!<br>

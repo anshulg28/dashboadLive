@@ -415,8 +415,17 @@ class Offers extends MY_Controller {
         {
             if($offerStatus['codeCheck']['isRedeemed'] == 1)
             {
-                $data['status'] = false;
-                $data['errorMsg'] = 'Sorry, this code has been redeemed before.';
+                if(isset($offerStatus['codeCheck']['useDateTime']))
+                {
+                    $d = date_create($offerStatus['codeCheck']['useDateTime']);
+                    $data['status'] = false;
+                    $data['errorMsg'] = 'Sorry, this code has been redeemed on '.date_format($d,DATE_TIME_FORMAT_UI);
+                }
+                else
+                {
+                    $data['status'] = false;
+                    $data['errorMsg'] = 'Sorry, this code has been redeemed before.';
+                }
             }
             elseif($toRedeem == '1')
             {
@@ -705,8 +714,9 @@ class Offers extends MY_Controller {
                                 }
                                 $offerData['dayOfferUsed'] = date('D');
                                 $this->offers_model->setOfferUsed($offerData);
+                                $dNow = date_create(date('Y-m-d H:i:s'));
                                 $data['status'] = false;
-                                $data['errorMsg'] = 'Sorry, this code has been redeemed before.';
+                                $data['errorMsg'] = 'Sorry, this code has been redeemed on';
                             }
                             else
                             {

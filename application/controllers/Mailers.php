@@ -8,6 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @property users_model $users_model
  * @property offers_model $offers_model
  * @property login_model $login_model
+ * @property locations_model $locations_model
 */
 
 class Mailers extends MY_Controller {
@@ -20,6 +21,7 @@ class Mailers extends MY_Controller {
         $this->load->model('users_model');
         $this->load->model('offers_model');
         $this->load->model('login_model');
+        $this->load->model('locations_model');
 	}
 	public function index()
 	{
@@ -35,7 +37,17 @@ class Mailers extends MY_Controller {
 
         if($this->userType == EXECUTIVE_USER)
         {
-            $userInfo = $this->users_model->getUserDetailsById($this->userId);
+            if(!is_null($this->commSecLoc) && isSessionVariableSet($this->commSecLoc))
+            {
+                $data['expiredMugs'] = $this->mugclub_model->getExpiredMugsList(true,$this->commSecLoc);
+                $data['expiringMugs'] = $this->mugclub_model->getExpiringMugsList(1,'week',true,$this->commSecLoc);
+                $data['birthdayMugs'] = $this->mugclub_model->getBirthdayMugsList(true,$this->commSecLoc);
+            }
+            else
+            {
+                redirect(base_url().'dashboard/setCommLoc');
+            }
+            /*$userInfo = $this->users_model->getUserDetailsById($this->userId);
             if(!isset($userInfo['userData'][0]['assignedLoc']))
             {
                 if(isset($userInfo['userData'][0]['secondaryLoc']))
@@ -47,10 +59,7 @@ class Mailers extends MY_Controller {
                     echo 'Location Not Set, Please Contact Admin!';
                     return false;
                 }
-            }
-            $data['expiredMugs'] = $this->mugclub_model->getExpiredMugsList(true,$userInfo['userData'][0]['assignedLoc']);
-            $data['expiringMugs'] = $this->mugclub_model->getExpiringMugsList(1,'week',true,$userInfo['userData'][0]['assignedLoc']);
-            $data['birthdayMugs'] = $this->mugclub_model->getBirthdayMugsList(true,$userInfo['userData'][0]['assignedLoc']);
+            }*/
         }
         else
         {
@@ -221,7 +230,15 @@ class Mailers extends MY_Controller {
         {
             if($this->userType == EXECUTIVE_USER)
             {
-                $userInfo = $this->users_model->getUserDetailsById($this->userId);
+                if(!is_null($this->commSecLoc) && isSessionVariableSet($this->commSecLoc))
+                {
+                    $expiredMails = $this->mugclub_model->getExpiredMugsList(true,$this->commSecLoc);
+                }
+                else
+                {
+                    redirect(base_url().'dashboard/setCommLoc');
+                }
+                /*$userInfo = $this->users_model->getUserDetailsById($this->userId);
                 if(isset($userInfo['userData'][0]['assignedLoc']))
                 {
                     $expiredMails = $this->mugclub_model->getExpiredMugsList(true,$userInfo['userData'][0]['assignedLoc']);
@@ -229,7 +246,7 @@ class Mailers extends MY_Controller {
                 else
                 {
                     $expiredMails = $this->mugclub_model->getExpiredMugsList(true,$userInfo['userData'][0]['secondaryLoc']);
-                }
+                }*/
             }
             else
             {
@@ -241,7 +258,15 @@ class Mailers extends MY_Controller {
         {
             if($this->userType == EXECUTIVE_USER)
             {
-                $userInfo = $this->users_model->getUserDetailsById($this->userId);
+                if(!is_null($this->commSecLoc) && isSessionVariableSet($this->commSecLoc))
+                {
+                    $expiringMails = $this->mugclub_model->getExpiringMugsList(1,'week',true,$this->commSecLoc);
+                }
+                else
+                {
+                    redirect(base_url().'dashboard/setCommLoc');
+                }
+                /*$userInfo = $this->users_model->getUserDetailsById($this->userId);
                 if(isset($userInfo['userData'][0]['assignedLoc']))
                 {
                     $expiringMails = $this->mugclub_model->getExpiringMugsList(1,'week',true,$userInfo['userData'][0]['assignedLoc']);
@@ -249,7 +274,7 @@ class Mailers extends MY_Controller {
                 else
                 {
                     $expiringMails = $this->mugclub_model->getExpiringMugsList(1,'week',true,$userInfo['userData'][0]['secondaryLoc']);
-                }
+                }*/
             }
             else
             {
@@ -261,7 +286,15 @@ class Mailers extends MY_Controller {
         {
             if($this->userType == EXECUTIVE_USER)
             {
-                $userInfo = $this->users_model->getUserDetailsById($this->userId);
+                if(!is_null($this->commSecLoc) && isSessionVariableSet($this->commSecLoc))
+                {
+                    $expiringMails = $this->mugclub_model->getBirthdayMugsList(true,$this->commSecLoc);
+                }
+                else
+                {
+                    redirect(base_url().'dashboard/setCommLoc');
+                }
+                /*$userInfo = $this->users_model->getUserDetailsById($this->userId);
                 if(isset($userInfo['userData'][0]['assignedLoc']))
                 {
                     $expiringMails = $this->mugclub_model->getBirthdayMugsList(true,$userInfo['userData'][0]['assignedLoc']);
@@ -269,7 +302,7 @@ class Mailers extends MY_Controller {
                 else
                 {
                     $expiringMails = $this->mugclub_model->getBirthdayMugsList(true,$userInfo['userData'][0]['secondaryLoc']);
-                }
+                }*/
             }
             else
             {
@@ -316,19 +349,6 @@ class Mailers extends MY_Controller {
                     $this->mugclub_model->extendMemberShip($key,$newDate);
                     $mugInfo['mugList'][0]['membershipEnd'] = $newDate['membershipEnd'];
                 }
-                $newSubject = $this->replaceMugTags($post['mailSubject'],$mugInfo);
-                $newBody = $this->replaceMugTags($post['mailBody'],$mugInfo);
-                if(isset($post['isSimpleMail']) && $post['isSimpleMail'] == '1')
-                {
-                    $mainBody = '<html><body>';
-                    $body = $newBody;
-                    //$body = wordwrap($body, 70);
-                    $body = nl2br($body);
-                    $body = stripslashes($body);
-                    $mainBody .= $body .'</body></html>';
-                    $newBody = $mainBody;
-                }
-                //$cc        = implode(',',$this->config->item('ccList'));
                 $fromName  = 'Doolally';
                 if($commDetail['status'] == true && $this->userEmail == DEFAULT_COMM_EMAIL)
                 {
@@ -341,6 +361,19 @@ class Mailers extends MY_Controller {
                         $fromName = trim(ucfirst($this->userFirstName));
                     }
                 }
+                $newSubject = $this->replaceMugTags($post['mailSubject'],$mugInfo,$fromName);
+                $newBody = $this->replaceMugTags($post['mailBody'],$mugInfo,$fromName);
+                if(isset($post['isSimpleMail']) && $post['isSimpleMail'] == '1')
+                {
+                    $mainBody = '<html><body>';
+                    $body = $newBody;
+                    //$body = wordwrap($body, 70);
+                    $body = nl2br($body);
+                    $body = stripslashes($body);
+                    $mainBody .= $body .'</body></html>';
+                    $newBody = $mainBody;
+                }
+                //$cc        = implode(',',$this->config->item('ccList'));
                 $fromEmail = DEFAULT_SENDER_EMAIL;
                 $fromPass = DEFAULT_SENDER_PASS;
                 $replyTo = $fromEmail;
@@ -391,10 +424,10 @@ class Mailers extends MY_Controller {
         }
     }
 
-    function replaceMugTags($tagStr,$mugInfo)
+    function replaceMugTags($tagStr,$mugInfo,$fromName = 'Doolally')
     {
 
-        $tagStr = str_replace('[sendername]',trim(ucfirst($this->userName)),$tagStr);
+        $tagStr = str_replace('[sendername]',$fromName,$tagStr);
         preg_match_all('/\[[brcode]\w+\]/', $tagStr, $output_array);
         if(myIsMultiArray($output_array))
         {

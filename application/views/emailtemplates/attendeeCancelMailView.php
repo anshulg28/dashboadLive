@@ -7,7 +7,7 @@
 
 <body>
     <p>
-        Dear <?php echo trim($mailData['firstName']); ?><br><br>
+        Dear <?php echo trim($mailData['firstName']); ?>,<br><br>
 
         The organiser <?php echo str_replace('.','',$mailData['creatorName']); ?> has cancelled the event <?php echo trim($mailData['eventName']); ?>.
 
@@ -47,10 +47,10 @@
             }
         ?>
         In case you have any questions/queries please don't hesitate to write to me at
-        this (<?php echo $mailData['senderEmail'];?>) mail address <!--or you can reach me at --><?php /*echo $mailData['senderPhone'];*/?><br><br>
+        this (<?php echo $mailData['senderEmail'];?>) mail address. <!--or you can reach me at --><?php /*echo $mailData['senderPhone'];*/?><br><br>
 
         Thanks,<br>
-        <?php echo ucfirst($mailData['senderName']);?>
+        <?php echo ucfirst($mailData['senderName']);?>, Doolally
     </p>
 
 </body>

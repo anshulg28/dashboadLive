@@ -48,28 +48,31 @@ class Dashboard extends MY_Controller {
         {
             //Check for Community manager secondary location set
 
-            $userInfo = $this->users_model->getUserDetailsById($this->userId);
+            /*$userInfo = $this->users_model->getUserDetailsById($this->userId);
             if(isset($userInfo['userData'][0]['secondaryLoc']))
             {
                 $data['secLocs'] = $userInfo['userData'][0]['secondaryLoc'];
-            }
+            }*/
             if( !isSession($this->commSecLoc) || !isSessionVariableSet($this->commSecLoc))
             {
-                if($userInfo['status'] === true && isset($userInfo['userData'][0]['secondaryLoc']))
+                redirect(base_url().'dashboard/setCommLoc');
+                /*if($userInfo['status'] === true && isset($userInfo['userData'][0]['secondaryLoc']))
                 {
                     $this->getCommLocation(base64_encode($userInfo['userData'][0]['secondaryLoc']));
                     return false;
-                }
+                }*/
             }
-            if(isSession($this->commSecLoc) && isSessionVariableSet($this->commSecLoc))
+            //$data['secLocs'] = $this->commSecLoc;
+            $allLocs = explode(',',$this->commSecLoc);
+            /*if(isSession($this->commSecLoc) && isSessionVariableSet($this->commSecLoc))
             {
-                $allLocs = explode(',',$this->commSecLoc);
-            }
-            else
+
+            }*/
+            /*else
             {
                 //Get assigned location for community manager
                 $allLocs = explode(',',$userInfo['userData'][0]['assignedLoc']);
-            }
+            }*/
 
             foreach($allLocs as $key)
             {
@@ -219,6 +222,38 @@ class Dashboard extends MY_Controller {
         $this->load->view('SecLocSelectView', $data);
     }
 
+    public function setCommLoc()
+    {
+        $refUrl = $_SERVER['HTTP_REFERER'];
+        if(isSessionVariableSet($this->isUserSession) === false)
+        {
+            redirect(base_url());
+        }
+        $data = array();
+
+        $userInfo = $this->users_model->getUserDetailsById($this->userId);
+        if($userInfo['status'] === true && isset($userInfo['userData'][0]['secondaryLoc']))
+        {
+            $data['refUrl'] = $refUrl;
+            $data['locData'] = $this->locations_model->getMultiLocs($userInfo['userData'][0]['secondaryLoc']);
+            $data['globalStyle'] = $this->dataformatinghtml_library->getGlobalStyleHtml($data);
+            $data['globalJs'] = $this->dataformatinghtml_library->getGlobalJsHtml($data);
+            $data['headerView'] = $this->dataformatinghtml_library->getHeaderHtml($data);
+
+            $this->load->view('SecLocSelectView', $data);
+        }
+        elseif($userInfo['status'] === true && isset($userInfo['userData'][0]['assignedLoc']))
+        {
+            $this->generalfunction_library->setSessionVariable("commSecLoc",$userInfo['userData'][0]['assignedLoc']);
+            redirect($refUrl);
+        }
+        else
+        {
+            echo 'Location Error Or Invalid User!';
+            die();
+        }
+    }
+
 	public function setCommLocation()
     {
         $post = $this->input->post();
@@ -229,7 +264,7 @@ class Dashboard extends MY_Controller {
 
         $this->generalfunction_library->setSessionVariable("commSecLoc",$post['currentLoc']);
 
-        redirect(base_url().'dashboard');
+        redirect($post['refUrl']);
     }
     public function getCustomStats()
     {

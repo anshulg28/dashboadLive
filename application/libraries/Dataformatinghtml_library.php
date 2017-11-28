@@ -53,10 +53,25 @@ class Dataformatinghtml_library
     public function getHeaderHtml($data)
     {
         $this->CI->load->model('login_model');
+        $this->CI->load->model('locations_model');
         if(isSessionVariableSet($this->CI->userId))
         {
+            $usrData = $this->CI->login_model->getUserById($this->CI->userId);
+            $data['userActive'] = $usrData['ifActive'];
             $rols = $this->CI->login_model->getUserRoles($this->CI->userId);
             $data['userModules'] = explode(',',$rols['modulesAssigned']);
+            if($this->CI->userType == EXECUTIVE_USER)
+            {
+                if(!is_null($this->CI->commSecLoc) && isSessionVariableSet($this->CI->commSecLoc))
+                {
+                    $locations = $this->CI->locations_model->getLocationDetailsById($this->CI->commSecLoc);
+                    $data['locInfo'] = $locations['locData'];
+                }
+                /*else
+                {
+                    redirect(base_url().'dashboard/setCommLoc');
+                }*/
+            }
         }
 
         $htmlPage = $this->CI->load->view('HeaderView', $data, true);

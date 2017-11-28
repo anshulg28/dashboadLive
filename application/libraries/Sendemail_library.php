@@ -221,6 +221,7 @@ class Sendemail_library
                 {
                     $cc .= ','.$commDetail['userData']['emailId'];
                     $senderName = ucfirst(trim($commDetail['userData']['firstName']));
+                    $senderEmail = $commDetail['userData']['emailId'];
                     $senderPhone = $commDetail['userData']['mobNum'];
                 }
             }
@@ -361,6 +362,7 @@ class Sendemail_library
                 {
                     $cc .= ','.$commDetail['userData']['emailId'];
                     $senderName = ucfirst(trim($commDetail['userData']['firstName']));
+                    $senderEmail = $commDetail['userData']['emailId'];
                     $senderPhone = $commDetail['userData']['mobNum'];
                 }
             }
@@ -408,6 +410,7 @@ class Sendemail_library
     public function eventApproveMail($userData)
     {
         $senderUser = $this->CI->users_model->getSenderUsername($userData['senderEmail']);
+        $commDetail = $this->CI->users_model->searchUserByLoc($userData[0]['eventPlace']);
         if(isset($senderUser) && myIsArray($senderUser))
         {
             $userData['senderPhone'] = $senderUser['mobNum'];
@@ -420,10 +423,6 @@ class Sendemail_library
         {
             $data['orgCode'] = $this->generateCustomOrgCode($userData[0]['eventId'],$userData[0]['eventDate'],$userData[0]['startTime'],"500",$userData[0]['eventPlace']);
         }
-        //$userData['senderPhone'] = $phons[ucfirst($userData['senderName'])];
-        $data['mailData'] = $userData;
-
-        $content = $this->CI->load->view('emailtemplates/eventApproveMailView', $data, true);
 
         $fromEmail = DEFAULT_SENDER_EMAIL;
         $fromPass = DEFAULT_SENDER_PASS;
@@ -435,6 +434,16 @@ class Sendemail_library
             $fromPass = $userData['fromPass'];
             $replyTo = $userData['fromEmail'];
         }
+
+        if($fromEmail == DEFAULT_COMM_EMAIL && $commDetail['status'] === true)
+        {
+            $data['senderName'] = ucfirst(trim($commDetail['userData']['firstName']));
+            $data['senderEmail'] = $commDetail['userData']['emailId'];
+        }
+        //$userData['senderPhone'] = $phons[ucfirst($userData['senderName'])];
+        $data['mailData'] = $userData;
+
+        $content = $this->CI->load->view('emailtemplates/eventApproveMailView', $data, true);
 
         /*if(isset($userData['senderEmail']) && isStringSet($userData['senderEmail']))
         {
@@ -453,7 +462,6 @@ class Sendemail_library
             $cc = $cc.','.$extraCc;
         }*/
 
-        $commDetail = $this->CI->users_model->searchUserByLoc($userData[0]['eventPlace']);
         if($commDetail['status'] === true)
         {
             if($fromEmail != $commDetail['userData']['emailId'])
@@ -496,6 +504,14 @@ class Sendemail_library
         }
         //$userData['senderPhone'] = $phons[$userData['senderName']];
         $data['mailData'] = $userData;
+        if(isset($userData[0]['eventPlace']))
+        {
+            $commDetail = $this->CI->users_model->searchUserByLoc($userData[0]['eventPlace']);
+            if($commDetail['status'] === true)
+            {
+                $data['senderName'] = ucfirst(trim($commDetail['userData']['firstName']));
+            }
+        }
 
         $content = $this->CI->load->view('emailtemplates/eventDeclineMailView', $data, true);
 
@@ -527,15 +543,11 @@ class Sendemail_library
         {
             $cc = $cc.','.$extraCc;
         }*/
-        if(isset($userData[0]['eventPlace']))
+        if(isset($commDetail) && $commDetail['status'] === true)
         {
-            $commDetail = $this->CI->users_model->searchUserByLoc($userData[0]['eventPlace']);
-            if($commDetail['status'] === true)
+            if($fromEmail != $commDetail['userData']['emailId'])
             {
-                if($fromEmail != $commDetail['userData']['emailId'])
-                {
-                    $cc .= ','.$commDetail['userData']['emailId'];
-                }
+                $cc .= ','.$commDetail['userData']['emailId'];
             }
         }
         $fromName  = 'Doolally';
@@ -961,6 +973,7 @@ class Sendemail_library
         }
         $userData['senderUser'] = $senderUser;
 
+        $userData['senderName'] = ucfirst(trim($mailRecord['userData']['firstName']));
         $data['mailData'] = $userData;
 
         $content = $this->CI->load->view('emailtemplates/eventEditOrganiserMailView', $data, true);

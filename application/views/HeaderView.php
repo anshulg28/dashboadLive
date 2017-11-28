@@ -10,6 +10,14 @@
             <a class="navbar-brand" href="<?php echo base_url();?>">Doolally</a>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
+            <?php
+                if(isset($userActive))
+                {
+                    ?>
+                    <input type="hidden" id="userActive" value="<?php echo $userActive;?>"/>
+                    <?php
+                }
+            ?>
             <ul class="nav navbar-nav">
                 <li><a href="<?php echo base_url();?>"><i class="fa fa-home"></i> Home</a></li>
                 <?php
@@ -92,6 +100,12 @@
                 <?php
                     if(isSessionVariableSet($this->isUserSession) === true)
                     {
+                        if(isset($locInfo) && myIsArray($locInfo) && $this->userEmail == DEFAULT_COMM_EMAIL)
+                        {
+                            ?>
+                            <li><a href="<?php echo base_url();?>dashboard/setCommLoc"><?php echo $locInfo[0]['locName'];?> (Change Location)</a></li>
+                            <?php
+                        }
                         ?>
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user"></span>

@@ -629,8 +629,8 @@
                                                         if(isset($row['invoicePics']) && $row['invoicePics'] != '')
                                                         {
                                                             $inPics = explode(',',$row['invoicePics']);
-                                                            foreach($inPics as $pic)
                                                             $imgs = array();
+                                                            foreach($inPics as $pic)
                                                             {
                                                                 $imgs[] = base_url().JOB_MEDIA_PATH.$pic;
                                                             }
@@ -823,6 +823,8 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-12">
+                                    <br>
+                                    <p>In Progress Amount To be paid (jobs approx amount less than 5k):</p>
                                     <?php
                                     if(isset($tapsTotal) && myIsArray($tapsTotal))
                                     {
@@ -893,6 +895,7 @@
                                                     <th>Location</th>
                                                     <th>Amount</th>
                                                     <th>Pay Method</th>
+                                                    <th>Pay Date/Time</th>
                                                 </tr>
                                             </thead>
 
@@ -2334,6 +2337,7 @@
                             tbody += '<td>'+data.payLogs[i].locName+'</td>';
                             tbody += '<td>'+data.payLogs[i].payAmount+'</td>';
                             tbody += '<td>'+data.payLogs[i].payType+'</td>';
+                            tbody += '<td>'+data.payLogs[i].payDate+'</td>';
                             tbody += '</tr>';
                         }
                         tbody += '</tbody>';

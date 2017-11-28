@@ -448,7 +448,7 @@ class Maintenance_Model extends CI_Model
     }
     function filterPayment($startDate, $endDate)
     {
-        $query = "SELECT lm.locName,fsm.jobId,fsm.payAmount,fsm.payType
+        $query = "SELECT lm.locName,fsm.jobId,fsm.payAmount,fsm.payType, DATE_FORMAT(fsm.payDate, '%d %b %Y %h:%i %p') AS 'payDate' 
                 FROM financestatusmaster fsm
                 LEFT JOIN complaintlogmaster clm ON fsm.jobId = clm.complaintId
                 LEFT JOIN locationmaster lm ON clm.locId = lm.id

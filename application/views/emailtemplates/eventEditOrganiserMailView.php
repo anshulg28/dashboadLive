@@ -152,7 +152,7 @@
         ?>
 
         Cheers,<br>
-        Doolally
+        <?php echo $mailData['senderName'];?>
     </p>
 
 </body>
