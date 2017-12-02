@@ -1960,6 +1960,7 @@ class Cron extends MY_Controller
                 );
                 $this->dashboard_model->updateStaffRecord($row['id'],$details);
             }
+            $this->dashboard_model->walletLogsBatch($walRec);
         }
     }
 }
