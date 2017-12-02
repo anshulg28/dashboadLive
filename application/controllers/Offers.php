@@ -4,6 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * Class Offers
  * @property Offers_Model $offers_model
+ * @property dashboard_model $dashboard_model
 */
 
 class Offers extends MY_Controller {
@@ -12,6 +13,7 @@ class Offers extends MY_Controller {
 	{
 		parent::__construct();
 		$this->load->model('offers_model');
+		$this->load->model('dashboard_model');
 	}
 	public function index()
 	{
@@ -278,6 +280,12 @@ class Offers extends MY_Controller {
         }
 
         $this->offers_model->setAllCodes($toBeInserted);
+        $logDetails = array(
+            'logMessage' => 'Function: createCodes, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
         if($responseType == RESPONSE_JSON)
         {
             echo json_encode($unUsedCodes);
@@ -395,6 +403,12 @@ class Offers extends MY_Controller {
                 $this->offers_model->deleteOfferRecord($offerId);
             }
         }
+        $logDetails = array(
+            'logMessage' => 'Function: deleteOffer, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
         redirect(base_url().'offers/stats');
     }
 
@@ -716,7 +730,7 @@ class Offers extends MY_Controller {
                                 $this->offers_model->setOfferUsed($offerData);
                                 $dNow = date_create(date('Y-m-d H:i:s'));
                                 $data['status'] = false;
-                                $data['errorMsg'] = 'Sorry, this code has been redeemed on';
+                                $data['errorMsg'] = 'Sorry, this code has been redeemed on '.date_format($dNow,DATE_TIME_FORMAT_UI);
                             }
                             else
                             {

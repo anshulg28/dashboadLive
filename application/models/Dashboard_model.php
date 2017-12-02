@@ -1557,4 +1557,9 @@ class Dashboard_Model extends CI_Model
         $this->db->update('offersmaster',$details);
         return true;
     }
+    public function saveDashLogs($details)
+    {
+        $this->db->insert('logsrecordsmaster', $details);
+        return true;
+    }
 }

@@ -561,6 +561,13 @@ class Dashboard extends MY_Controller {
         }
         $this->dashboard_model->insertFeedBack($insert_values);
 
+        $logDetails = array(
+            'logMessage' => 'Function: saveFeedback, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
+
         if($responseType == RESPONSE_JSON)
         {
             $data['status'] = true;
@@ -629,6 +636,13 @@ class Dashboard extends MY_Controller {
             }
         }
 
+        $logDetails = array(
+            'logMessage' => 'Function: saveFnb, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
+
         redirect(base_url().'dashboard');
 
     }
@@ -649,6 +663,12 @@ class Dashboard extends MY_Controller {
         {
             $data['status'] = false;
         }
+        $logDetails = array(
+            'logMessage' => 'Function: beerLocation, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
         echo json_encode($data);
     }
     public function fnbTagSet($fnbId)
@@ -663,6 +683,12 @@ class Dashboard extends MY_Controller {
 
         $data['status'] = true;
         echo json_encode($data);
+        $logDetails = array(
+            'logMessage' => 'Function: fnbTagSet, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
 
     }
     public function uploadFiles()
@@ -1086,6 +1112,12 @@ class Dashboard extends MY_Controller {
             $data['errorMsg'] = 'Sorry, This time slot is already booked!';
         }
         echo json_encode($data);
+        $logDetails = array(
+            'logMessage' => 'Function: saveEvent, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
 
     }
     
@@ -1498,6 +1530,12 @@ class Dashboard extends MY_Controller {
         }
 
         echo json_encode($data);
+        $logDetails = array(
+            'logMessage' => 'Function: updateEvent, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
 
     }
 
@@ -1747,6 +1785,12 @@ class Dashboard extends MY_Controller {
         $data['status'] = true;
         echo json_encode($data);
 
+        $logDetails = array(
+            'logMessage' => 'Function: cancelEvent, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
     }
 
     public function cancelMeetMeUp($meetupId = '')
@@ -1980,6 +2024,12 @@ class Dashboard extends MY_Controller {
         $data['status']= true;
 
         echo json_encode($data);
+        $logDetails = array(
+            'logMessage' => 'Function: changeCostType, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
     }
     function eventApproved($eventId)
     {
@@ -2207,6 +2257,12 @@ class Dashboard extends MY_Controller {
         }
         $data['apiData'] = $externalAPIData;
         echo json_encode($data);
+        $logDetails = array(
+            'logMessage' => 'Function: eventApproved, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
     }
 
     public function meetMeUp($eventInfo, $eventId, $meetupId = '')
@@ -2376,6 +2432,12 @@ class Dashboard extends MY_Controller {
         $this->sendemail_library->eventDeclineMail($eventDetail);
         $data['status'] = true;
         echo json_encode($data);
+        $logDetails = array(
+            'logMessage' => 'Function: eventDeclined, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
     }
     function setEventDeActive($eventId)
     {
@@ -2386,6 +2448,12 @@ class Dashboard extends MY_Controller {
         $this->dashboard_model->deActivateEventRecord($eventId);
         $eventInfo = $this->dashboard_model->getFullEventInfoById($eventId);
         $this->deactiveOtherPlatforms($eventInfo,$eventId);
+        $logDetails = array(
+            'logMessage' => 'Function: setEventDeActive, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
 
         redirect(base_url().'dashboard');
     }
@@ -2399,6 +2467,12 @@ class Dashboard extends MY_Controller {
         $eventInfo = $this->dashboard_model->getFullEventInfoById($eventId);
 
         $this->activeOtherPlatforms($eventInfo,$eventId);
+        $logDetails = array(
+            'logMessage' => 'Function: setEventActive, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
 
         redirect(base_url().'dashboard');
     }
@@ -2435,6 +2509,12 @@ class Dashboard extends MY_Controller {
         $this->dashboard_model->eventAttDelete($picId);
         $data['status'] = true;
         echo json_encode($data);
+        $logDetails = array(
+            'logMessage' => 'Function: deleteEventAtt, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
     }
 
     function openReg($eventId)
@@ -2450,6 +2530,12 @@ class Dashboard extends MY_Controller {
         $eventInfo = $this->dashboard_model->getFullEventInfoById($eventId);
 
         $this->activeOtherPlatforms($eventInfo,$eventId);
+        $logDetails = array(
+            'logMessage' => 'Function: openReg, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
         redirect(base_url().'dashboard');
     }
     function closeReg($eventId)
@@ -2465,6 +2551,12 @@ class Dashboard extends MY_Controller {
         $eventInfo = $this->dashboard_model->getFullEventInfoById($eventId);
 
         $this->deactiveOtherPlatforms($eventInfo,$eventId);
+        $logDetails = array(
+            'logMessage' => 'Function: closeReg, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
         redirect(base_url().'dashboard');
     }
     public function getSignupList($eventId)
@@ -2604,6 +2696,12 @@ class Dashboard extends MY_Controller {
             redirect(base_url());
         }
         $this->dashboard_model->activateFnbRecord($fnbId);
+        $logDetails = array(
+            'logMessage' => 'Function: setFnbActive, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
         redirect(base_url().'dashboard');
     }
     function setFnbDeActive($fnbId)
@@ -2613,6 +2711,12 @@ class Dashboard extends MY_Controller {
             redirect(base_url());
         }
         $this->dashboard_model->DeActivateFnbRecord($fnbId);
+        $logDetails = array(
+            'logMessage' => 'Function: setFnbDeActive, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
         redirect(base_url().'dashboard');
     }
     function deleteFnb($fnbId)
@@ -2622,6 +2726,12 @@ class Dashboard extends MY_Controller {
             redirect(base_url());
         }
         $this->dashboard_model->fnbDelete($fnbId);
+        $logDetails = array(
+            'logMessage' => 'Function: deleteFnb, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
         redirect(base_url().'dashboard');
     }
     function editFnb($fnbId)
@@ -2659,6 +2769,12 @@ class Dashboard extends MY_Controller {
         $this->dashboard_model->fnbAttDelete($picId);
         $data['status'] = true;
         echo json_encode($data);
+        $logDetails = array(
+            'logMessage' => 'Function: deleteFnbAtt, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
     }
     public function updatefnb()
     {
@@ -2690,6 +2806,13 @@ class Dashboard extends MY_Controller {
                 $this->dashboard_model->saveFnbAttachment($attArr);
             }
         }
+
+        $logDetails = array(
+            'logMessage' => 'Function: updateFnb, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
         redirect(base_url().'dashboard');
 
     }
@@ -2708,6 +2831,12 @@ class Dashboard extends MY_Controller {
         $this->dashboard_model->saveMetaRecord($post);
         $data['status'] = true;
         echo json_encode($data);
+        $logDetails = array(
+            'logMessage' => 'Function: saveEventMeta, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
     }
 
     function saveBeerMeta()
@@ -3067,5 +3196,11 @@ class Dashboard extends MY_Controller {
         $data['status'] = true;
 
         echo  json_encode($data);
+        $logDetails = array(
+            'logMessage' => 'Function: saveAltShareImg, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
     }
 }

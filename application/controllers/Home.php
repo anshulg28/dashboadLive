@@ -436,6 +436,7 @@ class Home extends MY_Controller {
         echo json_encode($data);
     }
 
+    //Not used
     function requestStaffOtp()
     {
         $post = $this->input->post();
@@ -612,6 +613,17 @@ class Home extends MY_Controller {
         $details = array(
             'walletBalance' => $finalBal
         );
+
+        $staffDet = $this->dashboard_model->getStaffById($id);
+        if($staffDet['status'] === true)
+        {
+            if(!isset($staffDet['staffDetails'][0]['expiryDateTime']))
+            {
+                $dt = date('Y-m-d');
+                $details['expiryDateTIme'] = date('Y-m-d',strtotime('+1 day', strtotime($dt))).' 01:00';
+            }
+        }
+
         $this->dashboard_model->updateStaffRecord($id,$details);
         $data['status'] = true;
         echo json_encode($data);
@@ -626,6 +638,7 @@ class Home extends MY_Controller {
         $post = $this->input->post();
 
         $empCheck = $this->dashboard_model->checkStaffById($post['empId']);
+        $id = '';
         if($empCheck['status'] == true)
         {
             $data['status'] = false;
@@ -641,11 +654,17 @@ class Home extends MY_Controller {
                 }
                 elseif($post['userType'] == WALLET_OFFICE)
                 {
-                    $post['walletBalance'] = 7000;
+                    $post['walletBalance'] = OFFICE_WALLET_CAP;
                 }
                 elseif($post['userType'] == WALLET_GUEST)
                 {
                     $post['walletBalance'] = 0;
+                }
+                elseif($post['userType'] == WALLET_GUEST_VALIDITY)
+                {
+                    $post['walletBalance'] = 0;
+                    $dt = date('Y-m-d');
+                    $post['expiryDateTIme'] = date('Y-m-d',strtotime('+1 day', strtotime($dt))).' 01:00';
                 }
                 $id = $this->dashboard_model->saveStaffRecord($post);
 
@@ -669,6 +688,12 @@ class Home extends MY_Controller {
         }
 
         echo json_encode($data);
+        $logDetails = array(
+            'logMessage' => 'Function: saveStaff, User: '.$this->userId.' Id: '.$id,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
     }
     function updateStaff()
     {
@@ -705,6 +730,12 @@ class Home extends MY_Controller {
             );
             $this->dashboard_model->updateWalletLog($walletRecord);
         }*/
+        $logDetails = array(
+            'logMessage' => 'Function: updateStaff, User: '.$this->userId.' id: '.$post['id'],
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
         redirect(base_url().'empDetails');
     }
     function addStaff()
@@ -734,6 +765,12 @@ class Home extends MY_Controller {
             redirect(base_url());
         }
         $this->dashboard_model->blockStaffRecord($id);
+        $logDetails = array(
+            'logMessage' => 'Function: blockStaff, User: '.$this->userId.' Staff: '.$id,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
         redirect(base_url().'empDetails');
     }
     function freeStaff($id)
@@ -759,6 +796,12 @@ class Home extends MY_Controller {
         }
         //$data['status'] = true;
         echo json_encode($data);
+        $logDetails = array(
+            'logMessage' => 'Function: freeStaff, User: '.$this->userId.' Id: '.$id,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
     }
 
     function staffEdit($id)
@@ -1006,6 +1049,12 @@ class Home extends MY_Controller {
         }
 
         echo json_encode($data);
+        $logDetails = array(
+            'logMessage' => 'Function: requestWalletOtp User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
     }
 
     function getCoupon()
@@ -1095,7 +1144,7 @@ class Home extends MY_Controller {
                                         'apiKey' => TEXTLOCAL_API,
                                         'numbers' => implode(',', $numbers),
                                         'sender'=> urlencode('DOLALY'),
-                                        'message' => rawurlencode($usedAmt.' Debited, Available Wallet Balance: '.$finalBal)
+                                        'message' => rawurlencode($usedAmt.' Debited against bill #'.$postBillNum.', Available Wallet Balance: '.$finalBal)
                                     );
                                     $smsStatus = $this->curl_library->sendCouponSMS($postDetails);
                                     if($smsStatus['status'] == 'failure')
@@ -1144,6 +1193,12 @@ class Home extends MY_Controller {
         }
 
         echo json_encode($data);
+        $logDetails = array(
+            'logMessage' => 'Function: getCoupon, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
     }
 
     function adminBillSettle()
@@ -1214,7 +1269,7 @@ class Home extends MY_Controller {
                                 'apiKey' => TEXTLOCAL_API,
                                 'numbers' => implode(',', $numbers),
                                 'sender'=> urlencode('DOLALY'),
-                                'message' => rawurlencode($usedAmt.' Debited, Available Wallet Balance: '.$finalBal)
+                                'message' => rawurlencode($usedAmt.' Debited against bill #'.$postBillNum.', Available Wallet Balance: '.$finalBal)
                             );
 
                             $smsStatus = $this->curl_library->sendCouponSMS($postDetails);
@@ -1262,6 +1317,12 @@ class Home extends MY_Controller {
         }
 
         echo json_encode($data);
+        $logDetails = array(
+            'logMessage' => 'Function: adminBillSettle, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
     }
 
     function smsErrorCodes($code)
@@ -1416,6 +1477,12 @@ class Home extends MY_Controller {
     public function delStaffRecord($id)
     {
         $this->dashboard_model->deleteStaffRecord($id);
+        $logDetails = array(
+            'logMessage' => 'Function: deleteStaffRecord, User: '.$this->userId.' id: '.$id,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
         redirect(base_url().'empDetails');
     }
 

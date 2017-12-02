@@ -419,6 +419,7 @@ class Mugclub_Model extends CI_Model
             $post['notes'] = trim($post['notes']);
         }
         $post['ifActive'] = '1';
+        $post['insertedDT'] = date('Y-m-d H:i:s');
 
         $this->db->insert('mugmaster', $post);
         return true;

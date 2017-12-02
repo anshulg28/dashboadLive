@@ -5,6 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Class Checkin
  * @property checkin_model $checkin_model
  * @property mugclub_model $mugclub_model
+ * @property dashboard_model $dashboard_model
  */
 
 class Checkin extends MY_Controller {
@@ -14,6 +15,7 @@ class Checkin extends MY_Controller {
         parent::__construct();
         $this->load->model('checkin_model');
         $this->load->model('mugclub_model');
+        $this->load->model('dashboard_model');
     }
 
 	public function index()
@@ -193,6 +195,13 @@ class Checkin extends MY_Controller {
             }
         }
 
+        $logDetails = array(
+            'logMessage' => 'Function: saveOrUpdateCheckIn, User: '.$this->userId.' Mug: '.$params['mugId'],
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
+
         if($responseType == RESPONSE_RETURN)
         {
             redirect(base_url().'check-ins');
@@ -231,6 +240,12 @@ class Checkin extends MY_Controller {
         {
             $this->checkin_model->deleteCheckInRecord($Id);
         }
+        $logDetails = array(
+            'logMessage' => 'Function: deleteMugCheckIn, User: '.$this->userId.' Mug: '.$Id,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
         redirect(base_url().'check-ins');
     }
 
@@ -266,6 +281,12 @@ class Checkin extends MY_Controller {
 
             echo json_encode($verifyMugData);
         }
+        $logDetails = array(
+            'logMessage' => 'Function: verifyCheckIn, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
     }
 
     function getProperFieldText($gotParam)

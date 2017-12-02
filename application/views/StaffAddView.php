@@ -33,11 +33,15 @@
                         </label><br>
                         <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="offEmp">
                             <input type="radio" id="offEmp" class="mdl-radio__button" name="userType" value="2">
-                            <span class="mdl-radio__label"> Office Employee/RM/FM/Sous Chef/CDP (<p style="font-size:12px;display:inline-block">7000 credits at all time</p>)</span>
+                            <span class="mdl-radio__label"> Office Employee/RM/FM/Sous Chef/CDP (<p style="font-size:12px;display:inline-block"><?php echo OFFICE_WALLET_CAP;?> credits/month</p>)</span>
                         </label><br>
                         <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="guestEmp">
                             <input type="radio" id="guestEmp" class="mdl-radio__button" name="userType" value="3">
                             <span class="mdl-radio__label"> Guest Wallet (<p style="font-size:12px;display:inline-block">add credits using Add Amount feature</p>)</span>
+                        </label><br>
+                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="guestEmpVal">
+                            <input type="radio" id="guestEmpVal" class="mdl-radio__button" name="userType" value="4">
+                            <span class="mdl-radio__label"> Guest Wallet With Expiring Credits (<p style="font-size:12px;display:inline-block">add credits using Add Amount feature</p>)</span>
                         </label>
                     </div>
                     <div class="mdl-cell mdl-cell--6-col">

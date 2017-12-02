@@ -1280,6 +1280,49 @@ class Cron extends MY_Controller
             }
         }
 
+        //Monthly Office Wallet Reset
+        $officeWalls = $this->dashboard_model->getAllOfficeWallets();
+
+        if(isset($officeWalls) && myIsArray($officeWalls))
+        {
+            $offWallBatch = array();
+            $offWalletLog = array();
+            foreach($officeWalls as $key => $row)
+            {
+                $oldBal = (double)$row['walletBalance'];
+                $updatedBal = OFFICE_WALLET_CAP;
+                if($oldBal < 0)
+                {
+                    $updatedBal = (double)OFFICE_WALLET_CAP + $oldBal;
+                }
+
+                $details = array(
+                    'walletBalance' => $updatedBal
+                );
+                $this->dashboard_model->updateStaffRecord($row['id'],$details);
+                if($updatedBal > 0)
+                {
+                    $offWallBatch[] = array(
+                        'amtCredit' => $updatedBal,
+                        'empId' => $row['empId'],
+                        'staffStatus' => '2',
+                        'updateDT' => date('Y-m-d H:i:s')
+                    );
+                }
+                $offWalletLog[] = array(
+                    'staffId' => $row['id'],
+                    'amount' => $updatedBal,
+                    'amtAction' => '2',
+                    'notes' => 'Monthly Balance Credit',
+                    'loggedDT' => date('Y-m-d H:i:s'),
+                    'updatedBy' => 'system'
+                );
+            }
+
+            $this->dashboard_model->offWallBatch($offWallBatch);
+            $this->dashboard_model->walletLogsBatch($offWalletLog);
+        }
+
     }
 
     function smsErrorCodes($code)
@@ -1646,32 +1689,49 @@ class Cron extends MY_Controller
 
     public function regularizeOfficeWallets()
     {
+        //Monthly Office Wallet Reset
         $officeWalls = $this->dashboard_model->getAllOfficeWallets();
 
         if(isset($officeWalls) && myIsArray($officeWalls))
         {
             $offWallBatch = array();
+            $offWalletLog = array();
             foreach($officeWalls as $key => $row)
             {
                 $oldBal = (double)$row['walletBalance'];
-                $remainBal = (double)OFFICE_WALLET_CAP - $oldBal;
+                $updatedBal = OFFICE_WALLET_CAP;
+                if($oldBal < 0)
+                {
+                    $updatedBal = (double)OFFICE_WALLET_CAP + $oldBal;
+                }
+
                 $details = array(
-                    'walletBalance' => OFFICE_WALLET_CAP
+                    'walletBalance' => $updatedBal
                 );
                 $this->dashboard_model->updateStaffRecord($row['id'],$details);
-                if($remainBal > 0)
+                if($updatedBal > 0)
                 {
                     $offWallBatch[] = array(
-                        'amtCredit' => $remainBal,
+                        'amtCredit' => $updatedBal,
                         'empId' => $row['empId'],
                         'staffStatus' => '2',
                         'updateDT' => date('Y-m-d H:i:s')
                     );
                 }
+                $offWalletLog[] = array(
+                    'staffId' => $row['id'],
+                    'amount' => $updatedBal,
+                    'amtAction' => '2',
+                    'notes' => 'Monthly Balance Credit',
+                    'loggedDT' => date('Y-m-d H:i:s'),
+                    'updatedBy' => 'system'
+                );
             }
 
             $this->dashboard_model->offWallBatch($offWallBatch);
+            $this->dashboard_model->walletLogsBatch($offWalletLog);
         }
+
     }
 
     public function sendWalletUseReport()
@@ -1748,7 +1808,7 @@ class Cron extends MY_Controller
             fclose($file1);
             $content = '<html><body><p>Monthly Employee Expenditure Report<br>PFA</p></body></html>';
 
-            $this->sendemail_library->sendEmail(array('purva@brewcraftsindia.com','hasti@brewcraftsindia.com','saha@brewcraftsindia.com','savio@brewcraftsindia.com','amit@brewcraftsindia.com','taronish@brewcraftsindia.com','pranjal.rathi@rubycapital.net'),'','admin@brewcraftsindia.com','ngks2009','Doolally'
+            $this->sendemail_library->sendEmail(array('purva@brewcraftsindia.com','hasti@brewcraftsindia.com','saha@brewcraftsindia.com','savio@brewcraftsindia.com','amit@brewcraftsindia.com','taronish@brewcraftsindia.com','pranjal.rathi@rubycapital.net'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
                 ,'admin@brewcraftsindia.com','Staff wallet usage report '.date('m_Y', strtotime('-1 month')),$content,array("./uploads/monthly_wallet_detail_transactions_".date('m_Y', strtotime('-1 month')).".csv",
                     "./uploads/monthly_wallet_usage_".date('m_Y', strtotime('-1 month')).".csv"));
             try

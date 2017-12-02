@@ -9,6 +9,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @property offers_model $offers_model
  * @property login_model $login_model
  * @property locations_model $locations_model
+ * @property dashboard_model $dashboard_model
 */
 
 class Mailers extends MY_Controller {
@@ -22,6 +23,7 @@ class Mailers extends MY_Controller {
         $this->load->model('offers_model');
         $this->load->model('login_model');
         $this->load->model('locations_model');
+        $this->load->model('dashboard_model');
 	}
 	public function index()
 	{
@@ -146,6 +148,12 @@ class Mailers extends MY_Controller {
         $post['insertedDT'] = date('Y-m-d H:i:s');
         $this->mailers_model->saveMailType($post);
         $data['status'] = true;
+        $logDetails = array(
+            'logMessage' => 'Function: savePressCategory, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
 
         echo json_encode($data);
     }
@@ -180,7 +188,15 @@ class Mailers extends MY_Controller {
         }
         $post = $this->input->post();
 
+        $post['addedBy'] = $this->userId;
+        $post['addedDT'] = date('Y-m-d H:i:s');
         $this->mailers_model->savePressEmail($post);
+        $logDetails = array(
+            'logMessage' => 'Function: savePressMail, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
 
         redirect(base_url().'mailers/pressSend');
 
@@ -193,6 +209,12 @@ class Mailers extends MY_Controller {
             redirect(base_url());
         }
         $this->mailers_model->deletePressEmail($pressId);
+        $logDetails = array(
+            'logMessage' => 'Function: removePressEmail, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
         redirect(base_url().'mailers/pressSend');
     }
     public function updatePressMail()
@@ -207,6 +229,12 @@ class Mailers extends MY_Controller {
             $PressId = $post['id'];
             unset($post['id']);
             $this->mailers_model->updatePressEmail($post,$PressId);
+            $logDetails = array(
+                'logMessage' => 'Function: updatePressMail, User: '.$this->userId,
+                'fromWhere' => 'Dashboard',
+                'insertedDT' => date('Y-m-d H:i:s')
+            );
+            $this->dashboard_model->saveDashLogs($logDetails);
             redirect(base_url().'mailers/pressSend');
         }
     }
@@ -412,6 +440,14 @@ class Mailers extends MY_Controller {
                 $this->mailers_model->setMailSend($key,$post['mailType']);
             }
         }
+
+
+        $logDetails = array(
+            'logMessage' => 'Function: sendAllMails, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
 
         if($responseType == RESPONSE_JSON)
         {
@@ -630,6 +666,11 @@ class Mailers extends MY_Controller {
         $body = $pressBody;
         $mainBody .= $body .'</body></html>';
 
+        if(!is_null($this->commSecLoc) && isSessionVariableSet($this->commSecLoc))
+        {
+            $commDetails = $this->users_model->searchUserByLoc($this->commSecLoc);
+        }
+
         foreach($pressEmails as $key)
         {
             if(isValidEmail($key))
@@ -661,6 +702,12 @@ class Mailers extends MY_Controller {
                     }*/
                 }
 
+                if(isset($commDetails) && $commDetails['status'] === true && $this->userEmail == DEFAULT_COMM_EMAIL)
+                {
+                    $cc .= ','.$commDetails['userData']['emailId'];
+                    $replyTo = $commDetails['userData']['emailId'];
+                    $fromName = ucfirst(trim($commDetails['userData']['firstName']));
+                }
                 /*if(isset($post['senderEmail']) && isStringSet($post['senderEmail'])
                     && isset($post['senderPass']) && isStringSet($post['senderPass']))
                 {
@@ -711,6 +758,13 @@ class Mailers extends MY_Controller {
             }
             //$this->sendemail_library->sendEmail($key,$cc,$fromEmail, $fromPass, $fromName,$replyTo,$pressSub,$newBody,$attchmentArr);
         }
+
+        $logDetails = array(
+            'logMessage' => 'Function: sendPressMails, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
         if($responseType == RESPONSE_JSON)
         {
             $data['status'] = true;
@@ -786,6 +840,12 @@ class Mailers extends MY_Controller {
         {
             $this->mailers_model->updateTemplate($post,$post['id']);
         }
+        $logDetails = array(
+            'logMessage' => 'Function: tempUpdate, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
         redirect(base_url().'mailers/templates');
     }
 
@@ -798,6 +858,12 @@ class Mailers extends MY_Controller {
         $post = $this->input->post();
 
         $this->mailers_model->saveTemplate($post);
+        $logDetails = array(
+            'logMessage' => 'Function: tempSave, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
         redirect(base_url().'mailers/templates');
     }
     public function generateBreakfastTwoCode($mugId)

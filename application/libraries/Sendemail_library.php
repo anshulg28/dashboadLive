@@ -437,8 +437,8 @@ class Sendemail_library
 
         if($fromEmail == DEFAULT_COMM_EMAIL && $commDetail['status'] === true)
         {
-            $data['senderName'] = ucfirst(trim($commDetail['userData']['firstName']));
-            $data['senderEmail'] = $commDetail['userData']['emailId'];
+            $userData['senderName'] = ucfirst(trim($commDetail['userData']['firstName']));
+            $userData['senderEmail'] = $commDetail['userData']['emailId'];
         }
         //$userData['senderPhone'] = $phons[ucfirst($userData['senderName'])];
         $data['mailData'] = $userData;

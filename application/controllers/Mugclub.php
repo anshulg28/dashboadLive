@@ -6,6 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @property mugclub_model $mugclub_model
  * @property users_model $users_model
  * @property locations_model $locations_model
+ * @property dashboard_model $dashboard_model
  */
 
 class Mugclub extends MY_Controller {
@@ -16,6 +17,7 @@ class Mugclub extends MY_Controller {
         $this->load->model('mugclub_model');
         $this->load->model('users_model');
         $this->load->model('locations_model');
+        $this->load->model('dashboard_model');
     }
 	public function index()
 	{
@@ -227,6 +229,12 @@ class Mugclub extends MY_Controller {
                 $this->sendemail_library->membershipRenewSendMail($mailData);
             }
 
+            $logDetails = array(
+                'logMessage' => 'Function: mugRenew, User: '.$this->userId,
+                'fromWhere' => 'Dashboard',
+                'insertedDT' => date('Y-m-d H:i:s')
+            );
+            $this->dashboard_model->saveDashLogs($logDetails);
             if($responseType == RESPONSE_RETURN)
             {
                 redirect(base_url().'mugclub');
@@ -255,12 +263,15 @@ class Mugclub extends MY_Controller {
                 unset($post['oldMugNum']);
             }
 
+            $mugNum = '';
             if(isset($mugId))
             {
+                $mugNum = $mugId;
                 $mugExists = $this->mugclub_model->getMugDataById($mugId);
             }
             else
             {
+                $mugNum = $post['mugNum'];
                 $mugExists = $this->mugclub_model->getMugDataById($post['mugNum']);
             }
 
@@ -344,6 +355,12 @@ class Mugclub extends MY_Controller {
                     $this->mugclub_model->updateMugRecord($params);
                 }
             }
+            $logDetails = array(
+                'logMessage' => 'Function: saveOrUpdateMug, User: '.$this->userId.' Mug: '.$mugNum,
+                'fromWhere' => 'Dashboard',
+                'insertedDT' => date('Y-m-d H:i:s')
+            );
+            $this->dashboard_model->saveDashLogs($logDetails);
             redirect(base_url().'mugclub');
         }
         else
@@ -399,6 +416,12 @@ class Mugclub extends MY_Controller {
         }
 
         echo json_encode($data);
+        $logDetails = array(
+            'logMessage' => 'Function: ajaxMugUpdate, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
     }
     function getProperFieldText($gotParam)
     {
@@ -454,6 +477,12 @@ class Mugclub extends MY_Controller {
             $this->mugclub_model->saveDelRecord($mugExists);
             $this->mugclub_model->deleteMugRecord($mugId);
         }
+        $logDetails = array(
+            'logMessage' => 'Function: deleteMugData, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
         redirect(base_url().'mugclub');
     }
     public function holdMugData($mugId)
@@ -468,6 +497,12 @@ class Mugclub extends MY_Controller {
         {
             $this->mugclub_model->holdMugRecord($mugId);
         }
+        $logDetails = array(
+            'logMessage' => 'Function: holdMugData, User: '.$this->userId,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
         redirect(base_url().'mugclub');
     }
 
