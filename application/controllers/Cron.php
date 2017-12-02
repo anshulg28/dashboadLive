@@ -1937,4 +1937,29 @@ class Cron extends MY_Controller
                 ,'admin@brewcraftsindia.com',$subject,$content,array());
         }
     }
+
+    public function resetGuestWallets()
+    {
+        $g2Users = $this->cron_model->getAllGuest2List();
+        if(isset($g2Users) && myIsArray($g2Users))
+        {
+            $walRec = array();
+            foreach($g2Users as $key => $row)
+            {
+                $walRec[] = array(
+                    'staffId' => $row['id'],
+                    'amount' => $row['walletBalance'],
+                    'amtAction' => '1',
+                    'notes' => 'Wallet Balance Expired',
+                    'loggedDT' => date('Y-m-d H:i:s'),
+                    'updatedBy' => 'system'
+                );
+                $details = array(
+                    'walletBalance' => 0,
+                    'expiryDateTime' => null
+                );
+                $this->dashboard_model->updateStaffRecord($row['id'],$details);
+            }
+        }
+    }
 }

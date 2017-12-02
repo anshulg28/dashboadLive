@@ -333,4 +333,11 @@ class Cron_Model extends CI_Model
         $result = $this->db->query($query)->result_array();
         return $result;
     }
+    function getAllGuest2List()
+    {
+        $query = "SELECT *
+                    FROM staffmaster WHERE ifActive = 1 AND userType = ".WALLET_GUEST_VALIDITY;
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
 }
