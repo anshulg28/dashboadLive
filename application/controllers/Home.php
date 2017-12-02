@@ -1515,4 +1515,125 @@ class Home extends MY_Controller {
         echo 'Done';
 
     }
+
+    public function topupWallet()
+    {
+        $data = array();
+        if(isSessionVariableSet($this->isUserSession) === false)
+        {
+            $data['errorMsg'] = 'Session Timeout! Please Login Again';
+            $data['status'] = false;
+            echo json_encode($data);
+            return false;
+        }
+        $post = $this->input->post();
+
+        $check_array = array('wallMob', 'wallAmt', 'wallReason');
+        if (array_diff($check_array, array_keys($post)))
+        {
+            $data['errorMsg'] = 'All fields are required!';
+            $data['status'] = false;
+            echo json_encode($data);
+            return false;
+        }
+
+        if( empty($post['wallMob']) || empty($post['wallAmt']) || empty($post['wallReason']))
+        {
+            $data['errorMsg'] = 'All fields are required!';
+            $data['status'] = false;
+            echo json_encode($data);
+            return false;
+        }
+
+        $mobNum = $post['wallMob'];
+        $guestInfo = $this->dashboard_model->checkStaffByMob($mobNum);
+        if($guestInfo['status'] === true)
+        {
+            if($guestInfo['checkin'][0]['userType'] == WALLET_GUEST_VALIDITY)
+            {
+                $oldBal = (double)$guestInfo['checkin'][0]['walletBalance'];
+                $newBal = $oldBal + (double)$post['wallAmt'];
+                $details = array(
+                    'walletBalance' => $newBal
+                );
+                if(!isset($guestInfo['checkin'][0]['expiryDateTime']))
+                {
+                    $dt = date('Y-m-d');
+                    $details['expiryDateTime'] = date('Y-m-d',strtotime('+1 day', strtotime($dt))).' 01:00';
+                }
+                $this->dashboard_model->updateStaffRecord($guestInfo['checkin'][0]['id'],$details);
+                $walRec =  array(
+                    'staffId' => $guestInfo['checkin'][0]['id'],
+                    'amount' => $post['wallAmt'],
+                    'amtAction' => '2',
+                    'notes' => 'Wallet Topup',
+                    'loggedDT' => date('Y-m-d H:i:s'),
+                    'updatedBy' => $this->userName
+                );
+                $this->dashboard_model->updateWalletLog($walRec);
+
+                $data['status'] = true;
+                $logDetails = array(
+                    'logMessage' => 'Function: topupWallet, User: '.$this->userId,
+                    'fromWhere' => 'Dashboard',
+                    'insertedDT' => date('Y-m-d H:i:s')
+                );
+                $this->dashboard_model->saveDashLogs($logDetails);
+            }
+            else
+            {
+                $data['status'] = false;
+                $data['errorMsg'] = 'Not Allowed for the given mobile number!';
+            }
+        }
+        else
+        {
+            $data['status'] = false;
+            $data['errorMsg'] = 'Guest Not Found!';
+        }
+
+    }
+
+    public function getEmpMobInfo()
+    {
+        $data = array();
+        if(isSessionVariableSet($this->isUserSession) === false)
+        {
+            $data['errorMsg'] = 'Session Timeout! Please Login Again';
+            $data['status'] = false;
+            echo json_encode($data);
+            return false;
+        }
+
+        $post = $this->input->post();
+        if(isset($post['mob']) && isStringSet($post['mob']))
+        {
+            $guestInfo = $this->dashboard_model->checkStaffByMob($post['mob']);
+            if($guestInfo['status'] === true)
+            {
+                if($guestInfo['checkin'][0]['userType'] == WALLET_GUEST_VALIDITY)
+                {
+                    $data['guestName'] = $guestInfo['checkin'][0]['firstName'].' '.$guestInfo['checkin'][0]['lastName'];
+                    $data['guestBal'] = $guestInfo['checkin'][0]['walletBalance'];
+                    $data['status'] = true;
+                }
+                else
+                {
+                    $data['status'] = false;
+                    $data['errorMsg'] = 'Not Allowed for the given mobile number!';
+                }
+            }
+            else
+            {
+                $data['status'] = false;
+                $data['errorMsg'] = 'Guest Not Found!';
+            }
+        }
+        else
+        {
+            $data['status'] = false;
+            $data['errorMsg'] = 'Mobile Number Not Set!';
+        }
+        echo json_encode($data);
+    }
 }

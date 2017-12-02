@@ -48,23 +48,29 @@
                         <?php
                     }
 
-                    if(myInArray('dashboard_fnb',$userModules) || (isset($this->commSecLoc) && $this->commSecLoc != 5))
+                    if(myInArray('dashboard_fnb',$userModules))
                     {
                         ?>
                         <li><a class="my-noBorderRadius" data-toggle="pill" href="#fnbpanel">FnB Data</a></li>
                         <?php
                     }
 
-                    if(myInArray('dashboard_events',$userModules) || (isset($this->commSecLoc) && $this->commSecLoc != 5))
+                    if(myInArray('dashboard_events',$userModules))
                     {
                         ?>
                         <li><a class="my-noBorderRadius" data-toggle="pill" href="#eventpanel">Events</a></li>
                         <?php                    }
-
-                    if(myInArray('dashboard_beerolympics',$userModules) || (isset($this->commSecLoc) && $this->commSecLoc != 5))
+                //|| (isset($this->commSecLoc) && $this->commSecLoc != 5)
+                    if(myInArray('dashboard_beerolympics',$userModules))
                     {
                         ?>
                         <li><a class="my-noBorderRadius" data-toggle="pill" href="#beerpanel">Beer Olympics</a></li>
+                        <?php
+                    }
+                    if(myInArray('dashboard_walletupdate',$userModules))
+                    {
+                        ?>
+                        <li><a class="my-noBorderRadius" data-toggle="pill" href="#walletpanel">Wallet Topup</a></li>
                         <?php
                     }
                 ?>
@@ -571,7 +577,7 @@
                     </section>
                     <?php
                 }
-                if(myInArray('dashboard_fnb',$userModules) || (isset($this->commSecLoc) && $this->commSecLoc != 5))
+                if(myInArray('dashboard_fnb',$userModules))
                 {
                     ?>
                     <section class="tab-pane fade" id="fnbpanel">
@@ -867,7 +873,7 @@
                     <?php
                 }
 
-                if(myInArray('dashboard_events',$userModules) || (isset($this->commSecLoc) && $this->commSecLoc != 5))
+                if(myInArray('dashboard_events',$userModules))
                 {
                     ?>
                     <section class="tab-pane fade" id="eventpanel">
@@ -1554,7 +1560,7 @@
                     <?php
                 }
 
-                if(myInArray('dashboard_beerolympics',$userModules) || (isset($this->commSecLoc) && $this->commSecLoc != 5))
+                if(myInArray('dashboard_beerolympics',$userModules))
                 {
                     ?>
                     <section class="tab-pane fade" id="beerpanel">
@@ -1650,6 +1656,37 @@
                                 <?php
                             }
                             ?>
+                        </div>
+                    </section>
+                    <?php
+                }
+                if(myInArray('dashboard_walletupdate',$userModules))
+                {
+                    ?>
+                    <section class="tab-pane fade" id="walletpanel">
+                        <div class="mdl-grid">
+                            <div class="mdl-cell mdl-cell--2-col"></div>
+                            <div class="mdl-cell mdl-cell--8-col">
+                                <form id="wallet-topup-form" action="<?php echo base_url();?>home/topupWallet" method="post">
+                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
+                                        <input class="mdl-textfield__input" type="number" name="wallMob" id="wallMob">
+                                        <label class="mdl-textfield__label" for="wallMob">Mobile Number</label>
+                                        <span id="wall-holder-name"></span>
+                                    </div>
+                                    <br>
+                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
+                                        <label class="mdl-textfield__label" for="wallAmt">Topup Amount</label>
+                                        <input class="mdl-textfield__input" type="number" name="wallAmt" id="wallAmt">
+                                    </div>
+                                    <br>
+                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
+                                        <label class="mdl-textfield__label" for="wallReason">Update Reason</label>
+                                        <textarea class="mdl-textfield__input my-singleBorder" rows="5" name="wallReason" id="wallReason"></textarea>
+                                    </div>
+                                    <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Save</button>
+                                </form>
+                            </div>
+                            <div class="mdl-cell mdl-cell--2-col"></div>
                         </div>
                     </section>
                     <?php
@@ -4803,6 +4840,94 @@
             }
         });
 
+    });
+
+    var isWallMobError = 0;
+    $(document).on('focusout','#walletpanel #wallMob',function(){
+        var mobTxt = $(this).val();
+        if(mobTxt != '')
+        {
+            $('#wall-holder-name').html('');
+            showCustomLoader();
+            var errUrl = base_url+'home/getEmpMobInfo';
+            $.ajax({
+                type:'POST',
+                dataType:'json',
+                aync:true,
+                url:base_url+'home/getEmpMobInfo',
+                data:{mob:mobTxt},
+                success: function(data){
+                    hideCustomLoader();
+                    if(data.status === true)
+                    {
+                        var wallTxt = 'Name: '+data.guestName+'<br>Balance: '+data.guestBal;
+                        $('#wall-holder-name').html(wallTxt);
+                        isWallMobError = 0;
+                    }
+                    else
+                    {
+                        isWallMobError = 1;
+                        bootbox.alert(data.errorMsg);
+                    }
+                },
+                error: function(xhr, status, error){
+                    hideCustomLoader();
+                    bootbox.alert('Error fetching employee details!');
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                    saveErrorLog(err);
+                }
+
+            });
+        }
+    });
+
+    $(document).on('submit','#wallet-topup-form', function(e){
+        e.preventDefault();
+
+        if(isWallMobError == 1)
+        {
+            bootbox.alert('Please provide A valid Mobile Number!');
+            return false;
+        }
+        if($(this).find('#wallAmt').val() == '' || $(this).find('#wallAmt').val() == 0)
+        {
+            bootbox.alert('Amount is required!');
+            return false;
+        }
+        if($(this).find('#wallAmt').val() == '')
+        {
+            bootbox.alert('Reason is required!');
+            return false;
+        }
+
+        var errUrl = $(this).attr('action');
+        showCustomLoader();
+        $.ajax({
+            type:'POST',
+            dataType:'json',
+            async:true,
+            data:$(this).serialize(),
+            url: $(this).attr('action'),
+            success: function(data){
+                hideCustomLoader();
+                if(data.status === true)
+                {
+                    bootbox.alert('Topup Successful!',function(){
+                        window.location.reload();
+                    })
+                }
+                else
+                {
+                    bootbox.alert('data.errorMsg');
+                }
+            },
+            error: function(xhr, status, error){
+                hideCustomLoader();
+                bootbox.alert('Error in topup transaction!');
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                saveErrorLog(err);
+            }
+        });
     });
 </script>
 
