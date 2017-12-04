@@ -1064,6 +1064,8 @@
                                                                 <i class="fa fa-users fa-15x"></i></a>&nbsp;
                                                             <a data-toggle="tooltip" class="eventShareImg-icon even-tracker" data-hasShareImg="<?php echo $row['eventData']['hasShareImg'];?>" data-eventName="<?php echo $row['eventData']['eventName'];?>" data-eventId="<?php echo $row['eventData']['eventId'];?>" title="Event Share Images" href="#">
                                                                 <i class="fa fa-share-alt fa-15x"></i></a>
+                                                            <a data-toggle="tooltip" class="eventEmailText-icon even-tracker" <?php if(isset($row['eventData']['customEmailText'])){echo 'data-emailTxt="'.htmlspecialchars($row['eventData']['customEmailText']).'"';} ?> data-eventName="<?php echo $row['eventData']['eventName'];?>" data-eventId="<?php echo $row['eventData']['eventId'];?>" title="Event Email Custom Text" href="#">
+                                                                <i class="fa fa-envelope fa-15x"></i></a>
                                                         </td>
                                                     </tr>
                                                     <?php
@@ -2011,6 +2013,26 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" id="event-alt-share-btn">Save</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div id="mailText-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Custom Email Text for <b><span class="eventName"></span></b></h4>
+                </div>
+                <div class="modal-body text-center share-body">
+                    <input type="hidden" id="eventId" value=""/>
+                    <textarea rows="5" class="form-control" id="customEmailText"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="event-custom-email-btn">Save</button>
                 </div>
             </div>
 
@@ -4918,7 +4940,7 @@
                 }
                 else
                 {
-                    bootbox.alert('data.errorMsg');
+                    bootbox.alert(data.errorMsg);
                 }
             },
             error: function(xhr, status, error){
@@ -4931,4 +4953,57 @@
     });
 </script>
 
+<script>
+    $(document).on('click','.eventEmailText-icon', function(e){
+         e.preventDefault();
+         var eveId = $(this).attr('data-eventId');
+         var eveName = $(this).attr('data-eventName');
+         $('#mailText-modal .eventName').html(eveName);
+         $('#mailText-modal #eventId').val(eveId);
+         if(typeof $(this).attr('data-emailTxt') !== 'undefined')
+         {
+             $('#mailText-modal #customEmailText').val($(this).attr('data-emailtxt'));
+         }
+        CKEDITOR.replace( 'customEmailText' );
+        CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
+        CKEDITOR.config.shiftEnterMode = CKEDITOR.ENTER_P;
+    });
+    $(document).on('click','#event-custom-email-btn',function(){
+         if($('#mailText-modal #customEmailText').val() != '')
+         {
+             bootbox.alert('Event Custom Email is required!');
+             return false;
+         }
+
+         var emailTxt = $('#mailText-modal #customEmailText').val();
+         var eveId = $('#mailText-modal #eventId').val();
+
+         var errUrl = base_url+'dashboard/setCustomMailText';
+         showCustomLoader();
+         $.ajax({
+             type:'POST',
+             dataType:'json',
+             async:true,
+             url:base_url+'dashboard/setCustomMailText',
+             data:{eventId:eveId,mailTxt:emailTxt},
+             success: function(data){
+                 hideCustomLoader();
+                if(data.status === true)
+                {
+                    window.location.reload();
+                }
+                else
+                {
+                    bootbox.alert(data.errorMsg);
+                }
+             },
+             error: function(xhr, status, error){
+                 hideCustomLoader();
+                 bootbox.alert('Some Error Occurred!');
+                 var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                 saveErrorLog(err);
+             }
+         });
+    });
+</script>
 </html>

@@ -1117,11 +1117,17 @@ class Maintenance extends MY_Controller {
         {
             if($_FILES['attachment']['error'] != 1)
             {
+                $filePath = $_FILES['attachment']['name'];
+                $fileName = preg_replace('/\(|\)/','',$filePath);
+                $fileName = preg_replace('/[^a-zA-Z0-9.]\.]/', '', $fileName);
+                $fileName = str_replace(' ','_',$fileName);
+                $fileName = time().'_'.$fileName;
                 $config = array();
                 $config['upload_path'] = '../dashboad/'.JOB_MEDIA_PATH; // FOOD_PATH_THUMB; //'uploads/food/';
                 $config['allowed_types'] = 'gif|jpg|png|jpeg|3gp|avi|mp4|flv|mov|mpeg';
                 $config['max_size']      = '0';
                 $config['overwrite']     = TRUE;
+                $config['file_name']     = $fileName;
 
                 $this->upload->initialize($config);
                 if(!$this->upload->do_upload('attachment'))
@@ -1215,11 +1221,17 @@ class Maintenance extends MY_Controller {
         {
             if($_FILES['attachment']['error'] != 1)
             {
+                $filePath = $_FILES['attachment']['name'];
+                $fileName = preg_replace('/\(|\)/','',$filePath);
+                $fileName = preg_replace('/[^a-zA-Z0-9.]\.]/', '', $fileName);
+                $fileName = str_replace(' ','_',$fileName);
+                $fileName = time().'_'.$fileName;
                 $config = array();
                 $config['upload_path'] = '../dashboad/'.JOB_MEDIA_PATH; // FOOD_PATH_THUMB; //'uploads/food/';
                 $config['allowed_types'] = 'gif|jpg|png|jpeg|3gp|avi|mp4|flv|mov|mpeg';
                 $config['max_size']      = '0';
                 $config['overwrite']     = TRUE;
+                $config['file_name']     = $fileName;
 
                 $this->upload->initialize($config);
                 if(!$this->upload->do_upload('attachment'))
@@ -1284,11 +1296,17 @@ class Maintenance extends MY_Controller {
         {
             if($_FILES['attachment']['error'] != 1)
             {
+                $filePath = $_FILES['attachment']['name'];
+                $fileName = preg_replace('/\(|\)/','',$filePath);
+                $fileName = preg_replace('/[^a-zA-Z0-9.]\.]/', '', $fileName);
+                $fileName = str_replace(' ','_',$fileName);
+                $fileName = time().'_'.$fileName;
                 $config = array();
                 $config['upload_path'] = '../dashboad/'.JOB_MEDIA_PATH; // FOOD_PATH_THUMB; //'uploads/food/';
                 $config['allowed_types'] = 'gif|jpg|png|jpeg';
                 $config['max_size']      = '0';
                 $config['overwrite']     = TRUE;
+                $config['file_name']     = $fileName;
 
                 $this->upload->initialize($config);
                 if(!$this->upload->do_upload('attachment'))
@@ -1595,11 +1613,17 @@ class Maintenance extends MY_Controller {
         {
             if($_FILES['attachment']['error'] != 1)
             {
+                $filePath = $_FILES['attachment']['name'];
+                $fileName = preg_replace('/\(|\)/','',$filePath);
+                $fileName = preg_replace('/[^a-zA-Z0-9.]\.]/', '', $fileName);
+                $fileName = str_replace(' ','_',$fileName);
+                $fileName = time().'_'.$fileName;
                 $config = array();
                 $config['upload_path'] = '../dashboad/'.JOB_MEDIA_PATH; // FOOD_PATH_THUMB; //'uploads/food/';
                 $config['allowed_types'] = 'gif|jpg|png|jpeg';
                 $config['max_size']      = '0';
                 $config['overwrite']     = TRUE;
+                $config['file_name']     = $fileName;
 
                 $this->upload->initialize($config);
                 if(!$this->upload->do_upload('attachment'))

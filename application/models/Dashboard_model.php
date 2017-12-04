@@ -1562,4 +1562,9 @@ class Dashboard_Model extends CI_Model
         $this->db->insert('logsrecordsmaster', $details);
         return true;
     }
+    public function saveCustomMailLog($details)
+    {
+        $this->db->insert('eventcustommaillogger', $details);
+        return true;
+    }
 }

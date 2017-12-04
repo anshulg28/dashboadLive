@@ -1592,6 +1592,8 @@ class Home extends MY_Controller {
             $data['errorMsg'] = 'Guest Not Found!';
         }
 
+        echo json_encode($data);
+
     }
 
     public function getEmpMobInfo()

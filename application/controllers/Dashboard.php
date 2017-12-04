@@ -3203,4 +3203,45 @@ class Dashboard extends MY_Controller {
         );
         $this->dashboard_model->saveDashLogs($logDetails);
     }
+
+    public function setCustomMailText()
+    {
+        $post = $this->input->post();
+        $data= array();
+        if(isSessionVariableSet($this->isUserSession) === false)
+        {
+            $data['status'] = false;
+            $data['errorMsg'] = 'Session Timeout, Please Login Again!';
+            echo json_encode($data);
+            return false;
+        }
+        if(isset($post['eventId']) && isset($post['mailTxt']) && $post['mailTxt'] != '')
+        {
+            $eveUpdate = array(
+                'customEmailText' => $post['mailTxt']
+            );
+            $this->dashboard_model->updateEditRecord($eveUpdate,$post['eventId']);
+            $data['status'] = true;
+
+            $logDetails = array(
+                'eventId' => $post['eventId'],
+                'mailText' => $post['mailTxt'],
+                'insertedDT' => date('Y-m-d H:i:s')
+            );
+            $this->dashboard_model->saveCustomMailLog($logDetails);
+
+            $logDetails = array(
+                'logMessage' => 'Function: setCustomMailText, User: '.$this->userId,
+                'fromWhere' => 'Dashboard',
+                'insertedDT' => date('Y-m-d H:i:s')
+            );
+            $this->dashboard_model->saveDashLogs($logDetails);
+        }
+        else
+        {
+            $data['status'] = false;
+            $data['errorMsg'] = 'All fields are required!';
+        }
+        echo json_encode($data);
+    }
 }
