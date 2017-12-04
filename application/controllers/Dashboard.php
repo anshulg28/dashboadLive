@@ -3215,17 +3215,17 @@ class Dashboard extends MY_Controller {
             echo json_encode($data);
             return false;
         }
-        if(isset($post['eventId']) && isset($post['mailTxt']) && $post['mailTxt'] != '')
+        if(isset($post['eventId']) && isset($post['customEmailText']) && $post['customEmailText'] != '')
         {
             $eveUpdate = array(
-                'customEmailText' => $post['mailTxt']
+                'customEmailText' => $post['customEmailText']
             );
-            $this->dashboard_model->updateEditRecord($eveUpdate,$post['eventId']);
+            $this->dashboard_model->updateEventRecord($eveUpdate,$post['eventId']);
             $data['status'] = true;
 
             $logDetails = array(
                 'eventId' => $post['eventId'],
-                'mailText' => $post['mailTxt'],
+                'mailText' => $post['customEmailText'],
                 'insertedDT' => date('Y-m-d H:i:s')
             );
             $this->dashboard_model->saveCustomMailLog($logDetails);
@@ -3242,6 +3242,24 @@ class Dashboard extends MY_Controller {
             $data['status'] = false;
             $data['errorMsg'] = 'All fields are required!';
         }
+        echo json_encode($data);
+    }
+
+    public function clearEveMail($eventId)
+    {
+        $data= array();
+        if(isSessionVariableSet($this->isUserSession) === false)
+        {
+            $data['status'] = false;
+            $data['errorMsg'] = 'Session Timeout, Please Login Again!';
+            echo json_encode($data);
+            return false;
+        }
+        $eveUpdate = array(
+            'customEmailText' => null
+        );
+        $this->dashboard_model->updateEventRecord($eveUpdate,$eventId);
+        $data['status'] = true;
         echo json_encode($data);
     }
 }

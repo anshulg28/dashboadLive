@@ -2028,11 +2028,13 @@
                     <h4 class="modal-title">Custom Email Text for <b><span class="eventName"></span></b></h4>
                 </div>
                 <div class="modal-body text-center share-body">
-                    <input type="hidden" id="eventId" value=""/>
-                    <textarea rows="5" class="form-control" id="customEmailText"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="event-custom-email-btn">Save</button>
+                    <form action="<?php echo base_url().'dashboard/setCustomMailText';?>" id="customEmail-form" method="POST">
+                        <input type="hidden" id="eventId" name="eventId" value=""/>
+                        <textarea rows="5" class="form-control" name="customEmailText" id="customEmailText" required></textarea>
+                        <br>
+                        <button type="submit" class="btn btn-primary" id="event-custom-email-btn">Save</button>
+                    </form>
+                    <a href="#" class="btn btn-warning" id="event-mail-reset-btn">Remove Custom Email Text</a>
                 </div>
             </div>
 
@@ -4964,12 +4966,21 @@
          {
              $('#mailText-modal #customEmailText').val($(this).attr('data-emailtxt'));
          }
-        CKEDITOR.replace( 'customEmailText' );
-        CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
-        CKEDITOR.config.shiftEnterMode = CKEDITOR.ENTER_P;
+         try
+         {
+             CKEDITOR.replace( 'customEmailText' );
+             CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
+             CKEDITOR.config.shiftEnterMode = CKEDITOR.ENTER_P;
+         }
+         catch(ex)
+         {
+             console.log(ex);
+         }
+        $('#mailText-modal').modal('show');
     });
-    $(document).on('click','#event-custom-email-btn',function(){
-         if($('#mailText-modal #customEmailText').val() != '')
+    $(document).on('submit','#customEmail-form',function(e){
+        e.preventDefault();
+         if($(this).find('#customEmailText').val() == '')
          {
              bootbox.alert('Event Custom Email is required!');
              return false;
@@ -4984,8 +4995,8 @@
              type:'POST',
              dataType:'json',
              async:true,
-             url:base_url+'dashboard/setCustomMailText',
-             data:{eventId:eveId,mailTxt:emailTxt},
+             url:$(this).attr('action'),
+             data:$(this).serialize(),
              success: function(data){
                  hideCustomLoader();
                 if(data.status === true)
@@ -5004,6 +5015,36 @@
                  saveErrorLog(err);
              }
          });
+    });
+    $(document).on('click','#event-mail-reset-btn',function(e){
+        e.preventDefault();
+        var eventId = $('#mailText-modal #customEmail-form #eventId').val();
+
+        if(eventId != '')
+        {
+            showCustomLoader();
+            $.ajax({
+                type :'GET',
+                dataType:'json',
+                url:base_url+'dashboard/clearEveMail/'+eventId,
+                success: function(data){
+                    if(data.status === true)
+                    {
+                        window.location.reload();
+                    }
+                    else
+                    {
+                        bootbox.alert(data.errorMsg);
+                    }
+                },
+                error: function(xhr, status, error){
+                    hideCustomLoader();
+                    bootbox.alert('Some Error Occurred!');
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                    saveErrorLog(err);
+                }
+            });
+        }
     });
 </script>
 </html>
