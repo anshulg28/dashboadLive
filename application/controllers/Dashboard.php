@@ -1160,7 +1160,7 @@ class Dashboard extends MY_Controller {
         $isImpChange = false;
         $oldImgId = '';
         $impChanges = array('eventName','eventDescription','eventDate','startTime','endTime','costType',
-                        'eventPrice','eventPlace');
+                        'eventPrice','eventPlace','creatorName','creatorPhone','creatorEmail');
         $changeCheck = array();
         $changesRecord = array();
         $changesMade = array();
@@ -1241,6 +1241,46 @@ class Dashboard extends MY_Controller {
                     $post['shortUrl'] = $shortDWName;
                 }
             }
+            //If organiser details are changed
+            if(myInArray('creatorEmail',$changeCheck) && myInArray('creatorPhone',$changeCheck))
+            {
+                $userStatus = $this->checkPublicUser($post['creatorEmail'],$post['creatorPhone']);
+
+                if($userStatus['status'] === false)
+                {
+                    $post['userId'] = $userStatus['userData']['userId'];
+                }
+                else
+                {
+                    $userName = explode(' ',$post['creatorName']);
+                    if(count($userName)< 2)
+                    {
+                        $userName[1] = '';
+                    }
+
+                    $user = array(
+                        'userName' => $post['creatorEmail'],
+                        'firstName' => $userName[0],
+                        'lastName' => $userName[1],
+                        'password' => md5($post['creatorPhone']),
+                        'LoginPin' => null,
+                        'isPinChanged' => null,
+                        'emailId' => $post['creatorEmail'],
+                        'mobNum' => $post['creatorPhone'],
+                        'userType' => '4',
+                        'assignedLoc' => null,
+                        'ifActive' => '1',
+                        'insertedDate' => date('Y-m-d H:i:s'),
+                        'updateDate' => date('Y-m-d H:i:s'),
+                        'updatedBy' => $post['creatorName'],
+                        'lastLogin' => date('Y-m-d H:i:s')
+                    );
+
+                    $post['userId'] = $this->users_model->savePublicUser($user);
+                }
+            }
+
+
             $post['startTime'] = date('H:i', strtotime($post['startTime']));
             $post['endTime'] = date('H:i', strtotime($post['endTime']));
             if(!isset($post['isEventEverywhere']))
@@ -1401,6 +1441,45 @@ class Dashboard extends MY_Controller {
                 if($shortDWName !== false)
                 {
                     $post['shortUrl'] = $shortDWName;
+                }
+            }
+
+            //If organiser details are changed
+            if(myInArray('creatorEmail',$changeCheck) && myInArray('creatorPhone',$changeCheck))
+            {
+                $userStatus = $this->checkPublicUser($post['creatorEmail'],$post['creatorPhone']);
+
+                if($userStatus['status'] === false)
+                {
+                    $post['userId'] = $userStatus['userData']['userId'];
+                }
+                else
+                {
+                    $userName = explode(' ',$post['creatorName']);
+                    if(count($userName)< 2)
+                    {
+                        $userName[1] = '';
+                    }
+
+                    $user = array(
+                        'userName' => $post['creatorEmail'],
+                        'firstName' => $userName[0],
+                        'lastName' => $userName[1],
+                        'password' => md5($post['creatorPhone']),
+                        'LoginPin' => null,
+                        'isPinChanged' => null,
+                        'emailId' => $post['creatorEmail'],
+                        'mobNum' => $post['creatorPhone'],
+                        'userType' => '4',
+                        'assignedLoc' => null,
+                        'ifActive' => '1',
+                        'insertedDate' => date('Y-m-d H:i:s'),
+                        'updateDate' => date('Y-m-d H:i:s'),
+                        'updatedBy' => $post['creatorName'],
+                        'lastLogin' => date('Y-m-d H:i:s')
+                    );
+
+                    $post['userId'] = $this->users_model->savePublicUser($user);
                 }
             }
 

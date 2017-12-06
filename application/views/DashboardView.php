@@ -2034,10 +2034,25 @@
                         <br>
                         <button type="submit" class="btn btn-primary" id="event-custom-email-btn">Save</button>
                     </form>
+                    <br>
+                    <a href="#" class="btn btn-success" id="event-mail-preview-btn">Show Preview</a>
                     <a href="#" class="btn btn-warning" id="event-mail-reset-btn">Remove Custom Email Text</a>
                 </div>
             </div>
 
+        </div>
+    </div>
+    <div id="mailPreview-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Email Preview</h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+            </div>
         </div>
     </div>
     <?php echo $footerView; ?>
@@ -4962,9 +4977,21 @@
          var eveName = $(this).attr('data-eventName');
          $('#mailText-modal .eventName').html(eveName);
          $('#mailText-modal #eventId').val(eveId);
+        try
+        {
+            CKEDITOR.instances.customEmailText.setData('');
+        }
+        catch(ex)
+        {}
+
          if(typeof $(this).attr('data-emailTxt') !== 'undefined')
          {
              $('#mailText-modal #customEmailText').val($(this).attr('data-emailtxt'));
+             $('#mailText-modal #event-mail-reset-btn').removeClass('hide');
+         }
+         else
+         {
+             $('#mailText-modal #event-mail-reset-btn').addClass('hide');
          }
          try
          {
@@ -5028,6 +5055,7 @@
                 dataType:'json',
                 url:base_url+'dashboard/clearEveMail/'+eventId,
                 success: function(data){
+                    hideCustomLoader();
                     if(data.status === true)
                     {
                         window.location.reload();
@@ -5045,6 +5073,20 @@
                 }
             });
         }
+    });
+    $(document).on('click','#event-mail-preview-btn',function(e){
+        e.preventDefault();
+        var startMail = '<p>Hi Attendee,</p>';
+        startMail += '<p>Rumour has it that you have signed up for <b>Event Name</b> happening on Sat, 9th Dec 2017, 06:00 pm-09:00 pm at';
+        startMail += ' Doolally Taproom, Khar, along with a friend.<br><br>';
+        startMail += '<span style="background-color:yellow">'+CKEDITOR.instances.customEmailText.getData()+'</span><br><br>';
+        startMail += 'You can access your events from the My Events section.';
+        startMail += ' This is a place where information on date, timings, organiser will be available to you. You can also cancel your attendance from this dashboard.<br><br>';
+        startMail += 'Username: someone@gmail.com<br>';
+        startMail += 'Password: Your Mobile Number<br><br>See you!<br>comm name, Doolally</p>';
+
+        $('#mailPreview-modal .modal-body').html(startMail);
+        $('#mailPreview-modal').modal('show');
     });
 </script>
 </html>

@@ -205,7 +205,14 @@ class Mailers_Model extends CI_Model
     }
     public function getAllPendingMails()
     {
-        $query = "SELECT * FROM pendingmailsmaster WHERE sendStatus LIKE 'waiting' LIMIT 25";
+        $query = "SELECT * FROM pendingmailsmaster WHERE isPressMail = 0 AND sendStatus LIKE 'waiting' LIMIT 2";
+
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+    public function getAllPendingPressMails()
+    {
+        $query = "SELECT * FROM pendingmailsmaster WHERE isPressMail = 1 AND sendStatus LIKE 'waiting' LIMIT 25";
 
         $result = $this->db->query($query)->result_array();
         return $result;

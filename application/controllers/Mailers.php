@@ -730,6 +730,7 @@ class Mailers extends MY_Controller {
                         'attachments' => implode(',',$attchmentArr),
                         'sendStatus' => 'waiting',
                         'failIds' => null,
+                        'isPressMail' => '1',
                         'sendDateTime' => date('Y-m-d H:i:s')
                     );
                 }
@@ -748,6 +749,7 @@ class Mailers extends MY_Controller {
                         'attachments' => '',
                         'sendStatus' => 'waiting',
                         'failIds' => null,
+                        'isPressMail' => '1',
                         'sendDateTime' => date('Y-m-d H:i:s')
                     );
                 }
@@ -1092,6 +1094,29 @@ class Mailers extends MY_Controller {
     public function sendPendingMails()
     {
         $mails = $this->mailers_model->getAllPendingMails();
+
+        if(isset($mails) && myIsArray($mails))
+        {
+            $attachment = array();
+            foreach($mails as $key => $row)
+            {
+                $attachment = explode(',',$row['attachments']);
+                $mailStatus = $this->sendemail_library->sendEmail($row['sendTo'],$row['ccList'],$row['sendFrom'],
+                    DEFAULT_SENDER_PASS,$row['sendFromName'],$row['replyTo'],$row['mailSubject'],
+                    $row['mailBody'],$attachment);
+                if($mailStatus == 'Success')
+                {
+                    $mailData = array(
+                        'sendStatus' => 'done'
+                    );
+                    $this->mailers_model->updateMailDetails($mailData,$row['id']);
+                }
+            }
+        }
+    }
+    public function sendPendingPressMails()
+    {
+        $mails = $this->mailers_model->getAllPendingPressMails();
 
         if(isset($mails) && myIsArray($mails))
         {
