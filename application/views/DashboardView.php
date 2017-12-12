@@ -890,6 +890,7 @@
                                 <?php
                             }
                             ?>
+                            <li><a data-toggle="tab" href="#orgSum">Organisers Summary</a></li>
                         </ul>
 
                         <div class="tab-content">
@@ -1557,6 +1558,52 @@
                                 <?php
                             }
                             ?>
+                            <div id="orgSum" class="tab-pane fade">
+                                <div class="row">
+                                    <br>
+                                    <div class="col-xs-1"></div>
+                                    <div class="col-xs-11">
+                                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="acEve">
+                                            <input type="radio" id="acEve" class="mdl-radio__button" name="orgEveType" value="1" checked>
+                                            <span class="mdl-radio__label"> Show Active Events</span>
+                                        </label>&nbsp;
+                                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="compEve">
+                                            <input type="radio" id="compEve" class="mdl-radio__button" name="orgEveType" value="2">
+                                            <span class="mdl-radio__label"> Show Completed Events</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-2 col-xs-0"></div>
+                                    <div class="col-sm-8 col-xs-12" id="org-summary-new-wrapper">
+                                        <br>
+                                        <table id="org-new-table" class="table table-hover table-bordered table-striped" style="width:100%">
+                                            <thead>
+                                            <tr>
+                                                <th>Organiser Name</th>
+                                                <th>Organiser Email</th>
+                                                <th>Organiser Phone</th>
+                                                <th>Total Amount</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                    <div class="col-sm-8 col-xs-12 hide" id="org-summary-old-wrapper">
+                                        <br>
+                                        <table id="org-old-table" class="table table-hover table-bordered table-striped" style="width:100%">
+                                            <thead>
+                                            <tr>
+                                                <th>Organiser Name</th>
+                                                <th>Organiser Email</th>
+                                                <th>Organiser Phone</th>
+                                                <th>Total Amount</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                    <div class="col-sm-2 col-xs-0"></div>
+                                </div>
+                            </div>
                         </div>
                     </section>
                     <?php
@@ -5087,6 +5134,49 @@
 
         $('#mailPreview-modal .modal-body').html(startMail);
         $('#mailPreview-modal').modal('show');
+    });
+
+    var newOrgTab = $('#org-new-table').DataTable({
+        ordering: false,
+        deferRender: true,
+        ajax: base_url+'dashboard/getOrgCollection/1'
+    });
+    var oldOrgTab = $('#org-old-table').DataTable({
+        ordering: false,
+        deferRender: true,
+        ajax: base_url+'dashboard/getOrgCollection/2'
+    });
+
+    $(document).on('change','input[name="orgEveType"]', function(){
+        if($(this).val() == '1')
+        {
+            $('#org-summary-new-wrapper').removeClass('hide');
+            $('#org-summary-old-wrapper').addClass('hide');
+            newOrgTab.ajax.reload();
+        }
+        else
+        {
+            $('#org-summary-new-wrapper').addClass('hide');
+            $('#org-summary-old-wrapper').removeClass('hide');
+            oldOrgTab.ajax.reload();
+        }
+    });
+
+    $(document).on('click','#orgSum .viewDetails-icon', function(e){
+        e.preventDefault();
+        var eveNames = $(this).attr('data-eveNames').split(';');
+        var eveAmts = $(this).attr('data-eveAmts').split(';');
+
+        var tempTab = '<table class="table table-responsive"><thead><tr><th>Event Name</th><th>Total collected</th></tr></thead><tbody>';
+        for(var i=0;i<eveNames.length;i++)
+        {
+            tempTab += '<tr>';
+            tempTab += '<td>'+eveNames[i]+'</td>';
+            tempTab += '<td>Rs. '+eveAmts[i]+'</td>';
+            tempTab += '</tr>';
+        }
+        tempTab += '</tbody></table>';
+        bootbox.alert(tempTab);
     });
 </script>
 </html>

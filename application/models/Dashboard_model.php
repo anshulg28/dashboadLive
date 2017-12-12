@@ -1567,4 +1567,45 @@ class Dashboard_Model extends CI_Model
         $this->db->insert('eventcustommaillogger', $details);
         return true;
     }
+
+    function getOrgNewEvents()
+    {
+        $query = "SELECT GROUP_CONCAT(eventId) AS 'ids', GROUP_CONCAT(eventName SEPARATOR ';') AS 'eveNames', creatorName, creatorEmail, creatorPhone
+                    FROM eventmaster WHERE costType != 1 AND ifActive = ".ACTIVE." AND ifApproved = ".EVENT_APPROVED." AND isEventCancel = 0 
+                    AND ifAutoCreated = 0 GROUP BY userId";
+
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+    function getOrgOldEvents()
+    {
+        $query = "SELECT GROUP_CONCAT(eventId) AS 'ids', GROUP_CONCAT(eventName SEPARATOR ';') AS 'eveNames', creatorName, creatorEmail, creatorPhone
+                    FROM eventcompletedmaster WHERE costType != 1 AND ifActive = ".ACTIVE." AND ifApproved = ".EVENT_APPROVED." AND isEventCancel = 0 
+                    AND ifAutoCreated = 0 GROUP BY userId";
+
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+    function getEventAllRegs($eventId)
+    {
+        $query = "SELECT erm.quantity,
+                  CASE WHEN erm.regPrice IS NULL THEN em.eventPrice ELSE erm.regPrice END AS 'price' 
+                  FROM eventregistermaster erm 
+                  LEFT JOIN eventmaster em ON erm.eventId = em.eventId 
+                  WHERE erm.eventId = ".$eventId;
+
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+    function getEventAllOldRegs($eventId)
+    {
+        $query = "SELECT erm.quantity,
+                  CASE WHEN erm.regPrice IS NULL THEN em.eventPrice ELSE erm.regPrice END AS 'price' 
+                  FROM eventregistermaster erm 
+                  LEFT JOIN eventcompletedmaster em ON erm.eventId = em.eventId 
+                  WHERE erm.eventId = ".$eventId;
+
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
 }

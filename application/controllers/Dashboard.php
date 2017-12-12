@@ -3499,6 +3499,109 @@ class Dashboard extends MY_Controller {
         echo json_encode($data);
     }
 
+    // Getting organiser wise events collection
+    public function getOrgCollection($isNew = 1)
+    {
+        $data = array();
+        if($isNew == 1)
+        {
+            //Total for current active events
+            $newOrgs = $this->dashboard_model->getOrgNewEvents();
+            if(isset($newOrgs) && myIsArray($newOrgs))
+            {
+                foreach($newOrgs as $key => $row)
+                {
+                    $data['data'][$key][] = $row['creatorName'];
+                    $data['data'][$key][] = $row['creatorEmail'];
+                    $data['data'][$key][] = $row['creatorPhone'];
+
+                    $totEveIds = explode(',',$row['ids']);
+                    $totEveNames = explode(';',$row['eveNames']);
+                    $total = 0;
+                    $eveNames = array();
+                    $eveAmts = array();
+                    for($i=0;$i<count($totEveIds);$i++)
+                    {
+                        $eveNames[] = $totEveNames[$i];
+                        $allRegis = $this->dashboard_model->getEventAllRegs($totEveIds[$i]);
+                        if(isset($allRegis) && myIsArray($allRegis))
+                        {
+                            $subTot = 0;
+                            foreach($allRegis as $regKey => $regRow)
+                            {
+                                $subTot += ((int)$regRow['quantity'] * (int)$regRow['price']);
+                            }
+                            $eveAmts[] = $subTot;
+                            $total += $subTot;
+                        }
+                        else
+                        {
+                            $eveAmts[] = 0;
+                            $total += 0;
+                        }
+                    }
+                    $data['data'][$key][] = 'Rs. '.$total;
+                    $data['data'][$key][] = '<a href="#" class="viewDetails-icon" data-eveNames="'.implode(';',$eveNames).'"
+                                               data-eveAmts= "'.implode(';',$eveAmts).'">
+                                                View Details</a>';
+                }
+            }
+            else
+            {
+                $data['data'] = null;
+            }
+        }
+        else
+        {
+            //Total for Completed Events
+            $newOrgs = $this->dashboard_model->getOrgOldEvents();
+            if(isset($newOrgs) && myIsArray($newOrgs))
+            {
+                foreach($newOrgs as $key => $row)
+                {
+                    $data['data'][$key][] = $row['creatorName'];
+                    $data['data'][$key][] = $row['creatorEmail'];
+                    $data['data'][$key][] = $row['creatorPhone'];
+
+                    $totEveIds = explode(',',$row['ids']);
+                    $totEveNames = explode(';',$row['eveNames']);
+                    $total = 0;
+                    $eveNames = array();
+                    $eveAmts = array();
+                    for($i=0;$i<count($totEveIds);$i++)
+                    {
+                        $eveNames[] = $totEveNames[$i];
+                        $allRegis = $this->dashboard_model->getEventAllOldRegs($totEveIds[$i]);
+                        if(isset($allRegis) && myIsArray($allRegis))
+                        {
+                            $subTot = 0;
+                            foreach($allRegis as $regKey => $regRow)
+                            {
+                                $subTot += ((int)$regRow['quantity'] * (int)$regRow['price']);
+                            }
+                            $eveAmts[] = $subTot;
+                            $total += $subTot;
+                        }
+                        else
+                        {
+                            $eveAmts[] = 0;
+                            $total += 0;
+                        }
+                    }
+                    $data['data'][$key][] = 'Rs. '.$total;
+                    $data['data'][$key][] = '<a href="#" class="viewDetails-icon" data-eveNames="'.implode(';',$eveNames).'"
+                                               data-eveAmts= "'.implode(';',$eveAmts).'">
+                                                View Details</a>';
+                }
+            }
+            else
+            {
+                $data['data'] = null;
+            }
+        }
+        echo json_encode($data);
+    }
+
     public function mailTest()
     {
         $mD = array(
