@@ -436,7 +436,7 @@ $(document).on('click','.homePage .request-otp', function(){
     {
         var price_data = {};
         price_data["name"] = "Per Person";
-        if(eventData.costType == <?php echo EVENT_FREE;?>)
+        if(eventData.costType == '<?php echo EVENT_FREE;?>')
         {
             price_data["value"] = 0;
         }
@@ -445,12 +445,23 @@ $(document).on('click','.homePage .request-otp', function(){
             price_data["value"] = Number(eventData.eventPrice);
         }
 
+        var eveCity = 'Mumbai';
+        var eveVenueName = eventData.locName+', Doolally Taproom';
+        var eveVenueAdd = eventData.locAddress;
+
+        if(eventData.isSpecialEvent == '1')
+        {
+            eveCity = 'Pune';
+            eveVenueName = '<?php echo SPECIAL_EVENT_VENUE_NAME; ?>';
+            eveVenueAdd = '<?php echo SPECIAL_EVENT_VENUE_ADDRESS; ?>';
+        }
+
         var postData = {
             'title': eventData.eventName,
             'description' : eventData.eventDescription,
-            'venue_name' : eventData.locName+', Doolally Taproom',
-            'venue_address' : eventData.locAddress,
-            'city' : 'Mumbai',
+            'venue_name' : eveVenueName,
+            'venue_address' : eveVenueAdd,
+            'city' : eveCity,
             'img_url' : '<?php echo MOBILE_URL.EVENT_PATH_THUMB;?>'+eventData.filename,
             'start_date' : eventData.eventDate,
             'start_time' : eventData.startTime+":00",

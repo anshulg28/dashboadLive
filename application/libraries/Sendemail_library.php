@@ -1013,6 +1013,64 @@ class Sendemail_library
         $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
     }
 
+    public function lowResImageFailMail($userData)
+    {
+        $mailRecord = $this->CI->users_model->searchUserByLoc($userData['locId']);
+        $senderName = 'Doolally';
+        $senderEmail = DEFAULT_SENDER_EMAIL;
+        $fromPass = DEFAULT_SENDER_PASS;
+        $replyTo = $senderEmail;
+
+        $toEmail = 'tresha@brewcraftsindia.com';
+        if($mailRecord['status'] === true)
+        {
+            $toEmail = $mailRecord['userData']['emailId'];
+        }
+        $data['mailData'] = $userData;
+
+        $content = $this->CI->load->view('emailtemplates/lowResImageMailView', $data, true);
+
+        $fromEmail = $senderEmail;
+
+        $cc        = implode(',',$this->CI->config->item('ccList'));
+        /*$extraCc = getExtraCCEmail($fromEmail);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }*/
+        $fromName  = $senderName;
+
+        $subject = 'Whatsapp Image size more than 300KB';
+
+        $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
+    }
+
+    public function eventExtraToMaintMail($userData)
+    {
+        $senderName = 'Doolally';
+        $senderEmail = DEFAULT_SENDER_EMAIL;
+        $fromPass = DEFAULT_SENDER_PASS;
+        $replyTo = $senderEmail;
+
+        $toEmail = array('mandar@brewcraftsindia.com','anil.jadhav@brewcraftsindia.com');
+        $data['mailData'] = $userData;
+
+        $content = $this->CI->load->view('emailtemplates/eventAccessMailView', $data, true);
+
+        $fromEmail = $senderEmail;
+
+        $cc        = implode(',',$this->CI->config->item('ccList'));
+        /*$extraCc = getExtraCCEmail($fromEmail);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }*/
+        $fromName  = $senderName;
+
+        $subject = 'Event accessories required';
+
+        $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
+    }
 
     public function sendEmail($to, $cc = '', $from, $fromPass, $fromName,$replyTo, $subject, $content, $attachment = array())
     {

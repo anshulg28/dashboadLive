@@ -1892,6 +1892,44 @@ class Cron extends MY_Controller
             $this->sendemail_library->sendEmail(array('mandar@brewcraftsindia.com','taronish@brewcraftsindia.com'),'saha@brewcraftsindia.com,anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
                 ,'admin@brewcraftsindia.com',$subject,$content,array());
         }
+
+        //Jobs Pending for budget approval
+        $openJobs = $this->maintenance_model->getOnlyBudgetJobs();
+        if(isset($openJobs) && myIsArray($openJobs) && isset($openJobs[0]['complaintId']) && $openJobs[0]['complaintId'] != '')
+        {
+            $subject = "Jobs Pending Budget Approval";
+            $content = '<html><body><br><table border="2"><tr><th>Job #</th><th>Problem</th><th>logged By</th><th>Approx Cost</th><th>logged date/time</th></tr><tbody>';
+            $goneIn = false;
+            foreach($openJobs as $key => $row)
+            {
+                if(isset($row['complaintId']) && isStringSet($row['complaintId']))
+                {
+                    $oldTime = strtotime($row['lastUpdateDT']) + (2 * 24 * 60 * 60);
+                    if($oldTime <= strtotime(date('Y-m-d H:i:s')))
+                    {
+                        $goneIn = true;
+                        $content .= '<tr>';
+                        $content .= '<td>Job #'.$row['complaintId'].'-'.$row['locName'].'</td>';
+                        $content .= '<td>'.$row['problemDescription'].'</td>';
+                        $content .= '<td>'.$row['loggedUser'].'</td>';
+                        $content .= '<td>'.$row['approxCost'].'</td>';
+                        $d = date_create($row['loggedDT']);
+                        $content .= '<td>'.date_format($d,DATE_TIME_FORMAT_UI).'</td>';
+                        $content .= '</tr>';
+                    }
+                }
+            }
+            if(!$goneIn)
+            {
+                $content = 'No Jobs Pending for budget approval';
+            }
+            else
+            {
+                $content .= '</tbody></table>';
+            }
+            $this->sendemail_library->sendEmail(array('mandar@brewcraftsindia.com','taronish@brewcraftsindia.com','anil.jadhav@brewcraftsindia.com','suketu@brewcraftsindia.com'),'saha@brewcraftsindia.com,anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+                ,'admin@brewcraftsindia.com',$subject,$content,array());
+        }
     }
 
     public function sendMusicReqReport()

@@ -1184,6 +1184,14 @@ class Dashboard extends MY_Controller {
             else
             {
                 unset($post['attachment']);
+                if(isset($post['oldEventImg']) && !isStringSet($post['oldEventImg']))
+                {
+                    unset($post['oldEventImg']);
+                }
+                if(isset($post['oldEventImgId']) && !isStringSet($post['oldEventImgId']))
+                {
+                    unset($post['oldEventImgId']);
+                }
             }
         }
 
@@ -1308,6 +1316,38 @@ class Dashboard extends MY_Controller {
                 if($oldImgId != '')
                 {
                     $this->dashboard_model->eventAttDelete($oldImgId);
+                }
+                //Creating whatsapp image
+                $imgPath = '/var/www/html/mobile/'.EVENT_PATH_THUMB;
+                $lowResImg = $this->image_thumb_low_res($imgPath,$img_names[0]);
+
+                $low_size = (int)$this->human_filesize(filesize($imgPath.$lowResImg),0);
+                if($low_size>300)
+                {
+                    //Sending mail if image resize fails
+                    if(isset($post['eventName']))
+                    {
+                        $mailData = array(
+                            'locId' => $eventOldInfo['eventPlace'],
+                            'eventName' => $post['eventName']
+                        );
+                    }
+                    else
+                    {
+                        $mailData = array(
+                            'locId' => $eventOldInfo['eventPlace'],
+                            'eventName' => $eventOldInfo['eventName']
+                        );
+                    }
+                    $this->sendemail_library->lowResImageFailMail($mailData);
+                    log_message('error','Low res Image size is more than 300KB eve-'.$eventId);
+                }
+                else
+                {
+                    $attDetails = array(
+                        'lowResImage' => $lowResImg
+                    );
+                    $this->dashboard_model->updateEventAttachment($attDetails,$eventId);
                 }
             }
             $changesRecord['eventId'] = $eventId;
@@ -1556,6 +1596,39 @@ class Dashboard extends MY_Controller {
                 if($oldImgId != '')
                 {
                     $this->dashboard_model->eventAttDelete($oldImgId);
+                }
+
+                //Creating whatsapp image
+                $imgPath = '/var/www/html/mobile/'.EVENT_PATH_THUMB;
+                $lowResImg = $this->image_thumb_low_res($imgPath,$img_names[0]);
+
+                $low_size = (int)$this->human_filesize(filesize($imgPath.$lowResImg),0);
+                if($low_size>300)
+                {
+                    //Sending mail if image resize fails
+                    if(isset($post['eventName']))
+                    {
+                        $mailData = array(
+                            'locId' => $eventOldInfo['eventPlace'],
+                            'eventName' => $post['eventName']
+                        );
+                    }
+                    else
+                    {
+                        $mailData = array(
+                            'locId' => $eventOldInfo['eventPlace'],
+                            'eventName' => $eventOldInfo['eventName']
+                        );
+                    }
+                    $this->sendemail_library->lowResImageFailMail($mailData);
+                    log_message('error','Low res Image size is more than 300KB eve-'.$eventId);
+                }
+                else
+                {
+                    $attDetails = array(
+                        'lowResImage' => $lowResImg
+                    );
+                    $this->dashboard_model->updateEventAttachment($attDetails,$eventId);
                 }
             }
 
@@ -2156,8 +2229,10 @@ class Dashboard extends MY_Controller {
         //Checking if event is editted and came for review
         $editRecord = $this->dashboard_model->getEditRecord($eventId);
         $eventStatus = 'approved';
+        $isEventEdit = false;
         if(isset($editRecord) && myIsArray($editRecord))
         {
+            $isEventEdit = true;
             $eventStatus = 'reviewed';
             $upDetail = array(
                 'isPending' => 1
@@ -2307,6 +2382,47 @@ class Dashboard extends MY_Controller {
             }
         }
 
+        //Creating whatsapp image
+        $imgPath = '/var/www/html/mobile/'.EVENT_PATH_THUMB;
+        $lowResImg = $this->image_thumb_low_res($imgPath,$eventDetail[0]['filename']);
+
+        $low_size = (int)$this->human_filesize(filesize($imgPath.$lowResImg),0);
+        if($low_size>300)
+        {
+            //Sending mail if image resize fails
+            $mailData = array(
+                'locId' => $eventDetail[0]['eventPlace'],
+                'eventName' => $eventDetail[0]['eventName']
+            );
+            $this->sendemail_library->lowResImageFailMail($mailData);
+            log_message('error','Low res Image size is more than 300KB');
+        }
+        else
+        {
+            $eveAtt = $this->dashboard_model->getEventAttById($eventId);
+            if(isset($eveAtt) && myIsArray($eveAtt))
+            {
+                if(!isset($eveAtt[0]['lowResImage']))
+                {
+                    $attDetails = array(
+                        'lowResImage' => $lowResImg
+                    );
+                    $this->dashboard_model->updateEventAttachment($attDetails,$eventId);
+                }
+            }
+        }
+
+        //Sending mail if projector is selected
+        if($eventDetail[0]['ifProjectorRequired'] == '1' && !$isEventEdit)
+        {
+            $mDetails = array(
+                'eventName' => $eventDetail[0]['eventName'],
+                'locName' => $eventDetail[0]['locName'],
+                'eventDate' => $eventDetail[0]['eventDate'],
+                'startTime' => $eventDetail[0]['startTime']
+            );
+            $this->sendemail_library->eventExtraToMaintMail($mDetails);
+        }
 
         // Editing the event at meetup
         $meetupRecord = $this->dashboard_model->getMeetupRecord($eventId);
@@ -2344,6 +2460,42 @@ class Dashboard extends MY_Controller {
         $this->dashboard_model->saveDashLogs($logDetails);
     }
 
+    function image_thumb_low_res( $image_path, $img_name)
+    {
+        $image_thumb = $image_path.'low_res_'.$img_name;
+
+        // LOAD LIBRARY
+        $this->load->library( 'image_lib' );
+
+        // CONFIGURE IMAGE LIBRARY
+        $config['image_library']    = 'gd2';
+        $config['source_image']     = $image_path.$img_name;
+        $config['new_image']        = $image_thumb;
+        $config['quality']          = 40;
+        $config['maintain_ratio']   = TRUE;
+        $config['height']           = 300;
+        $config['width']            = 200;
+
+        $this->image_lib->initialize( $config );
+        if(!$this->image_lib->resize())
+        {
+            log_message('error',$image_path.': '.$this->image_lib->display_errors());
+            $this->image_lib->clear();
+            return 'error';
+        }
+        else
+        {
+            $this->image_lib->clear();
+            return 'low_res_'.$img_name;
+        }
+    }
+    function human_filesize($bytes, $decimals = 2)
+    {
+        $factor = floor((strlen($bytes) - 1) / 3);
+        if ($factor > 0) $sz = 'KMGT';
+        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor));
+    }
+
     public function meetMeUp($eventInfo, $eventId, $meetupId = '')
     {
         $meetData = array();
@@ -2372,6 +2524,11 @@ class Dashboard extends MY_Controller {
         //Meetup Event Creation And Update
         try
         {
+            $venueId = $eventInfo['meetupVenueId'];
+            if($eventInfo['isSpecialEvent'] == '1')
+            {
+                $venueId = SPECIAL_EVENT_MEETUP_ID;
+            }
             if(!isStringSet($meetupId))
             {
                 $meetUpPost = array(
@@ -2381,7 +2538,7 @@ class Dashboard extends MY_Controller {
                     'announce' => true,
                     'time' => strtotime($eventStart)*1000,
                     'name' => (strlen($eventInfo['eventName']) > 75) ? substr($eventInfo['eventName'], 0, 75) . '..' : $eventInfo['eventName'],
-                    'venue_id' => $eventInfo['meetupVenueId']
+                    'venue_id' => $venueId
                 );
                 $meetupCreate = $this->meetup->postEvent($meetUpPost);
                 $saveMeetup = array(
@@ -2408,7 +2565,7 @@ class Dashboard extends MY_Controller {
                     'announce' => $announceStatus,
                     'time' => strtotime($eventStart)*1000,
                     'name' => (strlen($eventInfo['eventName']) > 75) ? substr($eventInfo['eventName'], 0, 75) . '..' : $eventInfo['eventName'],
-                    'venue_id' => $eventInfo['meetupVenueId']
+                    'venue_id' => $venueId
                 );
                 $meetupCreate = $this->meetup->updateEvent($meetUpPost,$meetupId);
             }
@@ -3340,5 +3497,16 @@ class Dashboard extends MY_Controller {
         $this->dashboard_model->updateEventRecord($eveUpdate,$eventId);
         $data['status'] = true;
         echo json_encode($data);
+    }
+
+    public function mailTest()
+    {
+        $mD = array(
+            'eventName' => 'abc Test',
+            'locName' => 'andheri',
+            'eventDate' => '2017-12-20',
+            'startTime' => '10:00'
+        );
+        $this->sendemail_library->eventExtraToMaintMail($mD);
     }
 }

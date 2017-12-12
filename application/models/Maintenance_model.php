@@ -327,6 +327,15 @@ class Maintenance_Model extends CI_Model
         return $result;
     }
 
+    function getOnlyBudgetJobs()
+    {
+        $query = "SELECT clm.*,lm.locName FROM complaintlogmaster clm
+                  LEFT JOIN locationmaster lm ON lm.id = clm.locId
+                  WHERE status = ".LOG_STATUS_PENDING_BUDGET_APPROVAL;
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+
     function updateFinRecord($details,$fid)
     {
         $this->db->where('fid',$fid);

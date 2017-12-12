@@ -195,3 +195,7 @@ defined('JOB_PRIORITY_HIGH') OR define('JOB_PRIORITY_HIGH',1);
 defined('JOB_PRIORITY_MEDIUM') OR define('JOB_PRIORITY_MEDIUM',2);
 defined('JOB_PRIORITY_LOW') OR define('JOB_PRIORITY_LOW',3);
 defined('SPECIAL_EVENT_DOOLALLYID') OR define('SPECIAL_EVENT_DOOLALLYID','612');
+
+defined('SPECIAL_EVENT_VENUE_NAME') OR define('SPECIAL_EVENT_VENUE_NAME','1st Brewhouse');
+defined('SPECIAL_EVENT_VENUE_ADDRESS') OR define('SPECIAL_EVENT_VENUE_ADDRESS','The Corinthians Resort & Club, Mohammed Wadi, Nyati County, Mohammed Wadi, Pune, Maharashtra 411060, India');
+defined('SPECIAL_EVENT_MEETUP_ID') OR define('SPECIAL_EVENT_MEETUP_ID', '25207984');

@@ -7,6 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @property Maintenance_Model $maintenance_model
  * @property Locations_Model $locations_model
  * @property Login_Model $login_model
+ * @property Dashboard_Model $dashboard_model
 */
 
 class Maintenance extends MY_Controller {
@@ -18,6 +19,7 @@ class Maintenance extends MY_Controller {
 		$this->load->model('maintenance_model');
 		$this->load->model('locations_model');
         $this->load->model('login_model');
+        $this->load->model('dashboard_model');
         ini_set('memory_limit', "256M");
         ini_set('upload_max_filesize', "50M");
 	}
