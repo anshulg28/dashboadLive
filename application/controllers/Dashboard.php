@@ -1160,7 +1160,9 @@ class Dashboard extends MY_Controller {
         $isImpChange = false;
         $oldImgId = '';
         $impChanges = array('eventName','eventDescription','eventDate','startTime','endTime','costType',
-                        'eventPrice','eventPlace','creatorName','creatorPhone','creatorEmail');
+                        'eventPrice','eventPlace','creatorName','creatorPhone','creatorEmail','eventCapacity',
+                        'ifMicRequired','ifProjectorRequired');
+
         $changeCheck = array();
         $changesRecord = array();
         $changesMade = array();
@@ -1214,6 +1216,14 @@ class Dashboard extends MY_Controller {
                             $oldLoc = $this->locations_model->getLocationDetailsById($row);
                             $newLoc = $this->locations_model->getLocationDetailsById($post[$key]);
                             $changesMade[$key] = $oldLoc['locData'][0]['locName'].';#;'.$newLoc['locData'][0]['locName'];
+                        }
+                        elseif($key == 'ifMicRequired' || $key == 'ifProjectorRequired')
+                        {
+                            $ynPoll = array(
+                                '1' => 'Yes',
+                                '2' => 'No'
+                            );
+                            $changesMade[$key] = $ynPoll[$row].';#;'.$ynPoll[$post[$key]];
                         }
                         else
                         {

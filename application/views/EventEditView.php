@@ -220,10 +220,34 @@
                                             <label class="mdl-textfield__label" for="eventCapacity">Event Capacity</label>
                                         </div>
                                         <br>
-                                        <label><input type="checkbox" value="1"
-                                                      name="ifMicRequired" <?php if($row['eventData']['ifMicRequired'] == "1"){echo 'checked';}?>>Do you need a mic?</label>
-                                        <label><input type="checkbox" value="2"
-                                                      name="ifProjectorRequired" <?php if($row['eventData']['ifProjectorRequired'] == "1"){echo 'checked';}?>>Do you need a projector?</label>
+                                        <ul class="list-inline text-left">
+                                            <li class="my-singleBorder">
+                                                <label>Do you need a mic?</label>
+                                                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="yesMic">
+                                                    <input type="radio" id="yesMic" class="mdl-radio__button" name="ifMicRequired"
+                                                           value="1" <?php if($row['eventData']['ifMicRequired'] == "1"){echo 'checked';}?>>
+                                                    <span class="mdl-radio__label">Yes</span>
+                                                </label>
+                                                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="noMic">
+                                                    <input type="radio" id="noMic" class="mdl-radio__button" name="ifMicRequired"
+                                                           value="2" <?php if($row['eventData']['ifMicRequired'] == "2"){echo 'checked';}?>>
+                                                    <span class="mdl-radio__label">No</span>
+                                                </label>
+                                            </li>
+                                            <li class="my-singleBorder">
+                                                <label>Do you need a projector?</label>
+                                                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="yesProjector">
+                                                    <input type="radio" id="yesProjector" class="mdl-radio__button" name="ifProjectorRequired"
+                                                           value="1" <?php if($row['eventData']['ifProjectorRequired'] == "1"){echo 'checked';}?>>
+                                                    <span class="mdl-radio__label">Yes</span>
+                                                </label>
+                                                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="noProjector">
+                                                    <input type="radio" id="noProjector" class="mdl-radio__button" name="ifProjectorRequired"
+                                                           value="2" <?php if($row['eventData']['ifProjectorRequired'] == "2"){echo 'checked';}?>>
+                                                    <span class="mdl-radio__label">No</span>
+                                                </label>
+                                            </li>
+                                        </ul>
                                     </div>
                                     <br>
                                     <div class="text-left">

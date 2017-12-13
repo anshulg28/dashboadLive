@@ -105,16 +105,16 @@
             {
                 $temp = explode(';#;',$mailData['ifMicRequired']);
                 ?>
-                <b>Mic Required?</b>:<br> From: <?php if($temp[0] == '1'){echo 'Yes';}else{echo 'No';}?><br><br>
-                To: <?php if($temp[1] == '1'){echo 'Yes';}else{echo 'No';}?><br><br>
+                <b>Mic Required?</b>:<br> From: <?php echo $temp[0];?><br><br>
+                To: <?php echo $temp[1];?><br><br>
                 <?php
             }
             if(isset($mailData['ifProjectorRequired']))
             {
                 $temp = explode(';#;',$mailData['ifProjectorRequired']);
                 ?>
-                <b>Projector Required?</b>:<br> From: <?php if($temp[0] == '1'){echo 'Yes';}else{echo 'No';}?><br><br>
-                To: <?php if($temp[1] == '1'){echo 'Yes';}else{echo 'No';}?><br><br>
+                <b>Projector Required?</b>:<br> From: <?php echo $temp[0];?><br><br>
+                To: <?php echo $temp[1];?><br><br>
                 <?php
             }
             if(isset($mailData['creatorName']))
