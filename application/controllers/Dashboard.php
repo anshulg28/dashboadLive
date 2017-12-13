@@ -1161,7 +1161,7 @@ class Dashboard extends MY_Controller {
         $oldImgId = '';
         $impChanges = array('eventName','eventDescription','eventDate','startTime','endTime','costType',
                         'eventPrice','eventPlace','creatorName','creatorPhone','creatorEmail','eventCapacity',
-                        'ifMicRequired','ifProjectorRequired');
+                        'ifMicRequired','ifProjectorRequired','isSpecialEvent');
 
         $changeCheck = array();
         $changesRecord = array();
@@ -1217,7 +1217,7 @@ class Dashboard extends MY_Controller {
                             $newLoc = $this->locations_model->getLocationDetailsById($post[$key]);
                             $changesMade[$key] = $oldLoc['locData'][0]['locName'].';#;'.$newLoc['locData'][0]['locName'];
                         }
-                        elseif($key == 'ifMicRequired' || $key == 'ifProjectorRequired')
+                        elseif($key == 'ifMicRequired' || $key == 'ifProjectorRequired' || $key == 'isSpecialEvent')
                         {
                             $ynPoll = array(
                                 '1' => 'Yes',

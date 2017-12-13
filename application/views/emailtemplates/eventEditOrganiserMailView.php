@@ -117,6 +117,14 @@
                 To: <?php echo $temp[1];?><br><br>
                 <?php
             }
+            if(isset($mailData['isSpecialEvent']))
+            {
+                $temp = explode(';#;',$mailData['isSpecialEvent']);
+                ?>
+                <b>Location Changed To Pune?</b>:<br> From: <?php echo $temp[0];?><br><br>
+                To: <?php echo $temp[1];?><br><br>
+                <?php
+            }
             if(isset($mailData['creatorName']))
             {
                 $temp = explode(';#;',$mailData['creatorName']);

@@ -86,6 +86,21 @@
                                     </ul>
                                     <ul class="list-inline text-left">
                                         <li class="my-singleBorder">
+                                            <label>Set Other Location (Pune)?</label>
+                                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="yesPune">
+                                                <input type="radio" id="yesPune" class="mdl-radio__button" name="isSpecialEvent"
+                                                       value="1" <?php if($row['eventData']['isSpecialEvent'] == "1"){echo 'checked';}?>>
+                                                <span class="mdl-radio__label">Yes</span>
+                                            </label>
+                                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="noPune">
+                                                <input type="radio" id="noPune" class="mdl-radio__button" name="isSpecialEvent"
+                                                       value="0" <?php if($row['eventData']['isSpecialEvent'] == "0"){echo 'checked';}?>>
+                                                <span class="mdl-radio__label">No</span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                    <ul class="list-inline text-left">
+                                        <li class="my-singleBorder">
                                             <label>Hide Event Date?</label>
                                             <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="yesDate">
                                                 <input type="radio" id="yesDate" class="mdl-radio__button" name="showEventDate"
