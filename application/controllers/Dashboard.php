@@ -1948,7 +1948,7 @@ class Dashboard extends MY_Controller {
         echo json_encode($data);
 
         $logDetails = array(
-            'logMessage' => 'Function: cancelEvent, User: '.$this->userId,
+            'logMessage' => 'Function: cancelEvent, User: '.$this->userId.' EventId: '.$eventId,
             'fromWhere' => 'Dashboard',
             'insertedDT' => date('Y-m-d H:i:s')
         );

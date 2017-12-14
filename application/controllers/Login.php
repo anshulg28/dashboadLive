@@ -212,7 +212,7 @@ class Login extends MY_Controller {
                 );
                 $this->login_model->updateUserRecord($userCheck['userId'],$details);*/
 
-                $newOtp = mt_rand(10000,999999);
+                $newOtp = mt_rand(1000,99999);
 
                 $details = array(
                     'userOtp'=> $newOtp

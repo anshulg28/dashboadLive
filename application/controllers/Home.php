@@ -1144,13 +1144,19 @@ class Home extends MY_Controller {
 
                                     if(isset($staffDetails['mobNum']) && isStringSet($staffDetails['mobNum']) && $staffDetails['mobNum'] != DEFAULT_STAFF_MOB)
                                     {
+                                        $locData = $this->locations_model->getLocationDetailsById($post['billLoc']);
+                                        $locName = '';
+                                        if($locData['status'] == true)
+                                        {
+                                            $locName = $locData['locData'][0]['locName'];
+                                        }
                                         $numbers = array('91'.$staffDetails['mobNum']);
 
                                         $postDetails = array(
                                             'apiKey' => TEXTLOCAL_API,
                                             'numbers' => implode(',', $numbers),
                                             'sender'=> urlencode('DOLALY'),
-                                            'message' => rawurlencode($usedAmt.' Debited against bill #'.$postBillNum.', Available Wallet Balance: '.$finalBal)
+                                            'message' => rawurlencode($usedAmt.' Debited against bill #'.$postBillNum.' at '.$locName.', Available Wallet Balance: '.$finalBal)
                                         );
                                         $smsStatus = $this->curl_library->sendCouponSMS($postDetails);
                                         if($smsStatus['status'] == 'failure')
@@ -1277,13 +1283,19 @@ class Home extends MY_Controller {
 
                             if(isset($staffDetails['mobNum']) && isStringSet($staffDetails['mobNum']) && $staffDetails['mobNum'] != DEFAULT_STAFF_MOB)
                             {
+                                $locData = $this->locations_model->getLocationDetailsById($post['billLoc']);
+                                $locName = '';
+                                if($locData['status'] == true)
+                                {
+                                    $locName = $locData['locData'][0]['locName'];
+                                }
                                 $numbers = array('91'.$staffDetails['mobNum']);
 
                                 $postDetails = array(
                                     'apiKey' => TEXTLOCAL_API,
                                     'numbers' => implode(',', $numbers),
                                     'sender'=> urlencode('DOLALY'),
-                                    'message' => rawurlencode($usedAmt.' Debited against bill #'.$postBillNum.', Available Wallet Balance: '.$finalBal)
+                                    'message' => rawurlencode($usedAmt.' Debited against bill #'.$postBillNum.' at '.$locName.', Available Wallet Balance: '.$finalBal)
                                 );
 
                                 $smsStatus = $this->curl_library->sendCouponSMS($postDetails);
