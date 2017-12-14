@@ -868,6 +868,33 @@ class Mailers extends MY_Controller {
         $this->dashboard_model->saveDashLogs($logDetails);
         redirect(base_url().'mailers/templates');
     }
+
+    public function setEmailDeActive($id)
+    {
+        $details = array(
+            'ifActive' => '0'
+        );
+        $this->mailers_model->updatePressEmailById($details,$id);
+        $logDetails = array(
+            'logMessage' => 'Function: setEmailDeActive, User: '.$this->userId.' emailId: '.$id,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
+    }
+    public function setEmailActive($id)
+    {
+        $details = array(
+            'ifActive' => '1'
+        );
+        $this->mailers_model->updatePressEmailById($details,$id);
+        $logDetails = array(
+            'logMessage' => 'Function: setEmailDeActive, User: '.$this->userId.' emailId: '.$id,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
+    }
     public function generateBreakfastTwoCode($mugId)
     {
         $allCodes = $this->offers_model->getAllCodes();

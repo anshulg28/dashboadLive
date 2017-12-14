@@ -61,7 +61,7 @@ class Mailers_Model extends CI_Model
         $query = "SELECT GROUP_CONCAT(pmm.pressEmail) as 'emails', ptm.catName
                     FROM pressmailmaster pmm
                     LEFT JOIN presstypemaster ptm ON ptm.id = pmm.pressMailType
-                    GROUP BY ptm.id";
+                    GROUP BY ptm.id WHERE pmm.ifActive = 1";
         $result = $this->db->query($query)->result_array();
 
         return $result;
@@ -226,6 +226,12 @@ class Mailers_Model extends CI_Model
     public function saveDummyMugs($data)
     {
         $this->db->insert_batch('dummymugmaster',$data);
+        return true;
+    }
+    public function updatePressEmailById($details, $id)
+    {
+        $this->db->where('id',$id);
+        $this->db->update('pressmailmaster',$details);
         return true;
     }
 }

@@ -158,6 +158,22 @@
                                             <td><?php echo $row['catName'];?></td>
                                             <td><?php echo $row['publication'];?></td>
                                             <td>
+                                                <?php
+                                                    if($row['ifActive'] == ACTIVE)
+                                                    {
+                                                        ?>
+                                                        <a data-toggle="tooltip" title="Active" href="<?php echo base_url().'mailers/setEmailDeActive/'.$row['id'];?>">
+                                                            <i class="fa fa-15x fa-lightbulb-o my-success-text"></i></a>
+                                                        <?php
+                                                    }
+                                                    else
+                                                    {
+                                                        ?>
+                                                        <a data-toggle="tooltip" title="Not Active" href="<?php echo base_url().'mailers/setEmailActive/'.$row['id'];?>">
+                                                            <i class="fa fa-15x fa-lightbulb-o my-error-text"></i></a>
+                                                        <?php
+                                                    }
+                                                ?>
                                                 <a data-toggle="tooltip" title="Edit" href="<?php echo base_url().'mailers/edit/'.$row['id'];?>">
                                                     <i class="glyphicon glyphicon-edit"></i></a>&nbsp;
                                                 <a data-toggle="tooltip" class="pressDelete-icon" title="Delete" data-pressId = "<?php echo $row['id'];?>">
