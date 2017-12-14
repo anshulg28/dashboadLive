@@ -36,7 +36,7 @@ class Mailers_Model extends CI_Model
     }
     public function getAllPressEmails()
     {
-        $query = "SELECT pmm.id, pmm.publication, pmm.pressName, pmm.pressEmail, pmm.pressMailType,"
+        $query = "SELECT pmm.id, pmm.publication, pmm.pressName, pmm.pressEmail, pmm.pressMailType, pmm.ifActive,"
                 ." ptm.catName"
                 ." FROM pressmailmaster pmm"
                 ." LEFT JOIN presstypemaster ptm ON ptm.id = pmm.pressMailType";
@@ -61,7 +61,7 @@ class Mailers_Model extends CI_Model
         $query = "SELECT GROUP_CONCAT(pmm.pressEmail) as 'emails', ptm.catName
                     FROM pressmailmaster pmm
                     LEFT JOIN presstypemaster ptm ON ptm.id = pmm.pressMailType
-                    GROUP BY ptm.id WHERE pmm.ifActive = 1";
+                    WHERE pmm.ifActive = 1 GROUP BY ptm.id";
         $result = $this->db->query($query)->result_array();
 
         return $result;

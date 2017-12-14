@@ -881,6 +881,7 @@ class Mailers extends MY_Controller {
             'insertedDT' => date('Y-m-d H:i:s')
         );
         $this->dashboard_model->saveDashLogs($logDetails);
+        redirect(base_url().'mailers/pressSend');
     }
     public function setEmailActive($id)
     {
@@ -894,6 +895,7 @@ class Mailers extends MY_Controller {
             'insertedDT' => date('Y-m-d H:i:s')
         );
         $this->dashboard_model->saveDashLogs($logDetails);
+        redirect(base_url().'mailers/pressSend');
     }
     public function generateBreakfastTwoCode($mugId)
     {
