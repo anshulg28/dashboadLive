@@ -1156,7 +1156,7 @@ class Home extends MY_Controller {
                                             'apiKey' => TEXTLOCAL_API,
                                             'numbers' => implode(',', $numbers),
                                             'sender'=> urlencode('DOLALY'),
-                                            'message' => rawurlencode($usedAmt.' Debited against bill #'.$postBillNum.' at '.$locName.', Available Wallet Balance: '.$finalBal)
+                                            'message' => rawurlencode($usedAmt.' Debited against bill #'.$postBillNum.' at '.trim($locName).', Available Wallet Balance: '.$finalBal)
                                         );
                                         $smsStatus = $this->curl_library->sendCouponSMS($postDetails);
                                         if($smsStatus['status'] == 'failure')
@@ -1295,7 +1295,7 @@ class Home extends MY_Controller {
                                     'apiKey' => TEXTLOCAL_API,
                                     'numbers' => implode(',', $numbers),
                                     'sender'=> urlencode('DOLALY'),
-                                    'message' => rawurlencode($usedAmt.' Debited against bill #'.$postBillNum.' at '.$locName.', Available Wallet Balance: '.$finalBal)
+                                    'message' => rawurlencode($usedAmt.' Debited against bill #'.$postBillNum.' at '.trim($locName).', Available Wallet Balance: '.$finalBal)
                                 );
 
                                 $smsStatus = $this->curl_library->sendCouponSMS($postDetails);
