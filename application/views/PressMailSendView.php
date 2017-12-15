@@ -508,7 +508,7 @@
                     hideCustomLoader();
                     if(data.status === true)
                     {
-                        $(currEl).removeClass('make-press-inactive').addClass('make-press-active').attr('title','Not Active');
+                        $(currEl).removeClass('make-press-inactive').addClass('make-press-active').attr('title','Not Active').attr('data-original-title','Not Active');
                         $(currEl).find('i').removeClass('my-success-text').addClass('my-error-text');
                     }
                     else
@@ -541,7 +541,7 @@
                     hideCustomLoader();
                     if(data.status === true)
                     {
-                        $(currEl).removeClass('make-press-active').addClass('make-press-inactive').attr('title','Active');
+                        $(currEl).removeClass('make-press-active').addClass('make-press-inactive').attr('title','Active').attr('data-original-title','Active');
                         $(currEl).find('i').removeClass('my-error-text').addClass('my-success-text');
                     }
                     else
