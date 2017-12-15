@@ -162,14 +162,14 @@
                                                     if($row['ifActive'] == ACTIVE)
                                                     {
                                                         ?>
-                                                        <a data-toggle="tooltip" title="Active" href="<?php echo base_url().'mailers/setEmailDeActive/'.$row['id'];?>">
+                                                        <a data-toggle="tooltip" title="Active" data-pressId="<?php echo $row['id']; ?>" href="#" class="make-press-inactive">
                                                             <i class="fa fa-15x fa-lightbulb-o my-success-text"></i></a>
                                                         <?php
                                                     }
                                                     else
                                                     {
                                                         ?>
-                                                        <a data-toggle="tooltip" title="Not Active" href="<?php echo base_url().'mailers/setEmailActive/'.$row['id'];?>">
+                                                        <a data-toggle="tooltip" title="Not Active" data-pressId="<?php echo $row['id']; ?>" href="#" class="make-press-active">
                                                             <i class="fa fa-15x fa-lightbulb-o my-error-text"></i></a>
                                                         <?php
                                                     }
@@ -491,6 +491,73 @@
                 window.location.href='<?php echo base_url();?>mailers/delete/'+pressId;
             }
         });
+    });
+
+    $(document).on('click','.make-press-inactive', function(e){
+        e.preventDefault();
+        var currEl = this;
+        var pressId = $(this).attr('data-pressId');
+        if(pressId != '')
+        {
+            showCustomLoader();
+            $.ajax({
+                type:'GET',
+                dataType:'json',
+                url:base_url+'mailers/setEmailDeActive/'+pressId,
+                success: function(data){
+                    hideCustomLoader();
+                    if(data.status === true)
+                    {
+                        $(currEl).removeClass('make-press-inactive').addClass('make-press-active');
+                        $(currEl).find('i').removeClass('my-success-text').addClass('my-error-text');
+                    }
+                    else
+                    {
+                        bootbox.alert(data.errorMsg);
+                    }
+                },
+                error: function(xhr, status, error){
+                    hideCustomLoader();
+                    //clearInterval(updateInterval);
+                    bootbox.alert('<span class="my-danger-text">Some Error occurred</span>');
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                    saveErrorLog(err);
+                }
+            });
+        }
+    });
+    $(document).on('click','.make-press-active', function(e){
+        e.preventDefault();
+        var currEl = this;
+        var pressId = $(this).attr('data-pressId');
+        if(pressId != '')
+        {
+            showCustomLoader();
+            $.ajax({
+                type:'GET',
+                dataType:'json',
+                url:base_url+'mailers/setEmailActive/'+pressId,
+                success: function(data){
+                    hideCustomLoader();
+                    if(data.status === true)
+                    {
+                        $(currEl).removeClass('make-press-active').addClass('make-press-inactive');
+                        $(currEl).find('i').removeClass('my-error-text').addClass('my-success-text');
+                    }
+                    else
+                    {
+                        bootbox.alert(data.errorMsg);
+                    }
+                },
+                error: function(xhr, status, error){
+                    hideCustomLoader();
+                    //clearInterval(updateInterval);
+                    bootbox.alert('<span class="my-danger-text">Some Error occurred</span>');
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                    saveErrorLog(err);
+                }
+            });
+        }
     });
 </script>
 

@@ -1349,8 +1349,9 @@
             error:function(xhr, status, error)
             {
                 hideCustomLoader();
-                bootbox.alert('Some Error Occurred, Try Again!');
+                //bootbox.alert('Some Error Occurred, Try Again!');
                 var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                bootbox.alert(err);
                 saveErrorLog(err);
             }
         });
