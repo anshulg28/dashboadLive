@@ -903,11 +903,17 @@ class Dashboard_Model extends CI_Model
     }
     public function getEventHighRecord($eventId)
     {
-        $query = "SELECT highId FROM eventshighmaster WHERE highStatus = 1 AND eventId = ".$eventId;
+        $query = "SELECT id, highId FROM eventshighmaster WHERE highStatus = 1 AND eventId = ".$eventId;
 
         $result = $this->db->query($query)->row_array();
 
         return $result;
+    }
+    public function updateCancelEH($details, $id)
+    {
+        $this->db->where('id',$id);
+        $this->db->update('eventshighmaster',$details);
+        return true;
     }
     public function getEventCouponInfo($eventId, $payId)
     {

@@ -1942,6 +1942,10 @@ class Dashboard extends MY_Controller {
         if(isset($eventHighRecord) && myIsArray($eventHighRecord))
         {
             $this->curl_library->disableEventsHigh($eventHighRecord['highId']);
+            $det = array(
+                'highStatus' => '2'
+            );
+            $this->dashboard_model->updateCancelEH($det,$eventHighRecord['id']);
         }
 
         $data['status'] = true;
