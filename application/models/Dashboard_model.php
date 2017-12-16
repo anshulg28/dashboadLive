@@ -245,11 +245,21 @@ class Dashboard_Model extends CI_Model
         return true;
     }
 
-    public function getAllInstamojoRecord()
+    public function getAllInstamojoRecord($locId = 0)
     {
-        $query = "SELECT * "
-            ." FROM instamojomaster"
-            ." WHERE status = 1 AND isApproved = 0";
+        if($locId == 0)
+        {
+            $query = "SELECT * "
+                ." FROM instamojomaster"
+                ." WHERE status = 1 AND isApproved = 0";
+        }
+        else
+        {
+            $query = "SELECT imm.* "
+                ." FROM instamojomaster imm"
+                ." LEFT JOIN mugmaster mm ON imm.mugId = mm.mugId"
+                ." WHERE status = 1 AND isApproved = 0 AND mm.homeBase = ".$locId;
+        }
 
         $result = $this->db->query($query)->result_array();
         $data['instaRecords'] = $result;
@@ -265,12 +275,22 @@ class Dashboard_Model extends CI_Model
         return $data;
     }
 
-    public function getAllInstamojoMugRecords()
+    public function getAllInstamojoMugRecords($locId = 0)
     {
-        $query = "SELECT imm.id,imm.mugId,imm.firstName,imm.lastName,imm.emailId,lm.locName "
-            ." FROM instamojomugmaster imm "
-            ."LEFT JOIN locationmaster lm ON imm.homeBase = lm.id"
-            ." WHERE status = 1 AND isApproved = 0";
+        if($locId == 0)
+        {
+            $query = "SELECT imm.id,imm.mugId,imm.firstName,imm.lastName,imm.emailId,lm.locName "
+                ." FROM instamojomugmaster imm "
+                ."LEFT JOIN locationmaster lm ON imm.homeBase = lm.id"
+                ." WHERE imm.status = 1 AND imm.isApproved = 0";
+        }
+        else
+        {
+            $query = "SELECT imm.id,imm.mugId,imm.firstName,imm.lastName,imm.emailId,lm.locName "
+                ." FROM instamojomugmaster imm "
+                ."LEFT JOIN locationmaster lm ON imm.homeBase = lm.id"
+                ." WHERE imm.status = 1 AND imm.isApproved = 0 AND imm.homeBase = ".$locId;
+        }
 
         $result = $this->db->query($query)->result_array();
         $data['instaRecords'] = $result;

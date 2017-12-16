@@ -106,8 +106,16 @@ class Dashboard extends MY_Controller {
         }
 
         //Instamojo Records
-        $data['instamojo'] = $this->dashboard_model->getAllInstamojoRecord();
-        $data['instamojoMugs'] = $this->dashboard_model->getAllInstamojoMugRecords();
+        if(!is_null($this->commSecLoc) && isSessionVariableSet($this->commSecLoc))
+        {
+            $data['instamojo'] = $this->dashboard_model->getAllInstamojoRecord($this->commSecLoc);
+            $data['instamojoMugs'] = $this->dashboard_model->getAllInstamojoMugRecords($this->commSecLoc);
+        }
+        else
+        {
+            $data['instamojo'] = $this->dashboard_model->getAllInstamojoRecord();
+            $data['instamojoMugs'] = $this->dashboard_model->getAllInstamojoMugRecords();
+        }
 
         $weeklyFeed = $this->dashboard_model->getWeeklyFeedBack();
         foreach($weeklyFeed as $key => $row)
