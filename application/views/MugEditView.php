@@ -119,35 +119,35 @@
                                             <label class="control-label col-sm-2" for="invoiceDate">Invoice Date:</label>
                                             <div class="col-sm-10">
                                                 <input type="text" name="invoiceDate" value="<?php echo $row['invoiceDate'];?>"
-                                                       class="form-control" id="invoiceDate" placeholder="Eg. 12 June 2016">
+                                                       class="form-control" id="invoiceDate" placeholder="Eg. 12 June 2016" readonly>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-sm-2" for="invoiceNo">Invoice No. :</label>
                                             <div class="col-sm-10">
                                                 <input type="text" name="invoiceNo" value="<?php echo $row['invoiceNo'];?>"
-                                                       class="form-control" id="invoiceNo" placeholder="Eg. L-50">
+                                                       class="form-control" id="invoiceNo" placeholder="Eg. L-50" readonly>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-sm-2" for="invoiceAmt">Invoice Amount:</label>
                                             <div class="col-sm-10">
                                                 <input type="number" name="invoiceAmt" value="<?php echo $row['invoiceAmt'];?>"
-                                                       class="form-control" id="invoiceAmt" placeholder="Eg. 3000">
+                                                       class="form-control" id="invoiceAmt" placeholder="Eg. 3000" readonly>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-sm-2" for="memberS">Membership Start Date:</label>
                                             <div class="col-sm-10">
                                                 <input type="text" name="memberS" value="<?php echo $row['membershipStart'];?>"
-                                                       class="form-control" id="memberS" placeholder="Eg. 12 June 2016">
+                                                       class="form-control" id="memberS" placeholder="Eg. 12 June 2016" readonly>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-sm-2" for="memberE">Membership End Date:</label>
                                             <div class="col-sm-10">
                                                 <input type="text" name="memberE" value="<?php echo $row['membershipEnd'];?>"
-                                                       class="form-control" id="memberE" placeholder="Eg. 12 June 2016">
+                                                       class="form-control" id="memberE" placeholder="Eg. 12 June 2016" readonly>
                                             </div>
                                         </div>
                                         <div class="form-group">

@@ -15,9 +15,9 @@
                 $attachment = explode(';#;',$mailData['attachment']);
                 ?>
                 Old Event Image:<br>
-                <img src="<?php echo base_url().EVENT_PATH_THUMB.$attachment[0];?>" alt="Old Image"/><br><br>
+                <img src="<?php echo MOBILE_URL.EVENT_PATH_THUMB.$attachment[0];?>" alt="Old Image"/><br><br>
                 New Event Image:<br>
-                <img src="<?php echo base_url().EVENT_PATH_THUMB.$attachment[1];?>" alt="New Image"/><br><br>
+                <img src="<?php echo MOBILE_URL.EVENT_PATH_THUMB.$attachment[1];?>" alt="New Image"/><br><br>
                 <?php
             }
             if(isset($mailData['eventName']))
