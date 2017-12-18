@@ -2746,6 +2746,8 @@ class Dashboard extends MY_Controller {
 
             $this->dashboard_model->updateEventRecord($eventRevert,$eventId);
             $this->dashboard_model->ApproveEvent($eventId);
+            $meetupRecord = $this->dashboard_model->getMeetupRecord($eventId);
+            $this->activeOtherPlatforms($eventDetail,$eventId,$meetupRecord['meetupId']);
             $mailDetail['changeRecord'] = $changesRecord;
             $senderName = 'Doolally';
             $senderEmail = 'events@doolally.in';
@@ -2824,8 +2826,8 @@ class Dashboard extends MY_Controller {
         }
         $this->dashboard_model->activateEventRecord($eventId);
         $eventInfo = $this->dashboard_model->getFullEventInfoById($eventId);
-
-        $this->activeOtherPlatforms($eventInfo,$eventId);
+        $meetupRecord = $this->dashboard_model->getMeetupRecord($eventId);
+        $this->activeOtherPlatforms($eventInfo,$eventId,$meetupRecord['meetupId']);
         $logDetails = array(
             'logMessage' => 'Function: setEventActive, User: '.$this->userId,
             'fromWhere' => 'Dashboard',
@@ -2888,7 +2890,9 @@ class Dashboard extends MY_Controller {
         $this->dashboard_model->updateEventRecord($details,$eventId);
         $eventInfo = $this->dashboard_model->getFullEventInfoById($eventId);
 
-        $this->activeOtherPlatforms($eventInfo,$eventId);
+        $meetupRecord = $this->dashboard_model->getMeetupRecord($eventId);
+
+        $this->activeOtherPlatforms($eventInfo,$eventId,$meetupRecord['meetupId']);
         $logDetails = array(
             'logMessage' => 'Function: openReg, User: '.$this->userId,
             'fromWhere' => 'Dashboard',
@@ -2962,13 +2966,32 @@ class Dashboard extends MY_Controller {
             $this->curl_library->archiveInstaLink($eventDetails[0]['instaSlug']);
         }*/
     }
-    function activeOtherPlatforms($eventDetails,$eventId)
+    function activeOtherPlatforms($eventDetails,$eventId,$meetupId)
     {
         //Checking any eventsHigh record in DB for corresponding event
         $eventHighRecord = $this->dashboard_model->getEventHighRecord($eventId);
         if(isset($eventHighRecord) && myIsArray($eventHighRecord))
         {
             $abc = $this->curl_library->enableEventsHigh($eventHighRecord['highId']);
+        }
+
+        $meetData = array();
+
+        //Meetup Event On Pause
+        try
+        {
+            $meetUpPost = array(
+                'announce' => true
+            );
+            $meetupCreate = $this->meetup->updateEvent($meetUpPost,$meetupId);
+            $meetData['status'] = true;
+
+        }
+        catch(Exception $ex)
+        {
+            $meetData['status'] = false;
+            $meetData['errorMsg'] = $ex->getMessage();
+            log_message('error',$ex->getMessage());
         }
 
         /*$instaImgLink = $this->curl_library->getInstaImageLink();
