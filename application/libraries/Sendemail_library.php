@@ -1067,7 +1067,7 @@ class Sendemail_library
         }*/
         $fromName  = $senderName;
 
-        $subject = 'Event accessories required';
+        $subject = 'Maintenance person required';
 
         $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
     }
