@@ -356,7 +356,7 @@
                                 else if(data.offerType == 'Workshop')
                                 {
                                     bootbox.alert('<label class="my-success-text">Congrats, you are eligible for 330ml Beer! Mug Club members get 500ml' +
-                                        '<span class="my-danger-text"> OR </span>Drink & Garlic Bread<span class="my-danger-text"> OR </span>House Fires </label>');
+                                        '<span class="my-danger-text"> OR </span>Drink & Garlic Bread<span class="my-danger-text"> OR </span>House Fries </label>');
                                 }
                                 else
                                 {
