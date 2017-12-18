@@ -2670,24 +2670,125 @@ class Dashboard extends MY_Controller {
         $data = array();
         $post = $this->input->post();
         $eventDetail = $this->dashboard_model->getFullEventInfoById($eventId);
-        $this->dashboard_model->DeclineEvent($eventId);
-        $senderName = 'Doolally';
-        $senderEmail = 'events@doolally.in';
-        if(isStringSet($this->userEmail) && isStringSet($this->userName))
-        {
-            $senderName = $this->userName;
-            $senderEmail = $this->userEmail;
-        }
-        $eventDetail['senderName'] = $senderName;
-        $eventDetail['senderEmail'] = $senderEmail;
 
-        if(isset($post['from']) && isStringSet($post['from'])
-            && isset($post['fromPass']) && isStringSet($post['fromPass']))
+        //Checking if event is editted and came for review
+        $editRecord = $this->dashboard_model->getEventEditRecord($eventId);
+
+        if(isset($editRecord) && myIsArray($editRecord))
         {
-            $eventDetail['fromEmail'] = $post['from'];
-            $eventDetail['fromPass'] = $post['fromPass'];
+            $changesRecord = array();
+            $upDetail = array(
+                'isPending' => 2
+            );
+            $this->dashboard_model->updateEditRecord($upDetail,$eventId);
+            $eventRevert = array();
+            $mailDetail['creatorName'] = $eventDetail[0]['creatorName'];
+            $mailDetail['creatorEmail'] = $eventDetail[0]['creatorEmail'];
+            $mailDetail['eventPlace'] = $eventDetail[0]['eventPlace'];
+            $mailDetail['eventName'] = $eventDetail[0]['eventName'];
+            foreach($editRecord as $key => $row)
+            {
+                if(isset($row))
+                {
+                    switch($key)
+                    {
+                        case 'eventName':
+                            $mailDetail['eventName'] = $row;
+                            $eveSlug = slugify($row);
+                            $eventRevert['eventSlug'] = $eveSlug;
+                            $eventRevert['eventShareLink'] = MOBILE_URL.'?page/events/'.$eveSlug;
+                            $eventRevert['shortUrl'] = null;
+
+                            // Adding event slug to new table
+                            $newSlugTab = array(
+                                'eventId' => $eventId,
+                                'eventSlug' => $eveSlug,
+                                'insertedDateTime' => date('Y-m-d H:i:s')
+                            );
+                            $this->dashboard_model->saveEventSlug($newSlugTab);
+
+                            $shortDWName = $this->googleurlapi->shorten(MOBILE_URL.'?page/events/'.$eveSlug);
+                            if($shortDWName !== false)
+                            {
+                                $eventRevert['shortUrl'] = $shortDWName;
+                            }
+                            $eventRevert['eventName'] = $row;
+                            $changesRecord[$key] = $row.';#;'.$eventDetail[0][$key];
+                            break;
+                        case 'ifMicRequired':
+                            $ynPoll = array(
+                                '1' => 'Yes',
+                                '2' => 'No'
+                            );
+                            $changesRecord[$key] = $ynPoll[$row].';#;'.$ynPoll[$eventDetail[0][$key]];
+                            break;
+                        case 'ifProjectorRequired':
+                            $ynPoll = array(
+                                '1' => 'Yes',
+                                '2' => 'No'
+                            );
+                            $changesRecord[$key] = $ynPoll[$row].';#;'.$ynPoll[$eventDetail[0][$key]];
+                            break;
+                        case 'imgAttachment':
+                            $imgAtt = array(
+                                'filename' => $row
+                            );
+                            $this->dashboard_model->updateEventAttachment($imgAtt,$eventId);
+                            $changesRecord[$key] = $row.';#;'.$eventDetail[0]['filename'];
+                            break;
+                        default:
+                            $eventRevert[$key] = $row;
+                            $changesRecord[$key] = $row.';#;'.$eventDetail[0][$key];
+                            break;
+                    }
+                }
+            }
+
+            $this->dashboard_model->updateEventRecord($eventRevert,$eventId);
+            $this->dashboard_model->ApproveEvent($eventId);
+            $mailDetail['changeRecord'] = $changesRecord;
+            $senderName = 'Doolally';
+            $senderEmail = 'events@doolally.in';
+            if(isStringSet($this->userEmail) && isStringSet($this->userName))
+            {
+                $senderName = $this->userName;
+                $senderEmail = $this->userEmail;
+            }
+            $mailDetail['senderName'] = $senderName;
+            $mailDetail['senderEmail'] = $senderEmail;
+
+            if(isset($post['from']) && isStringSet($post['from'])
+                && isset($post['fromPass']) && isStringSet($post['fromPass']))
+            {
+                $mailDetail['fromEmail'] = $post['from'];
+                $mailDetail['fromPass'] = $post['fromPass'];
+            }
+
+            $this->sendemail_library->eventChangesDeclineMail($mailDetail);
+            $data['eventEdit'] = true;
         }
-        $this->sendemail_library->eventDeclineMail($eventDetail);
+        else
+        {
+            $this->dashboard_model->DeclineEvent($eventId);
+            $senderName = 'Doolally';
+            $senderEmail = 'events@doolally.in';
+            if(isStringSet($this->userEmail) && isStringSet($this->userName))
+            {
+                $senderName = $this->userName;
+                $senderEmail = $this->userEmail;
+            }
+            $eventDetail['senderName'] = $senderName;
+            $eventDetail['senderEmail'] = $senderEmail;
+
+            if(isset($post['from']) && isStringSet($post['from'])
+                && isset($post['fromPass']) && isStringSet($post['fromPass']))
+            {
+                $eventDetail['fromEmail'] = $post['from'];
+                $eventDetail['fromPass'] = $post['fromPass'];
+            }
+            $this->sendemail_library->eventDeclineMail($eventDetail);
+            $data['eventEdit'] = false;
+        }
         $data['status'] = true;
         echo json_encode($data);
         $logDetails = array(

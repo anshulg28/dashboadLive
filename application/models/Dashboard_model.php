@@ -1495,6 +1495,16 @@ class Dashboard_Model extends CI_Model
         $result = $this->db->query($query)->row_array();
         return $result;
     }
+    public function getEventEditRecord($eventId)
+    {
+        $query = "SELECT eventName,eventDescription,eventDate,startTime,endTime,
+                  costType,eventPrice,eventPlace,creatorName,creatorEmail,creatorPhone,eventCapacity,
+                  ifMicRequired,ifProjectorRequired,imgAttachment,verticalImg
+                  FROM eventchangesmaster WHERE isPending = 0 AND eventId = ".$eventId." ORDER BY insertedDT DESC";
+
+        $result = $this->db->query($query)->row_array();
+        return $result;
+    }
     public function updateEditRecord($details,$id)
     {
         $this->db->where('eventId', $id);

@@ -4197,9 +4197,18 @@
                                         data:{from:senderEmail,fromPass:senderPass},
                                         success: function(data){
                                             hideCustomLoader();
-                                            if(data.status == true)
+                                            if(data.status === true)
                                             {
-                                                window.location.reload();
+                                                if(data.eventEdit === true)
+                                                {
+                                                    bootbox.alert('Event with previous info has been restored!',function(){
+                                                       window.location.reload();
+                                                    });
+                                                }
+                                                else
+                                                {
+                                                    window.location.reload();
+                                                }
                                             }
                                             else
                                             {

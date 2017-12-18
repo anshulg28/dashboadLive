@@ -566,6 +566,67 @@ class Sendemail_library
         $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
     }
 
+    public function eventChangesDeclineMail($userData)
+    {
+        $senderUser = $this->CI->users_model->getSenderUsername($userData['senderEmail']);
+        if(isset($senderUser) && myIsArray($senderUser))
+        {
+            $userData['senderPhone'] = $senderUser['mobNum'];
+        }
+        else
+        {
+            $userData['senderPhone'] = '9999999999';
+        }
+        //$userData['senderPhone'] = $phons[$userData['senderName']];
+        $data['mailData'] = $userData;
+        if(isset($userData['eventPlace']))
+        {
+            $commDetail = $this->CI->users_model->searchUserByLoc($userData['eventPlace']);
+            if($commDetail['status'] === true)
+            {
+                $data['senderName'] = ucfirst(trim($commDetail['userData']['firstName']));
+                $data['senderEmail'] = $commDetail['userData']['emailId'];
+            }
+        }
+
+        $content = $this->CI->load->view('emailtemplates/eventChangesDeclineMailView', $data, true);
+
+        $fromEmail = DEFAULT_SENDER_EMAIL;
+        $fromPass = DEFAULT_SENDER_PASS;
+        $replyTo = $fromEmail;
+
+        if(isset($userData['fromEmail']) && isset($userData['fromPass']))
+        {
+            $fromEmail = $userData['fromEmail'];
+            $fromPass = $userData['fromPass'];
+            $replyTo = $userData['fromEmail'];
+        }
+
+        $cc        = implode(',',$this->CI->config->item('ccList'));
+
+        if(isset($commDetail) && $commDetail['status'] === true)
+        {
+            if($fromEmail != $commDetail['userData']['emailId'])
+            {
+                $cc .= ','.$commDetail['userData']['emailId'];
+            }
+        }
+        $fromName  = 'Doolally';
+        if( $fromEmail == DEFAULT_COMM_EMAIL && isset($commDetail) && $commDetail['status'] === true)
+        {
+            $fromName = ucfirst(trim($commDetail['userData']['firstName']));
+        }
+        elseif(isset($userData['senderName']) && isStringSet($userData['senderName']))
+        {
+            $fromName = $userData['senderName'];
+        }
+
+        $subject = 'Sorry, '.$userData['eventName'].' modification is not approved';
+        $toEmail = $userData['creatorEmail'];
+
+        $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
+    }
+
     //Done
     public function newEventMail($userData)
     {
