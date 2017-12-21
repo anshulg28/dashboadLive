@@ -27,6 +27,13 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label class="control-label col-sm-2" for="jobDepartment">Department: </label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="jobDepartment" value="<?php echo $jobData['jobDepartment'];?>"
+                                           class="form-control" id="jobDepartment" placeholder="Eg. Marketing">
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label class="control-label col-sm-2" for="mugTag">Job Description:</label>
                                 <div class="col-sm-10">
                                     <textarea name="jobDescription" class="form-control" id="jobDescription" required><?php echo $jobData['jobDescription'];?></textarea>

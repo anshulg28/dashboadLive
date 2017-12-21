@@ -23,6 +23,12 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="control-label col-sm-2" for="jobDepartment">Department: </label>
+                        <div class="col-sm-10">
+                            <input type="text" name="jobDepartment" class="form-control" id="jobDepartment" placeholder="Eg. Marketing">
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label col-sm-2" for="mugTag">Job Description:</label>
                         <div class="col-sm-10">
                             <textarea name="jobDescription" class="form-control" id="jobDescription" required></textarea>
@@ -55,7 +61,7 @@
                     <div class="form-group hide" id="otherPanel">
                         <label class="control-label col-sm-2" for="otherLocation">Other Location:</label>
                         <div class="col-sm-10">
-                            <input type="text" name="otherLocation" class="form-control" id="otherLocation" placeholder="Eg. Santacruz" required>
+                            <input type="text" name="otherLocation" class="form-control" id="otherLocation" placeholder="Eg. Santacruz">
                         </div>
                     </div>
                     <div class="form-group">
@@ -82,5 +88,17 @@
     CKEDITOR.replace( 'jobDescription' );
     CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
     CKEDITOR.config.shiftEnterMode = CKEDITOR.ENTER_P;
+    $(document).on('change','select[name="locId"]',function(){
+        if($(this).val() == 'other')
+        {
+            $('#otherPanel').removeClass('hide');
+            $('#otherPanel #otherLocation').attr('required','required');
+        }
+        else
+        {
+            $('#otherPanel').addClass('hide').val('');
+            $('#otherPanel #otherLocation').removeAttr('required');
+        }
+    });
 </script>
 </html>
