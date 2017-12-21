@@ -65,6 +65,13 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="control-label col-sm-2" for="contactEmail">Contact Email: </label>
+                        <div class="col-sm-10">
+                            <input type="email" name="contactEmail"
+                                   class="form-control" id="contactEmail" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label col-sm-2" for="jobSkills">Job Skills (optional):</label>
                         <div class="col-sm-10">
                             <input type="text" name="jobSkills" class="form-control" id="jobSkills" placeholder="php,photoshop (comma separated)">

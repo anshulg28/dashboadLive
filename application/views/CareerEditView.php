@@ -30,7 +30,7 @@
                                 <label class="control-label col-sm-2" for="jobDepartment">Department: </label>
                                 <div class="col-sm-10">
                                     <input type="text" name="jobDepartment" value="<?php echo $jobData['jobDepartment'];?>"
-                                           class="form-control" id="jobDepartment" placeholder="Eg. Marketing">
+                                           class="form-control" id="jobDepartment" placeholder="Eg. Marketing" required>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -67,6 +67,13 @@
                                 <label class="control-label col-sm-2" for="otherLocation">Other Location:</label>
                                 <div class="col-sm-10">
                                     <input type="text" name="otherLocation" class="form-control" id="otherLocation" value="<?php echo $jobData['otherLocation'];?>" placeholder="Eg. Santacruz" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="contactEmail">Contact Email: </label>
+                                <div class="col-sm-10">
+                                    <input type="email" name="contactEmail" value="<?php echo $jobData['contactEmail'];?>"
+                                           class="form-control" id="contactEmail" required>
                                 </div>
                             </div>
                             <div class="form-group">
