@@ -119,6 +119,21 @@
                                         <?php
                                     }
 
+                                    if(myInArray('career',$userModules))
+                                    {
+                                        ?>
+                                        <li>
+                                            <a href="<?php echo base_url() . 'career'; ?>">
+                                                <div class="menuWrap">
+                                                    <i class="fa fa-suitcase fa-2x"></i>
+                                                    <br>
+                                                    <span>Careers</span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <?php
+                                    }
+
                                     if($this->userType == SERVER_USER)
                                     {
                                         ?>

@@ -29,6 +29,12 @@
                         <li><a href="<?php echo base_url();?>maintenance"><i class="fa fa-cogs"></i> Maintenance</a></li>
                         <?php
                     }
+                    if(myInArray('career',$userModules))
+                    {
+                        ?>
+                        <li><a href="<?php echo base_url();?>career"><i class="fa fa-suitcase"></i> Careers</a></li>
+                        <?php
+                    }
                     if(myInArray('mug_club',$userModules))
                     {
                         ?>
