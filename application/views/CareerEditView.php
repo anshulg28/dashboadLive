@@ -16,12 +16,13 @@
                         ?>
                         <h2><i class="fa fa-suitcase fa-1x"></i> Edit Job</h2>
                         <hr>
+                        <a href="<?php echo base_url().'career';?>" class="btn btn-default">GO Back</a>
                         <br>
                         <form action="<?php echo base_url();?>career/updateJob/<?php echo $jobData['id'];?>" id="mugNumSave-form" method="post" class="form-horizontal" role="form">
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="jobTitle">Job Title :</label>
                                 <div class="col-sm-10">
-                                    <input type="number" name="jobTitle" value="<?php echo $jobData['jobTitle'];?>"
+                                    <input type="text" name="jobTitle" value="<?php echo $jobData['jobTitle'];?>"
                                            class="form-control" id="jobTitle" placeholder="Community Manager" required>
                                 </div>
                             </div>
