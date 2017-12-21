@@ -63,7 +63,7 @@
                                     ?>
                                 </div>
                             </div>
-                            <div class="form-group <?php if(isset($jobData['otherLocation']) && isStringSet($jobData['otherLocation'])){echo 'show';}else{echo 'hide';} ?>" id="otherPanel">
+                            <div class="form-group <?php if(isset($jobData['otherLocation']) && isStringSet($jobData['otherLocation'])){}else{echo 'hide';} ?>" id="otherPanel">
                                 <label class="control-label col-sm-2" for="otherLocation">Other Location:</label>
                                 <div class="col-sm-10">
                                     <input type="text" name="otherLocation" class="form-control" id="otherLocation" value="<?php echo $jobData['otherLocation'];?>" placeholder="Eg. Santacruz" required>
@@ -107,5 +107,19 @@
     CKEDITOR.replace( 'jobDescription' );
     CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
     CKEDITOR.config.shiftEnterMode = CKEDITOR.ENTER_P;
+    $(document).on('change','select[name="locId"]',function(){
+        console.log($(this).val());
+        if($(this).val() == 'other')
+        {
+            $('#otherPanel').removeClass('hide');
+            $('#otherPanel #otherLocation').attr('required','required');
+        }
+        else
+        {
+            $('#otherPanel').addClass('hide').val('');
+            $('#otherPanel #otherLocation').removeAttr('required');
+        }
+    });
 </script>
+
 </html>
