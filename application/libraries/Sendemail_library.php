@@ -1126,6 +1126,7 @@ class Sendemail_library
         {
             $cc = $cc.','.$extraCc;
         }*/
+        $cc .= ',taronish@brewcraftsindia.com';
         $fromName  = $senderName;
 
         $subject = 'Maintenance person required';

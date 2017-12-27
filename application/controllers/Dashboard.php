@@ -1541,6 +1541,7 @@ class Dashboard extends MY_Controller {
                 }
             }
 
+            $isTimeChanged = false;
             //Check if event date is changed or not
             if(myInArray('eventDate',$changeCheck))
             {
@@ -1559,6 +1560,8 @@ class Dashboard extends MY_Controller {
                         'eventSlug' => $post['eventSlug'],
                         'oldDate' => $eventDetails[0]['eventDate'],
                         'newDate' => $post['eventDate'],
+                        'oldStartTime' => $eventDetails[0]['startTime'],
+                        'oldEndTime' => $eventDetails[0]['endTime'],
                         'costType' => $eventDetails[0]['costType'],
                         'eventPlace' => $eventDetails[0]['eventPlace']
                     );
@@ -1570,10 +1573,68 @@ class Dashboard extends MY_Controller {
                         'eventSlug' => $eventDetails[0]['eventSlug'],
                         'oldDate' => $eventDetails[0]['eventDate'],
                         'newDate' => $post['eventDate'],
+                        'oldStartTime' => $eventDetails[0]['startTime'],
+                        'oldEndTime' => $eventDetails[0]['endTime'],
                         'costType' => $eventDetails[0]['costType'],
                         'eventPlace' => $eventDetails[0]['eventPlace']
                     );
                 }
+
+                if(myInArray('startTime',$changeCheck) || myInArray('endTime',$changeCheck))
+                {
+                    $isTimeChanged = true;
+                    $dateMailData['newStartTime'] = $post['startTime'];
+                    $dateMailData['newEndTime'] = $post['endTime'];
+                }
+                else
+                {
+                    $dateMailData['newStartTime'] = $eventDetails[0]['startTime'];
+                    $dateMailData['newEndTime'] = $eventDetails[0]['endTime'];
+                }
+
+                $allAttendees = $this->dashboard_model->getJoinersInfo($eventId);
+                if(isset($allAttendees) && myIsArray($allAttendees))
+                {
+                    foreach($allAttendees as $key => $row)
+                    {
+                        $dateMailData['attendeeName'] = $row['firstName'];
+                        $dateMailData['emailId'] = $row['emailId'];
+                        $this->sendemail_library->attendeeChangeMail($dateMailData);
+                    }
+                }
+            }
+
+            if((myInArray('startTime',$changeCheck) || myInArray('endTime',$changeCheck)) && !$isTimeChanged)
+            {
+                if($isEventNameChanged)
+                {
+                    $dateMailData = array(
+                        'eventName' => $post['eventName'],
+                        'eventSlug' => $post['eventSlug'],
+                        'oldDate' => $eventDetails[0]['eventDate'],
+                        'newDate' => $post['eventDate'],
+                        'oldStartTime' => $eventDetails[0]['startTime'],
+                        'oldEndTime' => $eventDetails[0]['endTime'],
+                        'costType' => $eventDetails[0]['costType'],
+                        'eventPlace' => $eventDetails[0]['eventPlace']
+                    );
+                }
+                else
+                {
+                    $dateMailData = array(
+                        'eventName' => $eventDetails[0]['eventName'],
+                        'eventSlug' => $eventDetails[0]['eventSlug'],
+                        'oldDate' => $eventDetails[0]['eventDate'],
+                        'newDate' => $post['eventDate'],
+                        'oldStartTime' => $eventDetails[0]['startTime'],
+                        'oldEndTime' => $eventDetails[0]['endTime'],
+                        'costType' => $eventDetails[0]['costType'],
+                        'eventPlace' => $eventDetails[0]['eventPlace']
+                    );
+                }
+
+                $dateMailData['newStartTime'] = $post['startTime'];
+                $dateMailData['newEndTime'] = $post['endTime'];
 
                 $allAttendees = $this->dashboard_model->getJoinersInfo($eventId);
                 if(isset($allAttendees) && myIsArray($allAttendees))
@@ -2380,6 +2441,7 @@ class Dashboard extends MY_Controller {
         //Sending mails if event date is Modified!
         if(isset($editRecord) && myIsArray($editRecord))
         {
+            $isTimeChanged = false;
             if(isset($editRecord['eventDate']))
             {
                 $dateMailData = array(
@@ -2390,6 +2452,79 @@ class Dashboard extends MY_Controller {
                     'costType' => $externalAPIData['costType'],
                     'eventPlace' => $externalAPIData['eventPlace']
                 );
+
+                if(isset($editRecord['startTime']) || isset($editRecord['endTime']))
+                {
+                    $isTimeChanged = true;
+                    $dateMailData['newStartTime'] = $externalAPIData['startTime'];
+                    $dateMailData['newEndTime'] = $externalAPIData['endTime'];
+                    if(isset($editRecord['startTime']))
+                    {
+                        $dateMailData['oldStartTime'] = $editRecord['startTime'];
+                    }
+                    else
+                    {
+                        $dateMailData['oldStartTime'] = $externalAPIData['startTime'];
+                    }
+
+                    if(isset($editRecord['endTime']))
+                    {
+                        $dateMailData['oldEndTime'] = $editRecord['endTime'];
+                    }
+                    else
+                    {
+                        $dateMailData['oldEndTime'] = $externalAPIData['endTime'];
+                    }
+                }
+                else
+                {
+                    $dateMailData['newStartTime'] = $externalAPIData['startTime'];
+                    $dateMailData['newEndTime'] = $externalAPIData['endTime'];
+                    $dateMailData['oldStartTime'] = $externalAPIData['startTime'];
+                    $dateMailData['oldEndTime'] = $externalAPIData['endTime'];
+                }
+                $allAttendees = $this->dashboard_model->getJoinersInfo($eventId);
+                if(isset($allAttendees) && myIsArray($allAttendees))
+                {
+                    foreach($allAttendees as $key => $row)
+                    {
+                        $dateMailData['attendeeName'] = $row['firstName'];
+                        $dateMailData['emailId'] = $row['emailId'];
+                        $this->sendemail_library->attendeeChangeMail($dateMailData);
+                    }
+                }
+            }
+
+            if((isset($editRecord['startTime']) || isset($editRecord['endTime'])) && !$isTimeChanged)
+            {
+                $dateMailData = array(
+                    'eventName' => $externalAPIData['eventName'],
+                    'eventSlug' => $externalAPIData['eventSlug'],
+                    'oldDate' => $editRecord['eventDate'],
+                    'newDate' => $externalAPIData['eventDate'],
+                    'costType' => $externalAPIData['costType'],
+                    'eventPlace' => $externalAPIData['eventPlace']
+                );
+
+                $dateMailData['newStartTime'] = $externalAPIData['startTime'];
+                $dateMailData['newEndTime'] = $externalAPIData['endTime'];
+                if(isset($editRecord['startTime']))
+                {
+                    $dateMailData['oldStartTime'] = $editRecord['startTime'];
+                }
+                else
+                {
+                    $dateMailData['oldStartTime'] = $externalAPIData['startTime'];
+                }
+
+                if(isset($editRecord['endTime']))
+                {
+                    $dateMailData['oldEndTime'] = $editRecord['endTime'];
+                }
+                else
+                {
+                    $dateMailData['oldEndTime'] = $externalAPIData['endTime'];
+                }
 
                 $allAttendees = $this->dashboard_model->getJoinersInfo($eventId);
                 if(isset($allAttendees) && myIsArray($allAttendees))

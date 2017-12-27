@@ -10,9 +10,12 @@
         Dear <?php echo ucfirst(trim($mailData['attendeeName'])); ?>,<br><br>
 
         The organiser has rescheduled "<?php echo trim($mailData['eventName']); ?>" from
-        "<?php $d = date_create($mailData['oldDate']); echo date_format($d,DATE_FORMAT_UI);?>" to
-        "<?php $d = date_create($mailData['newDate']); echo date_format($d,DATE_FORMAT_UI);?>".<br><br>
-        In case you can't make it on "<?php $d = date_create($mailData['newDate']); echo date_format($d,DATE_FORMAT_UI);?>",
+        "<?php $d = date_create($mailData['oldDate']); echo date_format($d,DATE_FORMAT_UI);?>,
+        <?php echo date('h:i a',strtotime($mailData['oldStartTime'])).'-'.date('h:i a',strtotime($mailData['oldEndTime']));?>" to
+        "<?php $d = date_create($mailData['newDate']); echo date_format($d,DATE_FORMAT_UI);?>,
+        <?php echo date('h:i a',strtotime($mailData['newStartTime'])).'-'.date('h:i a',strtotime($mailData['newEndTime']));?>".<br><br>
+        In case you can't make it on "<?php $d = date_create($mailData['newDate']); echo date_format($d,DATE_FORMAT_UI);?>,
+        <?php echo date('h:i a',strtotime($mailData['newStartTime'])).'-'.date('h:i a',strtotime($mailData['newEndTime']));?>",
         just cancel your attendance.
         <?php
             if($mailData['costType'] != EVENT_FREE)
