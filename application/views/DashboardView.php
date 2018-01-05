@@ -2917,6 +2917,8 @@
         });
     });
     $(document).on('click','.agree_btn',function () {
+        //mugdialog.close();
+        $('.renew-mug .close').click();
         var selectedCard = $('#selectedMug').val();
         var paymentId = $('#mugPaymentId').val();
         var mugEmail = $('#mugEmail').val();

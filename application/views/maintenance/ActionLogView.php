@@ -41,7 +41,7 @@
                                     <th>Location</th>
                                     <th>Log By</th>
                                     <?php
-                                    if($this->userType == FINANCE_APPROVER)
+                                    if($this->userType == FINANCE_APPROVER || $this->userType == MAINTENANCE_APPROVER2)
                                     {
                                         ?>
                                         <th>Approx Cost</th>
@@ -140,7 +140,7 @@
                                                 <td><?php echo $row['loggedUser'];?></td>
                                                 <td>
                                                     <?php
-                                                    if($this->userType == FINANCE_APPROVER)
+                                                    if($this->userType == FINANCE_APPROVER || $this->userType == MAINTENANCE_APPROVER2)
                                                     {
                                                         if(isset($row['approxCost']))
                                                         {
@@ -200,7 +200,7 @@
                                                             {
                                                                 if($row['status'] == LOG_STATUS_PENDING_APPROVAL)
                                                                 {
-                                                                    if((double)$row['approxCost'] >= 10000 && (double)$row['approxCost'] < 50000)
+                                                                    if((double)$row['approxCost'] > 15000 && (double)$row['approxCost'] < 50000)
                                                                     {
                                                                         ?>
                                                                         <a class="track-me" href="<?php echo base_url().'maintenance/approveJob/'.$row['complaintId'];?>">Approve</a>&nbsp;|&nbsp;
@@ -208,7 +208,7 @@
                                                                         <a href="#" data-complaintId="<?php echo $row['complaintId'];?>" class="postpone-btn track-me">Postpone</a>
                                                                         <?php
                                                                     }
-                                                                    elseif((double)$row['approxCost'] < 10000)
+                                                                    elseif((double)$row['approxCost'] < 15000)
                                                                     {
                                                                         echo 'Pending Budget Approval';
                                                                     }
@@ -234,7 +234,7 @@
                                                                         <a href="#" data-complaintId="<?php echo $row['complaintId'];?>" class="postpone-btn track-me">Postpone</a>
                                                                         <?php
                                                                     }
-                                                                    elseif((double)$row['approxCost'] < 10000)
+                                                                    elseif((double)$row['approxCost'] < 15000)
                                                                     {
                                                                         echo 'Pending Budget Approval';
                                                                     }
@@ -245,10 +245,14 @@
                                                                 }
                                                                 elseif($row['status'] == LOG_STATUS_PENDING_BUDGET_APPROVAL)
                                                                 {
-                                                                    echo 'Pending Budget Approval';
+                                                                    //echo 'Pending Budget Approval';
+                                                                    ?>
+                                                                    <a href="#" data-complaintId="<?php echo $row['complaintId'];?>" data-compAmt="<?php echo $row['approxCost'];?>"
+                                                                       class="update-budget track-me">Allocate Amount</a>
+                                                                    <?php
                                                                 }
                                                             }
-                                                            elseif($this->userType == FINANCE_APPROVER)
+                                                            elseif($this->userType == FINANCE_APPROVER || $this->userType == MAINTENANCE_APPROVER2)
                                                             {
                                                                 if($row['status'] == LOG_STATUS_PENDING_BUDGET_APPROVAL)
                                                                 {
@@ -259,7 +263,7 @@
                                                                 }
                                                                 else
                                                                 {
-                                                                    if((double)$row['approxCost'] >= 10000 && (double)$row['approxCost'] < 50000)
+                                                                    if((double)$row['approxCost'] > 15000 && (double)$row['approxCost'] < 50000)
                                                                     {
                                                                         echo 'Pending Approval Lvl 1';
                                                                     }
@@ -280,7 +284,7 @@
                                                                 }
                                                                 elseif($row['status'] == LOG_STATUS_PENDING_APPROVAL)
                                                                 {
-                                                                    if((double)$row['approxCost'] >= 10000 && (double)$row['approxCost'] < 50000)
+                                                                    if((double)$row['approxCost'] > 15000 && (double)$row['approxCost'] < 50000)
                                                                     {
                                                                         echo 'Pending Approval Lvl 1';
                                                                     }
@@ -474,7 +478,7 @@
                                                             <a href="#" class="fetch-budget-info">Payment Info</a>
                                                         </div>
                                                         <?php
-                                                            if(isset($row['jobInfo']['vendorId']) && $this->userType == FINANCE_APPROVER)
+                                                            if(isset($row['jobInfo']['vendorId']) && ($this->userType == FINANCE_APPROVER || $this->userType == MAINTENANCE_APPROVER2))
                                                             {
                                                                 ?>
                                                                 <a href="#" data-vendorId="<?php echo $row['jobInfo']['vendorId'];?>" class="vendor-info-fetch">Vendor Info</a>
@@ -771,6 +775,34 @@
                             </table>
                         </div>
                         <div id="payfilter" class="tab-pane fade">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <?php
+                                        if(isset($allTotAmt) && isset($allClosedTotAmt))
+                                        {
+                                            $allLocs = array();
+                                            $allTot = array();
+                                            $allClosedTot = array();
+                                            foreach($allTotAmt as $key => $row)
+                                            {
+                                                $allLocs[] = $row['locName'];
+                                                $allTot[] = $row['locAmount'];
+                                            }
+                                            foreach($allClosedTotAmt as $key => $row)
+                                            {
+                                                $allClosedTot[] = $row['locAmount'];
+                                            }
+                                            ?>
+                                            <input type="hidden" id="allLocs" value="<?php echo implode(',',$allLocs);?>"/>
+                                            <input type="hidden" id="allTotAmt" value="<?php echo implode(',',$allTot);?>"/>
+                                            <input type="hidden" id="allClosedTotAmt" value="<?php echo implode(',',$allClosedTot);?>"/>
+                                            <?php
+                                        }
+                                    ?>
+                                    <canvas id="cost-canvas" class="mygraphs"></canvas>
+                                </div>
+                            </div>
+                            <br>
                             <div class="row">
                                 <div class="col-xs-12">
                                     <br>
@@ -1579,7 +1611,7 @@
             $('#budgetModal #complaintId').val(compId);
             $('#budgetModal .initial-compAmount').html('Rs '+compAmt);
             $('#budgetModal #totAmt').val(compAmt);
-            if(Number(compAmt) > 10000)
+            if(Number(compAmt) > 15000)
             {
                 //$('#budgetModal .split-btn').removeClass('hide');
             }
@@ -2017,7 +2049,7 @@
            bootbox.alert('Invoice is Required!');
            return false;
        }*/
-       var totAmt=acCost;
+       /*var totAmt=acCost;
        if(optTax != 0)
        {
            totAmt = acCost+optTax;
@@ -2030,7 +2062,7 @@
        {
             bootbox.alert('Amount can\'t be more then approx cost');
             return false;
-       }
+       }*/
        var errUrl = base_url+'maintenance/finalUpdate';
        showCustomLoader();
        $.ajax({
@@ -2384,5 +2416,65 @@
             $('#priorityModal').modal('show');
         }
     });
+</script>
+<script>
+
+
+    var barChartData = {
+        labels: $('#allLocs').val().split(','),
+        datasets: [{
+            label: 'Dataset 1',
+            backgroundColor: window.chartColors.red,
+            data: [
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor()
+            ]
+        }, {
+            label: 'Dataset 2',
+            backgroundColor: window.chartColors.blue,
+            data: [
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor()
+            ]
+        }]
+
+    };
+    window.onload = function() {
+        var ctx = document.getElementById("cost-canvas").getContext("2d");
+        window.myBar = new Chart(ctx, {
+            type: 'bar',
+            data: barChartData,
+            options: {
+                title:{
+                    display:true,
+                    text:"Chart.js Bar Chart - Stacked"
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false
+                },
+                responsive: true,
+                scales: {
+                    xAxes: [{
+                        stacked: true,
+                    }],
+                    yAxes: [{
+                        stacked: true
+                    }]
+                }
+            }
+        });
+    };
+
 </script>
 </html>

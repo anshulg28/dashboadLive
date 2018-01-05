@@ -103,7 +103,20 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <button type="button" class="btn btn-danger col-sm-2 my-marginDown" data-toggle="modal" data-target="#subjectModal" >Select Subject</button>
+                                            <?php
+                                                if($mailType == BIRTHDAY_MAIL)
+                                                {
+                                                    ?>
+                                                    <button type="button" class="btn btn-danger col-sm-2 my-marginDown" data-toggle="modal" data-target="#subjectModal" disabled>Select Subject</button>
+                                                    <?php
+                                                }
+                                                else
+                                                {
+                                                    ?>
+                                                    <button type="button" class="btn btn-danger col-sm-2 my-marginDown" data-toggle="modal" data-target="#subjectModal" >Select Subject</button>
+                                                    <?php
+                                                }
+                                            ?>
                                             <div class="col-sm-10 my-marginDown">
                                                 <input type="text" name="mailSubject" class="form-control" id="mailSubject" placeholder="Subject"
                                                        <?php
@@ -130,7 +143,20 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <button type="button" class="btn btn-danger col-sm-2 my-marginDown" data-toggle="modal" data-target="#bodyModal" >Select Body</button>
+                                            <?php
+                                            if($mailType == BIRTHDAY_MAIL)
+                                            {
+                                                ?>
+                                                <button type="button" class="btn btn-danger col-sm-2 my-marginDown" data-toggle="modal" data-target="#bodyModal" disabled>Select Body</button>
+                                                <?php
+                                            }
+                                            else
+                                            {
+                                                ?>
+                                                <button type="button" class="btn btn-danger col-sm-2 my-marginDown" data-toggle="modal" data-target="#bodyModal" >Select Body</button>
+                                                <?php
+                                            }
+                                            ?>
                                             <div class="col-sm-10 my-marginDown">
                                                 <textarea name="mailBody" class="form-control" id="mailBody" placeholder="Body" <?php
                                                 if($mailList['status'] === true)
@@ -148,7 +174,20 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-sm-offset-2 col-sm-10">
-                                                <button type="submit" class="btn btn-primary">Send Mail(s)</button>
+                                                <?php
+                                                if($mailType == BIRTHDAY_MAIL)
+                                                {
+                                                    ?>
+                                                    <button type="submit" class="btn btn-primary" disabled>Send Mail(s)</button>
+                                                    <?php
+                                                }
+                                                else
+                                                {
+                                                    ?>
+                                                    <button type="submit" class="btn btn-primary">Send Mail(s)</button>
+                                                    <?php
+                                                }
+                                                ?>
                                             </div>
                                         </div>
                                         <br>

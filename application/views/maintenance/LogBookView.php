@@ -167,11 +167,11 @@
             return false;
         }
 
-        if($('input[name="problemMedia"]').val() == '')
+        /*if($('input[name="problemMedia"]').val() == '')
         {
             bootbox.alert('Photo or Video is required!');
             return false;
-        }
+        }*/
 
         if(typeof $('#locId') !== 'undefined' && $('#locId').val() == '')
         {

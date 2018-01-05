@@ -570,15 +570,33 @@ class Mugclub_Model extends CI_Model
 
     }
 
+    function getCurrentBirthdayMails()
+    {
+        $query = "SELECT mugId, firstName, emailId, birthDate, homeBase 
+                  FROM mugmaster 
+                  WHERE birthDate IS NOT NULL AND birthDate != '0000-00-00' 
+                  AND membershipEnd >= CURRENT_DATE() AND CONCAT(YEAR(CURRENT_DATE()),'-',DATE_FORMAT(birthDate,'%m-%d')) = CURRENT_DATE() AND 
+                  birthdayMailStatus = 0 ORDER BY DATE_FORMAT( birthDate, '%m-%d' ) DESC ";
+        $result = $this->db->query($query)->result_array();
+        $data['expiryMugList'] = $result;
+        if(myIsArray($result))
+        {
+            $data['status'] = true;
+        }
+        else
+        {
+            $data['status'] = false;
+        }
+
+        return $data;
+    }
     public function getBirthdayMugsList($locSort = false, $locArray = '')
     {
         $query = "SELECT mugId, firstName, emailId, birthDate, homeBase "
             ." FROM mugmaster "
             ."WHERE birthDate IS NOT NULL AND birthDate != '0000-00-00' AND membershipEnd >= CURRENT_DATE() "
-            ."AND DATE_FORMAT(birthDate,'%m-%d') BETWEEN DATE_FORMAT( (CURRENT_DATE() - INTERVAL 1 WEEK ) , '%m-%d')"
-            ." AND DATE_FORMAT( CURRENT_DATE() , '%m-%d' ) AND birthdayMailStatus = 0 "
-            ."AND CONCAT( YEAR( CURRENT_DATE( ) ) ,  '-', MONTH( birthDate ) ,  '-', DAY( birthDate ) ) > membershipStart"
-            ." AND CONCAT( YEAR( CURRENT_DATE( ) ) ,  '-', MONTH( birthDate ) ,  '-', DAY( birthDate ) ) <= membershipEnd";
+            ."AND (CONCAT(YEAR(CURRENT_DATE()),'-',DATE_FORMAT(birthDate,'%m-%d')) >= (CURRENT_DATE() - INTERVAL 1 WEEK )"
+            ." AND CONCAT(YEAR(CURRENT_DATE()),'-',DATE_FORMAT(birthDate,'%m-%d')) <= CURRENT_DATE()) ";
         if($locSort === true)
         {
             $query .= ' AND homeBase IN('.$locArray.')';

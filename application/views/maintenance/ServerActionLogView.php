@@ -355,7 +355,7 @@
                                                     {
                                                         $closeCount++;
                                                         ?>
-                                                        <input type="checkbox" name="jobs" data-media="<?php if($ifMedia){echo '1';}else{echo '0';} ?>" value="<?php echo $row['complaintId'];?>"/>
+                                                        <input type="checkbox" data-openMedia="<?php if(isset($row['problemMedia'])){echo '1';}else{echo '0';}?>" name="jobs" data-media="<?php if($ifMedia){echo '1';}else{echo '0';} ?>" value="<?php echo $row['complaintId'];?>"/>
                                                         <?php
                                                     }
                                                 ?>
@@ -571,11 +571,14 @@
         $('#closeTab input[name="jobs"]').each(function(i,val){
              if($(val).is(':checked'))
              {
-                 if($(val).attr('data-media') == '0')
+                 if($(val).attr('data-openMedia') == '1')
                  {
-                     falseMedia = true;
-                     bootbox.alert('One of the job has missing media proof!');
-                     return false;
+                     if($(val).attr('data-media') == '0')
+                     {
+                         falseMedia = true;
+                         bootbox.alert('One of the job has missing media proof!');
+                         return false;
+                     }
                  }
                  closeJobs.push($(val).val());
              }

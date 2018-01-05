@@ -150,13 +150,13 @@ class Maintenance extends MY_Controller {
             $media = $post['problemMedia'];
             unset($post['problemMedia']);
         }
-        if($media == '')
+        /*if($media == '')
         {
             $data['errorMsg'] = 'Error: No Job Media Provided!';
             $data['status'] = false;
             echo json_encode($data);
             return false;
-        }
+        }*/
         if(!isset($post['locId']))
         {
             $post['locId'] = $this->currentLocation;
@@ -247,6 +247,8 @@ class Maintenance extends MY_Controller {
         $data['mainBalance'] = $this->calcMainBalance();
         $data['tapsTotal'] = $this->maintenance_model->showTotTapAmt();
         $data['openTot'] = $this->maintenance_model->showOpenTotAmt();
+        $data['allTotAmt'] = $this->maintenance_model->getTotAmtByTap();
+        $data['allClosedTotAmt'] = $this->maintenance_model->getTotClosedAmtByTap();
 
         $data['globalStyle'] = $this->dataformatinghtml_library->getGlobalStyleHtml($data);
         $data['globalJs'] = $this->dataformatinghtml_library->getGlobalJsHtml($data);
@@ -655,7 +657,7 @@ class Maintenance extends MY_Controller {
                 }
             }
 
-            if((double)$post['approxCost'] <= 5000)
+            if((double)$post['approxCost'] <= 15000)
             {
                 $post['status']  = LOG_STATUS_IN_PROGRESS;
                 $details = array(
@@ -668,11 +670,11 @@ class Maintenance extends MY_Controller {
 
                 $this->maintenance_model->saveBudget($details);
             }
-            elseif((double)$post['approxCost'] <= 10000 )
+            /*elseif((double)$post['approxCost'] < 15000 )
             {
                 $post['status'] = LOG_STATUS_PENDING_BUDGET_APPROVAL;
-            }
-            elseif((double)$post['approxCost'] > 10000)
+            }*/
+            elseif((double)$post['approxCost'] > 15000)
             {
                 $post['status'] = LOG_STATUS_PENDING_APPROVAL;
             }

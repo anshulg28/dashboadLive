@@ -116,7 +116,7 @@ class Maintenance_Model extends CI_Model
     {
         if($locId != '')
         {
-            $query = "SELECT clm.*, lm.locName, wam.areaName, wtm.typeName, wst.subTypeName, um.userName, jmm.solutionMedia, jmm.sMediaType
+            $query = "SELECT clm.*, lm.locName, wam.areaName, wtm.typeName, wst.subTypeName, um.userName,jmm.problemMedia, jmm.solutionMedia, jmm.sMediaType
                   FROM complaintlogmaster clm 
                   LEFT JOIN locationmaster lm ON lm.id = clm.locId 
                   LEFT JOIN workareamaster wam ON clm.workAreaId = wam.areaId
@@ -462,6 +462,28 @@ class Maintenance_Model extends CI_Model
                 LEFT JOIN complaintlogmaster clm ON fsm.jobId = clm.complaintId
                 LEFT JOIN locationmaster lm ON clm.locId = lm.id
                 WHERE DATE(fsm.payDate) >= '".$startDate."' AND DATE(fsm.payDate) <= '".$endDate."' AND fsm.receiveDate IS NULL";
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+
+    function getTotAmtByTap()
+    {
+        $query = "SELECT lm.locName, sum(clm.approxCost) as 'locAmount' 
+                  FROM `complaintlogmaster` clm 
+                  LEFT JOIN locationmaster lm ON clm.locId = lm.id 
+                  GROUP BY lm.id";
+
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+    function getTotClosedAmtByTap()
+    {
+        $query = "SELECT lm.locName, sum(clm.approxCost) as 'locAmount' 
+                  FROM `complaintlogmaster` clm 
+                  LEFT JOIN locationmaster lm ON clm.locId = lm.id 
+                  WHERE clm.status = ".LOG_STATUS_CLOSED."
+                  GROUP BY lm.id";
+
         $result = $this->db->query($query)->result_array();
         return $result;
     }

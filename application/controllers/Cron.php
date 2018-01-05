@@ -1609,7 +1609,7 @@ class Cron extends MY_Controller
     {
         $this->load->model('mailers_model');
         $this->load->model('users_model');
-        $birthMails = $this->mugclub_model->getBirthdayMugsList();
+        $birthMails = $this->mugclub_model->getCurrentBirthdayMails();
         $mailResult = $this->mailers_model->getAllTemplatesByType(BIRTHDAY_MAIL);
 
         if($birthMails['status'] == true)
@@ -1808,7 +1808,7 @@ class Cron extends MY_Controller
             fclose($file1);
             $content = '<html><body><p>Monthly Employee Expenditure Report<br>PFA</p></body></html>';
 
-            $this->sendemail_library->sendEmail(array('purva@brewcraftsindia.com','hasti@brewcraftsindia.com','saha@brewcraftsindia.com','savio@brewcraftsindia.com','amit@brewcraftsindia.com','taronish@brewcraftsindia.com','pranjal.rathi@rubycapital.net'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+            $this->sendemail_library->sendEmail(array('purva@brewcraftsindia.com','hasti@brewcraftsindia.com','saha@brewcraftsindia.com','savio@brewcraftsindia.com','amit@brewcraftsindia.com','taronish@brewcraftsindia.com','pranjal.rathi@rubycapital.net','jayant@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
                 ,'admin@brewcraftsindia.com','Staff wallet usage report '.date('m_Y', strtotime('-1 month')),$content,array("./uploads/monthly_wallet_detail_transactions_".date('m_Y', strtotime('-1 month')).".csv",
                     "./uploads/monthly_wallet_usage_".date('m_Y', strtotime('-1 month')).".csv"));
             try
