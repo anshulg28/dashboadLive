@@ -796,8 +796,8 @@
                                                     ?>
                                                     <tr>
                                                         <td><?php echo $allTotAmt[$i]['locName']; ?></td>
-                                                        <td><?php echo $allTotAmt[$i]['locAmount']; ?></td>
-                                                        <td><?php echo $allClosedTotAmt[$i]['locAmount']; ?></td>
+                                                        <td>Rs <?php echo number_format($allTotAmt[$i]['locAmount']); ?></td>
+                                                        <td>Rs <?php echo number_format($allClosedTotAmt[$i]['locAmount']); ?></td>
                                                     </tr>
                                                     <?php
                                                 }
