@@ -236,13 +236,14 @@
                             console.log(data);
                             if(data.status === true)
                             {
-                                localStorageUtil.setLocal('foundM3','1',(23 * 60 * 60 * 1000));
+                                localStorageUtil.setLocal('foundM3','0',(23 * 60 * 60 * 1000));
+                                /*localStorageUtil.setLocal('foundM3','1',(23 * 60 * 60 * 1000));
                                 if(!$('.notification-indicator').hasClass('notification-animate-cls'))
                                 {
                                     $('.notification-indicator').addClass('notification-animate-cls');
                                     $('.notification-indicator-mobile').addClass('notification-animate-cls');
                                     $('.notification-indicator-big').addClass('notification-animate-cls');
-                                }
+                                }*/
                             }
                             else
                             {

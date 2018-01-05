@@ -780,7 +780,32 @@
                                     <?php
                                         if(isset($allTotAmt) && isset($allClosedTotAmt))
                                         {
-                                            $allLocs = array();
+                                            ?>
+                                            <table class="table table-responsive">
+                                                <thead>
+                                                <tr>
+                                                    <th>Taproom</th>
+                                                    <th>Approx Cost</th>
+                                                    <th>Actual Spend</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <?php
+                                                for($i=0;$i<count($allTotAmt);$i++)
+                                                {
+                                                    ?>
+                                                    <tr>
+                                                        <td><?php echo $allTotAmt[$i]['locName']; ?></td>
+                                                        <td><?php echo $allTotAmt[$i]['locAmount']; ?></td>
+                                                        <td><?php echo $allClosedTotAmt[$i]['locAmount']; ?></td>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                                ?>
+                                                </tbody>
+                                            </table>
+                                            <?php
+/*                                            $allLocs = array();
                                             $allTot = array();
                                             $allClosedTot = array();
                                             foreach($allTotAmt as $key => $row)
@@ -792,14 +817,14 @@
                                             {
                                                 $allClosedTot[] = $row['locAmount'];
                                             }
-                                            ?>
-                                            <input type="hidden" id="allLocs" value="<?php echo implode(',',$allLocs);?>"/>
-                                            <input type="hidden" id="allTotAmt" value="<?php echo implode(',',$allTot);?>"/>
-                                            <input type="hidden" id="allClosedTotAmt" value="<?php echo implode(',',$allClosedTot);?>"/>
+                                            */?>
+                                            <!--<input type="hidden" id="allLocs" value="<?php /*echo implode(',',$allLocs);*/?>"/>
+                                            <input type="hidden" id="allTotAmt" value="<?php /*echo implode(',',$allTot);*/?>"/>
+                                            <input type="hidden" id="allClosedTotAmt" value="<?php /*echo implode(',',$allClosedTot);*/?>"/>-->
                                             <?php
                                         }
                                     ?>
-                                    <canvas id="cost-canvas" class="mygraphs"></canvas>
+                                    <!--<canvas id="cost-canvas" class="mygraphs"></canvas>-->
                                 </div>
                             </div>
                             <br>
@@ -2420,32 +2445,16 @@
 <script>
 
 
-    var barChartData = {
+    /*var barChartData = {
         labels: $('#allLocs').val().split(','),
         datasets: [{
-            label: 'Dataset 1',
-            backgroundColor: window.chartColors.red,
-            data: [
-                randomScalingFactor(),
-                randomScalingFactor(),
-                randomScalingFactor(),
-                randomScalingFactor(),
-                randomScalingFactor(),
-                randomScalingFactor(),
-                randomScalingFactor()
-            ]
+            label: 'Actual Spend',
+            backgroundColor: 'red',
+            data: $('#allClosedTotAmt').val().split(',')
         }, {
-            label: 'Dataset 2',
-            backgroundColor: window.chartColors.blue,
-            data: [
-                randomScalingFactor(),
-                randomScalingFactor(),
-                randomScalingFactor(),
-                randomScalingFactor(),
-                randomScalingFactor(),
-                randomScalingFactor(),
-                randomScalingFactor()
-            ]
+            label: 'Approx Cost',
+            backgroundColor: 'skyblue',
+            data:  $('#allTotAmt').val().split(',')
         }]
 
     };
@@ -2474,7 +2483,7 @@
                 }
             }
         });
-    };
+    };*/
 
 </script>
 </html>
