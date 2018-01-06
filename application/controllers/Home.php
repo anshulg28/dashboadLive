@@ -773,6 +773,42 @@ class Home extends MY_Controller {
         $this->dashboard_model->saveDashLogs($logDetails);
         redirect(base_url().'empDetails');
     }
+    function snoozeStaff($id)
+    {
+        if(isSessionVariableSet($this->isUserSession) === false)
+        {
+            redirect(base_url());
+        }
+        $details = array(
+            'ifActive' => '0'
+        );
+        $this->dashboard_model->updateStaffRecord($id,$details);
+        $logDetails = array(
+            'logMessage' => 'Function: snoozeStaff, User: '.$this->userId.' Staff: '.$id,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
+        redirect(base_url().'empDetails');
+    }
+    function unSnoozeStaff($id)
+    {
+        if(isSessionVariableSet($this->isUserSession) === false)
+        {
+            redirect(base_url());
+        }
+        $details = array(
+            'ifActive' => '1'
+        );
+        $this->dashboard_model->updateStaffRecord($id,$details);
+        $logDetails = array(
+            'logMessage' => 'Function: unSnoozeStaff, User: '.$this->userId.' Staff: '.$id,
+            'fromWhere' => 'Dashboard',
+            'insertedDT' => date('Y-m-d H:i:s')
+        );
+        $this->dashboard_model->saveDashLogs($logDetails);
+        redirect(base_url().'empDetails');
+    }
     function freeStaff($id)
     {
         if(isSessionVariableSet($this->isUserSession) === false)

@@ -251,9 +251,33 @@ class Maintenance extends MY_Controller {
         $data['allClosedTotAmt'] = $this->maintenance_model->getTotClosedAmtByTap();
 
         //getting monthly cost
-        $data['monthlyTotAmt'] = $this->maintenance_model->getTotAmtByTap(true);
-        $data['monthlyClosedTotAmt'] = $this->maintenance_model->getTotClosedAmtByTap(true);
-
+        $monthlyTotAmt = $this->maintenance_model->getTotAmtByTap(true);
+        $monthlyClosedTotAmt = $this->maintenance_model->getTotClosedAmtByTap(true);
+        $allLocs = $this->locations_model->getAllActiveLocations();
+        $monthlyFinal = array();
+        foreach($allLocs as $key => $row)
+        {
+            $monthlyFinal[$key]['locName'] = $row['locName'];
+            $monthlyFinal[$key]['totAmt'] = 0;
+            $monthlyFinal[$key]['totClosedAmt'] = 0;
+            foreach($monthlyTotAmt as $monKey => $monRow)
+            {
+                if($monRow['locId'] == $row['id'])
+                {
+                    $monthlyFinal[$key]['totAmt'] = $monRow['locAmount'];
+                    break;
+                }
+            }
+            foreach($monthlyClosedTotAmt as $monKey => $monRow)
+            {
+                if($monRow['locId'] == $row['id'])
+                {
+                    $monthlyFinal[$key]['totClosedAmt'] = $monRow['locAmount'];
+                    break;
+                }
+            }
+        }
+        $data['monthlyFinal'] = $monthlyFinal;
         $data['globalStyle'] = $this->dataformatinghtml_library->getGlobalStyleHtml($data);
         $data['globalJs'] = $this->dataformatinghtml_library->getGlobalJsHtml($data);
         $data['headerView'] = $this->dataformatinghtml_library->getHeaderHtml($data);

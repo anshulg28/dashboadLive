@@ -715,9 +715,9 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <br>
-                                    <p>Total amount requested and spend in the Month of <?php $d = date_create(date('Y-m-d')); echo date_format($d,'M j');?></p>
+                                    <p>Total amount requested and spend in the Month of <?php $d = date_create(date('Y-m-d')); echo date_format($d,'M Y');?></p>
                                     <?php
-                                    if(isset($monthlyTotAmt) && isset($monthlyClosedTotAmt))
+                                    if(isset($monthlyFinal) && myIsArray($monthlyFinal))
                                     {
                                         ?>
                                         <table class="table table-responsive">
@@ -730,13 +730,13 @@
                                             </thead>
                                             <tbody>
                                             <?php
-                                            for($i=0;$i<count($monthlyTotAmt);$i++)
+                                            foreach($monthlyFinal as $key => $row)
                                             {
                                                 ?>
                                                 <tr>
-                                                    <td><?php echo $monthlyTotAmt[$i]['locName']; ?></td>
-                                                    <td>Rs <?php echo number_format($monthlyTotAmt[$i]['locAmount']); ?></td>
-                                                    <td>Rs <?php echo number_format($monthlyClosedTotAmt[$i]['locAmount']); ?></td>
+                                                    <td><?php echo $row['locName']; ?></td>
+                                                    <td>Rs <?php echo number_format($row['totAmt']); ?></td>
+                                                    <td>Rs <?php echo number_format($row['totClosedAmt']); ?></td>
                                                 </tr>
                                                 <?php
                                             }
