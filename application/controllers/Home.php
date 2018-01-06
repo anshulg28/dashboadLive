@@ -780,7 +780,7 @@ class Home extends MY_Controller {
             redirect(base_url());
         }
         $details = array(
-            'ifActive' => '0'
+            'ifActive' => '2'
         );
         $this->dashboard_model->updateStaffRecord($id,$details);
         $logDetails = array(

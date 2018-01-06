@@ -48,7 +48,18 @@
                                         ?>
                                         <div for="clock<?php echo $row['id'];?>" class="mdl-tooltip">Put On Hold</div>
                                         <a class="pageTracker" id="clock<?php echo $row['id'];?>" href="<?php echo base_url().'home/snoozeStaff/'.$row['id'];?>">
-                                            <i class="fa fa-clock-o fa-15x my-success-text"></i></a>&nbsp;
+                                            <i class="fa fa-hand-paper-o fa-15x my-success-text"></i></a>&nbsp;
+                                        <div for="bulb<?php echo $row['id'];?>" class="mdl-tooltip">Active</div>
+                                        <a class="pageTracker" id="bulb<?php echo $row['id'];?>" href="<?php echo base_url().'blockStaff/'.$row['id'];?>">
+                                            <i class="fa fa-lightbulb-o fa-15x my-success-text"></i></a>&nbsp;
+                                        <?php
+                                    }
+                                    elseif($row['ifActive'] == ON_HOLD)
+                                    {
+                                        ?>
+                                        <div for="clock<?php echo $row['id'];?>" class="mdl-tooltip">On Hold</div>
+                                        <a class="pageTracker" id="clock<?php echo $row['id'];?>" href="<?php echo base_url().'home/unSnoozeStaff/'.$row['id'];?>">
+                                            <i class="fa fa-hand-paper-o fa-15x my-yellow-text"></i></a>&nbsp;
                                         <div for="bulb<?php echo $row['id'];?>" class="mdl-tooltip">Active</div>
                                         <a class="pageTracker" id="bulb<?php echo $row['id'];?>" href="<?php echo base_url().'blockStaff/'.$row['id'];?>">
                                             <i class="fa fa-lightbulb-o fa-15x my-success-text"></i></a>&nbsp;
@@ -57,9 +68,6 @@
                                     else
                                     {
                                         ?>
-                                        <div for="clock<?php echo $row['id'];?>" class="mdl-tooltip">On Hold</div>
-                                        <a class="pageTracker" id="clock<?php echo $row['id'];?>" href="<?php echo base_url().'home/unSnoozeStaff/'.$row['id'];?>">
-                                            <i class="fa fa-clock-o fa-15x my-danger-text"></i></a>&nbsp;
                                         <div for="bulb<?php echo $row['id'];?>" class="mdl-tooltip">Terminated</div>
                                         <a class="pageTracker blocked-bulb" data-mob="<?php echo $row['mobNum'];?>" id="bulb<?php echo $row['id'];?>" href="#" data-href="<?php echo base_url().'freeStaff/'.$row['id'];?>">
                                             <i class="fa fa-lightbulb-o fa-15x my-danger-text"></i></a>&nbsp;
