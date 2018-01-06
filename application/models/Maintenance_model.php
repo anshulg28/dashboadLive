@@ -470,7 +470,7 @@ class Maintenance_Model extends CI_Model
     {
         if($isMonthly)
         {
-            $query = "SELECT lm.locName, sum(clm.approxCost) as 'locAmount' 
+            $query = "SELECT lm.locName,clm.locId, sum(clm.approxCost) as 'locAmount' 
                   FROM `complaintlogmaster` clm 
                   LEFT JOIN locationmaster lm ON clm.locId = lm.id
                   WHERE DATE(clm.loggedDT) >= CONCAT(YEAR(CURRENT_DATE()),'-',MONTH(CURRENT_DATE()),'-01') AND 
@@ -479,7 +479,7 @@ class Maintenance_Model extends CI_Model
         }
         else
         {
-            $query = "SELECT lm.locName, sum(clm.approxCost) as 'locAmount' 
+            $query = "SELECT lm.locName,clm.locId, sum(clm.approxCost) as 'locAmount' 
                   FROM `complaintlogmaster` clm 
                   LEFT JOIN locationmaster lm ON clm.locId = lm.id 
                   GROUP BY lm.id";
@@ -492,7 +492,7 @@ class Maintenance_Model extends CI_Model
     {
         if($isMonthly)
         {
-            $query = "SELECT lm.locName, sum(clm.approxCost) as 'locAmount' 
+            $query = "SELECT lm.locName,clm.locId, sum(clm.approxCost) as 'locAmount' 
                   FROM `complaintlogmaster` clm 
                   LEFT JOIN locationmaster lm ON clm.locId = lm.id 
                   WHERE clm.status = ".LOG_STATUS_CLOSED." AND (DATE(clm.loggedDT) >= CONCAT(YEAR(CURRENT_DATE()),'-',MONTH(CURRENT_DATE()),'-01') AND 
@@ -501,7 +501,7 @@ class Maintenance_Model extends CI_Model
         }
         else
         {
-            $query = "SELECT lm.locName, sum(clm.approxCost) as 'locAmount' 
+            $query = "SELECT lm.locName,clm.locId, sum(clm.approxCost) as 'locAmount' 
                   FROM `complaintlogmaster` clm 
                   LEFT JOIN locationmaster lm ON clm.locId = lm.id 
                   WHERE clm.status = ".LOG_STATUS_CLOSED."
