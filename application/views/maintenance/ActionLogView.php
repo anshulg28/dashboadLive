@@ -11,8 +11,8 @@
         <div class="row">
             <div class="col-sm-1 col-xs-0"></div>
             <div class="col-sm-10 col-xs-12 text-right">
-                Maintenance Balance (Rs): <?php echo $mainBalance;?>
-                <input type="hidden" id="mainBalance" value="<?php echo $mainBalance;?>"/>
+                <!--Maintenance Balance (Rs): --><?php /*echo $mainBalance;*/?>
+                <!--<input type="hidden" id="mainBalance" value="<?php /*echo $mainBalance;*/?>"/>-->
             </div>
             <div class="col-sm-1 col-xs-0"></div>
         </div>
@@ -196,52 +196,15 @@
                                                         }
                                                         else
                                                         {
-                                                            if($this->userType == MAINTENANCE_APPROVER1)
+                                                            if($this->userType == MAINTENANCE_APPROVER2)
                                                             {
                                                                 if($row['status'] == LOG_STATUS_PENDING_APPROVAL)
                                                                 {
-                                                                    if((double)$row['approxCost'] > 15000 && (double)$row['approxCost'] < 50000)
-                                                                    {
-                                                                        ?>
-                                                                        <a class="track-me" href="<?php echo base_url().'maintenance/approveJob/'.$row['complaintId'];?>">Approve</a>&nbsp;|&nbsp;
-                                                                        <a href="#" data-complaintId="<?php echo $row['complaintId'];?>" class="decline-btn track-me">Decline</a>&nbsp;|&nbsp;
-                                                                        <a href="#" data-complaintId="<?php echo $row['complaintId'];?>" class="postpone-btn track-me">Postpone</a>
-                                                                        <?php
-                                                                    }
-                                                                    elseif((double)$row['approxCost'] < 15000)
-                                                                    {
-                                                                        echo 'Pending Budget Approval';
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        echo 'Pending Job Approval Lvl 2';
-                                                                    }
-                                                                }
-                                                                elseif($row['status'] == LOG_STATUS_PENDING_BUDGET_APPROVAL)
-                                                                {
-                                                                    echo 'Pending Budget Approval';
-                                                                }
-                                                            }
-                                                            elseif($this->userType == MAINTENANCE_APPROVER2)
-                                                            {
-                                                                if($row['status'] == LOG_STATUS_PENDING_APPROVAL)
-                                                                {
-                                                                    if((double)$row['approxCost'] >= 50000)
-                                                                    {
-                                                                        ?>
-                                                                        <a class="track-me" href="<?php echo base_url().'maintenance/approveJob/'.$row['complaintId'];?>">Approve</a>&nbsp;|&nbsp;
-                                                                        <a href="#" data-complaintId="<?php echo $row['complaintId'];?>" class="decline-btn track-me">Decline</a>&nbsp;|&nbsp;
-                                                                        <a href="#" data-complaintId="<?php echo $row['complaintId'];?>" class="postpone-btn track-me">Postpone</a>
-                                                                        <?php
-                                                                    }
-                                                                    elseif((double)$row['approxCost'] < 15000)
-                                                                    {
-                                                                        echo 'Pending Budget Approval';
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        echo 'Pending Job Approval Lvl 1';
-                                                                    }
+                                                                    ?>
+                                                                    <a class="track-me" href="<?php echo base_url().'maintenance/approveJob/'.$row['complaintId'];?>">Approve</a>&nbsp;|&nbsp;
+                                                                    <a href="#" data-complaintId="<?php echo $row['complaintId'];?>" class="decline-btn track-me">Decline</a>&nbsp;|&nbsp;
+                                                                    <a href="#" data-complaintId="<?php echo $row['complaintId'];?>" class="postpone-btn track-me">Postpone</a>
+                                                                    <?php
                                                                 }
                                                                 elseif($row['status'] == LOG_STATUS_PENDING_BUDGET_APPROVAL)
                                                                 {
@@ -250,28 +213,6 @@
                                                                     <a href="#" data-complaintId="<?php echo $row['complaintId'];?>" data-compAmt="<?php echo $row['approxCost'];?>"
                                                                        class="update-budget track-me">Allocate Amount</a>
                                                                     <?php
-                                                                }
-                                                            }
-                                                            elseif($this->userType == FINANCE_APPROVER || $this->userType == MAINTENANCE_APPROVER2)
-                                                            {
-                                                                if($row['status'] == LOG_STATUS_PENDING_BUDGET_APPROVAL)
-                                                                {
-                                                                    ?>
-                                                                    <a href="#" data-complaintId="<?php echo $row['complaintId'];?>" data-compAmt="<?php echo $row['approxCost'];?>"
-                                                                       class="update-budget track-me">Allocate Amount</a>
-                                                                    <?php
-                                                                }
-                                                                else
-                                                                {
-                                                                    if((double)$row['approxCost'] > 15000 && (double)$row['approxCost'] < 50000)
-                                                                    {
-                                                                        echo 'Pending Approval Lvl 1';
-                                                                    }
-                                                                    elseif((double)$row['approxCost'] >= 50000)
-                                                                    {
-                                                                        echo 'Pending Approval Lvl 2';
-                                                                    }
-
                                                                 }
                                                             }
                                                             else
@@ -284,11 +225,7 @@
                                                                 }
                                                                 elseif($row['status'] == LOG_STATUS_PENDING_APPROVAL)
                                                                 {
-                                                                    if((double)$row['approxCost'] > 15000 && (double)$row['approxCost'] < 50000)
-                                                                    {
-                                                                        echo 'Pending Approval Lvl 1';
-                                                                    }
-                                                                    elseif((double)$row['approxCost'] >= 50000)
+                                                                    if((double)$row['approxCost'] > 15000)
                                                                     {
                                                                         echo 'Pending Approval Lvl 2';
                                                                     }
@@ -777,6 +714,44 @@
                         <div id="payfilter" class="tab-pane fade">
                             <div class="row">
                                 <div class="col-xs-12">
+                                    <br>
+                                    <p>Total amount requested and spend in the Month of <?php $d = date_create(date('Y-m-d')); echo date_format($d,'M j');?></p>
+                                    <?php
+                                    if(isset($monthlyTotAmt) && isset($monthlyClosedTotAmt))
+                                    {
+                                        ?>
+                                        <table class="table table-responsive">
+                                            <thead>
+                                            <tr>
+                                                <th>Taproom</th>
+                                                <th>Approx Cost (Till Date)</th>
+                                                <th>Actual Spend (Till Date)</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php
+                                            for($i=0;$i<count($monthlyTotAmt);$i++)
+                                            {
+                                                ?>
+                                                <tr>
+                                                    <td><?php echo $monthlyTotAmt[$i]['locName']; ?></td>
+                                                    <td>Rs <?php echo number_format($monthlyTotAmt[$i]['locAmount']); ?></td>
+                                                    <td>Rs <?php echo number_format($monthlyClosedTotAmt[$i]['locAmount']); ?></td>
+                                                </tr>
+                                                <?php
+                                            }
+                                            ?>
+                                            </tbody>
+                                        </table>
+                                        <?php
+                                    }
+                                    ?>
+                                    <!--<canvas id="cost-canvas" class="mygraphs"></canvas>-->
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-xs-12">
                                     <?php
                                         if(isset($allTotAmt) && isset($allClosedTotAmt))
                                         {
@@ -785,8 +760,8 @@
                                                 <thead>
                                                 <tr>
                                                     <th>Taproom</th>
-                                                    <th>Approx Cost</th>
-                                                    <th>Actual Spend</th>
+                                                    <th>Approx Cost (Till Date)</th>
+                                                    <th>Actual Spend (Till Date)</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -878,14 +853,14 @@
                                     ?>
                                 </div>
                             </div>
-                            <div class="row">
+                            <!--<div class="row">
                                 <div class="col-xs-12">
                                     <br>
                                     <p>In Progress Amount To be paid (jobs approx amount less than 5k):</p>
                                     <?php
-                                    if(isset($tapsTotal) && myIsArray($tapsTotal))
+/*                                    if(isset($tapsTotal) && myIsArray($tapsTotal))
                                     {
-                                        ?>
+                                        */?>
                                         <table class="table table-responsive">
                                             <thead>
                                             <tr>
@@ -895,14 +870,14 @@
                                             </thead>
                                             <tbody>
                                             <?php
-                                            foreach($tapsTotal as $key => $row)
+/*                                            foreach($tapsTotal as $key => $row)
                                             {
-                                                ?>
+                                                */?>
                                                 <tr>
-                                                    <td><?php echo $row['locName'];?></td>
+                                                    <td><?php /*echo $row['locName'];*/?></td>
                                                     <td>
                                                         <?php
-                                                        if(isset($row['locAmount']))
+/*                                                        if(isset($row['locAmount']))
                                                         {
                                                             echo 'Rs. '. $row['locAmount'];
                                                         }
@@ -910,24 +885,24 @@
                                                         {
                                                             echo 'Rs. 0';
                                                         }
-                                                        ?>
+                                                        */?>
                                                     </td>
                                                 </tr>
                                                 <?php
-
+/*
                                             }
-                                            ?>
+                                            */?>
                                             </tbody>
                                         </table>
                                         <?php
-                                    }
+/*                                    }
                                     else
                                     {
                                         echo 'Nothing To pay!';
                                     }
-                                    ?>
+                                    */?>
                                 </div>
-                            </div>
+                            </div>-->
                             <br>
                             <div class="row text-center">
                                 <div class="col-xs-12">
@@ -1123,12 +1098,12 @@
                                         {
                                             if($key == 'Maintenance Balance')
                                             {
-                                                if($mainBalance != 0)
+                                                /*if($mainBalance != 0)
                                                 {
-                                                    ?>
-                                                    <option value="<?php echo $key;?>"><?php echo $key;?></option>
-                                                    <?php
-                                                }
+                                                    */?><!--
+                                                    <option value="<?php /*echo $key;*/?>"><?php /*echo $key;*/?></option>
+                                                    --><?php
+/*                                                }*/
                                             }
                                             else
                                             {
@@ -1690,10 +1665,10 @@
             {
                 if(payTypes[j] == 'Maintenance Balance')
                 {
-                    if($('#mainBalance').val() != '0')
+                    /*if($('#mainBalance').val() != '0')
                     {
                         splitHtml += '<option value="'+payTypes[j]+'">'+payTypes[j]+'</option>';
-                    }
+                    }*/
                 }
                 else
                 {

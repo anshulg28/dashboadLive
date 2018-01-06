@@ -466,25 +466,62 @@ class Maintenance_Model extends CI_Model
         return $result;
     }
 
-    function getTotAmtByTap()
+    function getTotAmtByTap($isMonthly = false)
     {
-        $query = "SELECT lm.locName, sum(clm.approxCost) as 'locAmount' 
+        if($isMonthly)
+        {
+            $query = "SELECT lm.locName, sum(clm.approxCost) as 'locAmount' 
+                  FROM `complaintlogmaster` clm 
+                  LEFT JOIN locationmaster lm ON clm.locId = lm.id
+                  WHERE DATE(clm.loggedDT) >= CONCAT(YEAR(CURRENT_DATE()),'-',MONTH(CURRENT_DATE()),'-01') AND 
+                  DATE(clm.loggedDT) <= CONCAT(YEAR(CURRENT_DATE()),'-',MONTH(CURRENT_DATE()),'-31')  
+                  GROUP BY lm.id";
+        }
+        else
+        {
+            $query = "SELECT lm.locName, sum(clm.approxCost) as 'locAmount' 
                   FROM `complaintlogmaster` clm 
                   LEFT JOIN locationmaster lm ON clm.locId = lm.id 
                   GROUP BY lm.id";
+        }
 
         $result = $this->db->query($query)->result_array();
         return $result;
     }
-    function getTotClosedAmtByTap()
+    function getTotClosedAmtByTap($isMonthly = false)
     {
-        $query = "SELECT lm.locName, sum(clm.approxCost) as 'locAmount' 
+        if($isMonthly)
+        {
+            $query = "SELECT lm.locName, sum(clm.approxCost) as 'locAmount' 
+                  FROM `complaintlogmaster` clm 
+                  LEFT JOIN locationmaster lm ON clm.locId = lm.id 
+                  WHERE clm.status = ".LOG_STATUS_CLOSED." AND (DATE(clm.loggedDT) >= CONCAT(YEAR(CURRENT_DATE()),'-',MONTH(CURRENT_DATE()),'-01') AND 
+                  DATE(clm.loggedDT) <= CONCAT(YEAR(CURRENT_DATE()),'-',MONTH(CURRENT_DATE()),'-31')) 
+                  GROUP BY lm.id";
+        }
+        else
+        {
+            $query = "SELECT lm.locName, sum(clm.approxCost) as 'locAmount' 
                   FROM `complaintlogmaster` clm 
                   LEFT JOIN locationmaster lm ON clm.locId = lm.id 
                   WHERE clm.status = ".LOG_STATUS_CLOSED."
                   GROUP BY lm.id";
+        }
 
         $result = $this->db->query($query)->result_array();
         return $result;
+    }
+    function getBalanceByLoc($locId)
+    {
+        $query = "SELECT jobCostCap FROM locationmaster
+                  WHERE id = "+$locId;
+        $result = $this->db->query($query)->row_array();
+        return $result;
+    }
+    function updateBalByLoc($locId,$details)
+    {
+        $this->db->where('id',$locId);
+        $this->db->update('locationmaster',$details);
+        return true;
     }
 }

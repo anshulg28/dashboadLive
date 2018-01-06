@@ -244,11 +244,15 @@ class Maintenance extends MY_Controller {
         //$data['progressComplaints']
         $data['closeComplaints'] = $this->maintenance_model->getCloseComplaints();
         $data['postponeComplaints'] = $this->maintenance_model->getPostponeComplaints();
-        $data['mainBalance'] = $this->calcMainBalance();
-        $data['tapsTotal'] = $this->maintenance_model->showTotTapAmt();
+        /*$data['mainBalance'] = $this->calcMainBalance();*/
+        /*$data['tapsTotal'] = $this->maintenance_model->showTotTapAmt();*/
         $data['openTot'] = $this->maintenance_model->showOpenTotAmt();
         $data['allTotAmt'] = $this->maintenance_model->getTotAmtByTap();
         $data['allClosedTotAmt'] = $this->maintenance_model->getTotClosedAmtByTap();
+
+        //getting monthly cost
+        $data['monthlyTotAmt'] = $this->maintenance_model->getTotAmtByTap(true);
+        $data['monthlyClosedTotAmt'] = $this->maintenance_model->getTotClosedAmtByTap(true);
 
         $data['globalStyle'] = $this->dataformatinghtml_library->getGlobalStyleHtml($data);
         $data['globalJs'] = $this->dataformatinghtml_library->getGlobalJsHtml($data);
@@ -659,16 +663,32 @@ class Maintenance extends MY_Controller {
 
             if((double)$post['approxCost'] <= 15000)
             {
-                $post['status']  = LOG_STATUS_IN_PROGRESS;
-                $details = array(
-                    'jobId' => $compId,
-                    'payAmount' => $post['approxCost'],
-                    'payDate' => date('Y-m-d H:i:s'),
-                    'payType' => 'Happay Cash',
-                    'addedDT' => date('Y-m-d H:i:s')
-                );
+                $comDetails = $this->maintenance_model->getComplaintById($compId);
+                if(isset($comDetails) && myIsArray($comDetails))
+                {
+                    $locBal = $this->maintenance_model->getBalanceByLoc($comDetails['locId']);
+                    if($locBal <= 15000)
+                    {
+                        $totBal = (int)$locBal + (int)$post['approxCost'];
+                        if($totBal<=15000)
+                        {
+                            $post['status']  = LOG_STATUS_IN_PROGRESS;
+                            $details = array(
+                                'jobId' => $compId,
+                                'payAmount' => $post['approxCost'],
+                                'payDate' => date('Y-m-d H:i:s'),
+                                'payType' => 'Happay Cash',
+                                'addedDT' => date('Y-m-d H:i:s')
+                            );
 
-                $this->maintenance_model->saveBudget($details);
+                            $this->maintenance_model->saveBudget($details);
+                            $details = array(
+                                'jobCostCap' => $totBal
+                            );
+                            $this->maintenance_model->updateBalByLoc($comDetails['locId'],$details);
+                        }
+                    }
+                }
             }
             /*elseif((double)$post['approxCost'] < 15000 )
             {
