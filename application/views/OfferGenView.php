@@ -19,21 +19,21 @@
                         <label class="control-label col-sm-2" for="beerNums">Number of Beer Codes :</label>
                         <div class="col-sm-10">
                             <input type="number" name="beerNums" class="form-control"
-                                    id="beerNums" placeholder="Eg. 50"/>
+                                    id="beerNums" placeholder="Enter a Number"/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="breakNums">Number of Breakfast Codes :</label>
                         <div class="col-sm-10">
                             <input type="number" name="breakNums" class="form-control"
-                                   id="breakNums" placeholder="Eg. 50"/>
+                                   id="breakNums" placeholder="Enter a Number"/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="eventNums">Number of Event Codes :</label>
                         <div class="col-sm-10">
                             <input type="number" name="eventNums" class="form-control"
-                                   id="eventNums" placeholder="Eg. 50"/>
+                                   id="eventNums" placeholder="Enter a Number"/>
                         </div>
                     </div>
                     <div class="form-group">
@@ -46,11 +46,11 @@
                             <ul class="list-inline custom-input-list hide">
                                 <li>
                                     <input type="number" name="customNums" class="form-control"
-                                           id="customNums" placeholder="Eg. 50"/>
+                                           id="customNums" placeholder="Enter a Number"/>
                                 </li>
                                 <li>
                                     <input type="text" name="customName" class="form-control"
-                                           id="customName" placeholder="Eg. Beer"/>
+                                           id="customName" placeholder="Text To display"/>
                                 </li>
                             </ul>
                         </div>

@@ -340,4 +340,23 @@ class Cron_Model extends CI_Model
         $result = $this->db->query($query)->result_array();
         return $result;
     }
+
+    function saveTapsTotal($details)
+    {
+        $this->db->insert('complainttapstotal',$details);
+        return true;
+    }
+    function getAllTapsTotal()
+    {
+        $query = "SELECT id, jobCostCap, locName from locationmaster";
+
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+    function updateTapTotal($id,$details)
+    {
+        $this->db->where('id',$id);
+        $this->db->update('locationmaster',$details);
+        return true;
+    }
 }

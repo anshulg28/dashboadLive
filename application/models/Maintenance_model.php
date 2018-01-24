@@ -514,7 +514,7 @@ class Maintenance_Model extends CI_Model
     function getBalanceByLoc($locId)
     {
         $query = "SELECT jobCostCap FROM locationmaster
-                  WHERE id = "+$locId;
+                  WHERE id = ".$locId;
         $result = $this->db->query($query)->row_array();
         return $result;
     }

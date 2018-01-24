@@ -1548,8 +1548,17 @@ class Dashboard extends MY_Controller {
                 $orgCode = $this->dashboard_model->getOrgCoupon($eventId);
                 if(isset($orgCode) && myIsArray($orgCode))
                 {
+                    if(myInArray('startTime',$changeCheck))
+                    {
+                        $dt = $post['eventDate'].' '.$post['startTime'];
+                    }
+                    else
+                    {
+                        $dt = $post['eventDate'].' '.$eventDetails[0]['startTime'];
+                    }
                     $details = array(
-                        'validFromDate'=>$post['eventDate']
+                        'validFromDate'=>$post['eventDate'],
+                        'expiryDateTime' => date('Y-m-d H:i',strtotime('+12 hours', strtotime($dt)))
                     );
                     $this->dashboard_model->updateOfferCode($details,$orgCode['id']);
                 }
@@ -2929,7 +2938,7 @@ class Dashboard extends MY_Controller {
         $data['status'] = true;
         echo json_encode($data);
         $logDetails = array(
-            'logMessage' => 'Function: eventDeclined, User: '.$this->userId,
+            'logMessage' => 'Function: eventDeclined, User: '.$this->userId.' eventId: '.$eventId,
             'fromWhere' => 'Dashboard',
             'insertedDT' => date('Y-m-d H:i:s')
         );
@@ -2945,7 +2954,7 @@ class Dashboard extends MY_Controller {
         $eventInfo = $this->dashboard_model->getFullEventInfoById($eventId);
         $this->deactiveOtherPlatforms($eventInfo,$eventId);
         $logDetails = array(
-            'logMessage' => 'Function: setEventDeActive, User: '.$this->userId,
+            'logMessage' => 'Function: setEventDeActive, User: '.$this->userId.' EventId: '.$eventId,
             'fromWhere' => 'Dashboard',
             'insertedDT' => date('Y-m-d H:i:s')
         );
@@ -2964,7 +2973,7 @@ class Dashboard extends MY_Controller {
         $meetupRecord = $this->dashboard_model->getMeetupRecord($eventId);
         $this->activeOtherPlatforms($eventInfo,$eventId,$meetupRecord['meetupId']);
         $logDetails = array(
-            'logMessage' => 'Function: setEventActive, User: '.$this->userId,
+            'logMessage' => 'Function: setEventActive, User: '.$this->userId.' EventId: '.$eventId,
             'fromWhere' => 'Dashboard',
             'insertedDT' => date('Y-m-d H:i:s')
         );
@@ -3822,6 +3831,15 @@ class Dashboard extends MY_Controller {
                         }
                     }
                     $data['data'][$key][] = 'Rs. '.$total;
+                    if($total>30000)
+                    {
+                        $tds = ($total*10)/100;
+                        $data['data'][$key][] = 'Rs. '.$tds;
+                    }
+                    else
+                    {
+                        $data['data'][$key][] = 'NA';
+                    }
                     $data['data'][$key][] = '<a href="#" class="viewDetails-icon" data-eveNames="'.implode(';',$eveNames).'"
                                                data-eveAmts= "'.implode(';',$eveAmts).'">
                                                 View Details</a>';
@@ -3870,6 +3888,15 @@ class Dashboard extends MY_Controller {
                         }
                     }
                     $data['data'][$key][] = 'Rs. '.$total;
+                    if($total>30000)
+                    {
+                        $tds = ($total*10)/100;
+                        $data['data'][$key][] = 'Rs. '.$tds;
+                    }
+                    else
+                    {
+                        $data['data'][$key][] = 'NA';
+                    }
                     $data['data'][$key][] = '<a href="#" class="viewDetails-icon" data-eveNames="'.implode(';',$eveNames).'"
                                                data-eveAmts= "'.implode(';',$eveAmts).'">
                                                 View Details</a>';

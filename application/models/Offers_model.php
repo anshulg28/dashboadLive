@@ -293,4 +293,19 @@ class Offers_Model extends CI_Model
         return $resut;
     }
 
+    function getNewOfferById($id)
+    {
+        $query = "SELECT * FROM offersmaster WHERE id= ".$id;
+
+        $result = $this->db->query($query)->row_array();
+        return $result;
+    }
+    function getOldOfferById($id)
+    {
+        $query = "SELECT * FROM oldoffersmaster WHERE id= ".$id;
+
+        $result = $this->db->query($query)->row_array();
+        return $result;
+    }
+
 }

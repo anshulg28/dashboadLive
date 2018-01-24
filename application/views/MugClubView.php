@@ -63,6 +63,9 @@
                             <a class="btn btn-primary" href="<?php echo base_url().'mugclub/check';?>">
                                 <i class="fa fa-beer"></i>
                                 Check Mug Number</a>
+                            <div class="checkbox">
+                                <label><input type="checkbox" value="1" id="expiredMugs">Show only expired Mugs</label>
+                            </div>
                             <!--<ul class="list-inline pagination-List">
                                 <li>
                                     <label class="control-label" for="pageEntry">Show</label>
@@ -125,8 +128,13 @@
                                 {
                                     if(isset($row['mugId']))
                                     {
+                                        $ifExpired = false;
+                                        if($row['membershipEnd'] < date('Y-m-d'))
+                                        {
+                                            $ifExpired = true;
+                                        }
                                         ?>
-                                        <tr>
+                                        <tr class="<?php if($ifExpired){echo 'danger';}?>">
                                             <th scope="row"><?php echo $row['mugId'];?></th>
                                             <td><?php echo $row['mugTag'];?></td>
                                             <td><?php echo ucfirst($row['firstName']) .' '.ucfirst($row['lastName']);?></td>
@@ -481,15 +489,34 @@
     if(localStorageUtil.getLocal('tabPage') != null)
     {
         var mugClubTab =  $('#main-mugclub-table').DataTable({
-            "displayStart": localStorageUtil.getLocal('tabPage') * 10
+            "displayStart": localStorageUtil.getLocal('tabPage') * 10,
+            "ordering": false
         });
         localStorageUtil.delLocal('tabPage');
     }
     else
     {
-        var mugClubTab =  $('#main-mugclub-table').DataTable();
+        var mugClubTab =  $('#main-mugclub-table').DataTable({
+            "ordering": false
+        });
     }
 
+    $(document).on('change','#expiredMugs', function(){
+        if($(this).is(':checked'))
+        {
+            $.fn.dataTable.ext.search.push(
+                function(settings, data, dataIndex) {
+                    return $(mugClubTab.row(dataIndex).node()).hasClass('danger');
+                }
+            );
+            mugClubTab.draw();
+        }
+        else
+        {
+            $.fn.dataTable.ext.search.pop();
+            mugClubTab.draw();
+        }
+    });
     //});
             //newPaginationFunc();
             <?php

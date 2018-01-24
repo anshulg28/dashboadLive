@@ -18,7 +18,7 @@ class Mugclub_Model extends CI_Model
     {
         $query = "SELECT mugId,mugTag,homeBase,l.locName,firstName,lastName,mobileNo, emailId, birthDate, membershipStart, membershipEnd,notes "
             ."FROM mugmaster m "
-            ."LEFT JOIN locationmaster l ON id = m.homeBase";
+            ."LEFT JOIN locationmaster l ON id = m.homeBase order by m.membershipEnd ASC";
 
         $result = $this->db->query($query)->result_array();
 
@@ -592,7 +592,7 @@ class Mugclub_Model extends CI_Model
     }
     public function getBirthdayMugsList($locSort = false, $locArray = '')
     {
-        $query = "SELECT mugId, firstName, emailId, birthDate, homeBase "
+        $query = "SELECT mugId, firstName, emailId, birthDate, homeBase, birthMailDate "
             ." FROM mugmaster "
             ."WHERE birthDate IS NOT NULL AND birthDate != '0000-00-00' AND membershipEnd >= CURRENT_DATE() "
             ."AND (CONCAT(YEAR(CURRENT_DATE()),'-',DATE_FORMAT(birthDate,'%m-%d')) >= (CURRENT_DATE() - INTERVAL 1 WEEK )"

@@ -71,6 +71,12 @@
                                                                             $bDate = date_create($row['birthDate']);
                                                                             echo ' - '.date_format($bDate,'jS M');
                                                                         }
+                                                                        if(isset($row['birthMailDate']))
+                                                                        {
+                                                                            $d = date_create($row['birthMailDate']);
+                                                                            echo ' (Mail Date: '.date_format($d,DATE_FORMAT_UI).')';
+                                                                        }
+
                                                                     ?>
                                                                 </label>
                                                             </li>

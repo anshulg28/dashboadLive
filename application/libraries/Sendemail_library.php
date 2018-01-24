@@ -1134,7 +1134,7 @@ class Sendemail_library
         $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
     }
 
-    public function sendEmail($to, $cc = '', $from, $fromPass, $fromName,$replyTo, $subject, $content, $attachment = array())
+    public function sendEmail($to, $cc = '', $from, $fromPass, $fromName,$replyTo, $subject, $content, $attachment = array(),$viewCC = '')
     {
         //Create the Transport
         /*$CI =& get_instance();
@@ -1155,7 +1155,6 @@ class Sendemail_library
             ->setSubject($subject)
             ->setReplyTo($replyTo)
             ->setReadReceiptTo($from)
-            //->setCc($cc)
             ->setFrom(array($from => $fromName))
             ->setSender($replyTo)
             ->setTo($to) ->setBody($content, 'text/html');
@@ -1163,6 +1162,10 @@ class Sendemail_library
         if($cc != '')
         {
             $message->setBcc(explode(',',$cc));
+        }
+        if($viewCC != '')
+        {
+            $message->setCc(explode(',',$viewCC));
         }
         if(isset($attachment) && myIsMultiArray($attachment))
         {

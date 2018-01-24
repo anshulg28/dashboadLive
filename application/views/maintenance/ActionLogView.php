@@ -715,7 +715,7 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <br>
-                                    <p>Total amount requested and spend in the Month of <?php $d = date_create(date('Y-m-d')); echo date_format($d,'M Y');?></p>
+                                    <p><b>Total amount requested and spent in the Month of <?php $d = date_create(date('Y-m-d')); echo date_format($d,'M Y');?></b></p>
                                     <?php
                                     if(isset($monthlyFinal) && myIsArray($monthlyFinal))
                                     {
@@ -724,8 +724,8 @@
                                             <thead>
                                             <tr>
                                                 <th>Taproom</th>
-                                                <th>Approx Cost (Till Date)</th>
-                                                <th>Actual Spend (Till Date)</th>
+                                                <th>Approx Cost</th>
+                                                <th>Actual Spend</th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -806,7 +806,7 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <br>
-                                    <p>Open Complaint Location wise Amount Balance for accounts approval:</p>
+                                    <p>Amount for open complaints which are pending for accounts approval:</p>
                                     <?php
                                     if(isset($openTot) && myIsArray($openTot))
                                     {
@@ -2042,6 +2042,11 @@
        if(remark == '' && acCost == '')
        {
            bootbox.alert('All fileds are required!');
+           return false;
+       }
+       if(acCost == 0)
+       {
+           bootbox.alert("Cost can't be zero.");
            return false;
        }
        /*if(acCost != 0 && $('#finalModal input[name="invoicePics"]').val() == '')

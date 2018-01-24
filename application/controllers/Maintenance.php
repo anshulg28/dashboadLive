@@ -691,9 +691,9 @@ class Maintenance extends MY_Controller {
                 if(isset($comDetails) && myIsArray($comDetails))
                 {
                     $locBal = $this->maintenance_model->getBalanceByLoc($comDetails['locId']);
-                    if($locBal <= 15000)
+                    if((int)$locBal['jobCostCap'] <= 15000)
                     {
-                        $totBal = (int)$locBal + (int)$post['approxCost'];
+                        $totBal = (int)$locBal['jobCostCap'] + (int)$post['approxCost'];
                         if($totBal<=15000)
                         {
                             $post['status']  = LOG_STATUS_IN_PROGRESS;
@@ -706,12 +706,20 @@ class Maintenance extends MY_Controller {
                             );
 
                             $this->maintenance_model->saveBudget($details);
-                            $details = array(
-                                'jobCostCap' => $totBal
-                            );
-                            $this->maintenance_model->updateBalByLoc($comDetails['locId'],$details);
+                        }
+                        else
+                        {
+                            $post['status'] = LOG_STATUS_PENDING_APPROVAL;
                         }
                     }
+                    else
+                    {
+                        $post['status'] = LOG_STATUS_PENDING_APPROVAL;
+                    }
+                }
+                else
+                {
+                    $post['status'] = LOG_STATUS_PENDING_APPROVAL;
                 }
             }
             /*elseif((double)$post['approxCost'] < 15000 )
@@ -1594,6 +1602,8 @@ class Maintenance extends MY_Controller {
 
         if(isset($post['remark']) && isset($post['acCost']))
         {
+            $comDetails = $this->maintenance_model->getComplaintById($post['compId']);
+            $locBal = $this->maintenance_model->getBalanceByLoc($comDetails['locId']);
             if($post['invoicePics'] == '')
             {
                 $post['invoicePics'] = null;
@@ -1606,6 +1616,11 @@ class Maintenance extends MY_Controller {
             );
 
             $this->maintenance_model->updateComplaint($details,$post['compId']);
+            $totBal = (int)$locBal['jobCostCap'] + (int)$post['acCost'];
+            $details = array(
+                'jobCostCap' => $totBal
+            );
+            $this->maintenance_model->updateBalByLoc($comDetails['locId'],$details);
             $data['status'] = true;
         }
         else

@@ -59,7 +59,7 @@
                                         ?>
                                         <div for="clock<?php echo $row['id'];?>" class="mdl-tooltip">On Hold</div>
                                         <a class="pageTracker" id="clock<?php echo $row['id'];?>" href="<?php echo base_url().'home/unSnoozeStaff/'.$row['id'];?>">
-                                            <i class="fa fa-hand-paper-o fa-15x my-yellow-text"></i></a>&nbsp;
+                                            <i class="fa fa-hand-paper-o fa-15x my-orange-text"></i></a>&nbsp;
                                         <div for="bulb<?php echo $row['id'];?>" class="mdl-tooltip">Active</div>
                                         <a class="pageTracker" id="bulb<?php echo $row['id'];?>" href="<?php echo base_url().'blockStaff/'.$row['id'];?>">
                                             <i class="fa fa-lightbulb-o fa-15x my-success-text"></i></a>&nbsp;

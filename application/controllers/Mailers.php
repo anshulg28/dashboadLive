@@ -1134,10 +1134,15 @@ class Mailers extends MY_Controller {
             $attachment = array();
             foreach($mails as $key => $row)
             {
+                $viewCC= '';
+                if(isset($row['ccView']))
+                {
+                    $viewCC = $row['ccView'];
+                }
                 $attachment = explode(',',$row['attachments']);
                 $mailStatus = $this->sendemail_library->sendEmail($row['sendTo'],$row['ccList'],$row['sendFrom'],
                     DEFAULT_SENDER_PASS,$row['sendFromName'],$row['replyTo'],$row['mailSubject'],
-                    $row['mailBody'],$attachment);
+                    $row['mailBody'],$attachment,$viewCC);
                 if($mailStatus == 'Success')
                 {
                     $mailData = array(

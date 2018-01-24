@@ -394,17 +394,25 @@ class Offers extends MY_Controller {
         }
         if(isset($offerId))
         {
+            $offerDetails = '';
             if($offerAge == 'old')
             {
+                $offerDetails = $this->offers_model->getOldOfferById($offerId);
                 $this->offers_model->deleteOldOfferRecord($offerId);
             }
             else
             {
+                $offerDetails = $this->offers_model->getNewOfferById($offerId);
                 $this->offers_model->deleteOfferRecord($offerId);
             }
         }
+        $offCode = '';
+        if(isset($offerDetails['offerCode']))
+        {
+            $offCode = $offerDetails['offerCode'];
+        }
         $logDetails = array(
-            'logMessage' => 'Function: deleteOffer, User: '.$this->userId,
+            'logMessage' => 'Function: deleteOffer, User: '.$this->userId,' OfferCode: '.$offCode,
             'fromWhere' => 'Dashboard',
             'insertedDT' => date('Y-m-d H:i:s')
         );

@@ -1808,7 +1808,7 @@ class Cron extends MY_Controller
             fclose($file1);
             $content = '<html><body><p>Monthly Employee Expenditure Report<br>PFA</p></body></html>';
 
-            $this->sendemail_library->sendEmail(array('purva@brewcraftsindia.com','hasti@brewcraftsindia.com','saha@brewcraftsindia.com','savio@brewcraftsindia.com','amit@brewcraftsindia.com','taronish@brewcraftsindia.com','pranjal.rathi@rubycapital.net','jayant@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+            $this->sendemail_library->sendEmail(array('purva@brewcraftsindia.com','hasti@brewcraftsindia.com','saha@brewcraftsindia.com','savio@brewcraftsindia.com','amit@brewcraftsindia.com','taronish@brewcraftsindia.com','finance@brewcraftsindia.com','jayant@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
                 ,'admin@brewcraftsindia.com','Staff wallet usage report '.date('m_Y', strtotime('-1 month')),$content,array("./uploads/monthly_wallet_detail_transactions_".date('m_Y', strtotime('-1 month')).".csv",
                     "./uploads/monthly_wallet_usage_".date('m_Y', strtotime('-1 month')).".csv"));
             try
@@ -1999,6 +1999,29 @@ class Cron extends MY_Controller
                 $this->dashboard_model->updateStaffRecord($row['id'],$details);
             }
             $this->dashboard_model->walletLogsBatch($walRec);
+        }
+    }
+
+    public function resetTapAmounts()
+    {
+        $tapsTotal = $this->cron_model->getAllTapsTotal();
+        if(isset($tapsTotal) && myIsArray($tapsTotal))
+        {
+            $taps = array();
+            foreach($tapsTotal as $key => $row)
+            {
+                $taps[] = $row['locName'].': '.$row['jobCostCap'];
+                $tapDetail = array(
+                    'jobCostCap' => 0
+                );
+                $this->cron_model->updateTapTotal($row['id'],$tapDetail);
+            }
+            $ttps = implode(',',$taps);
+            $details = array(
+                'tapsArray' => json_encode($ttps),
+                'insertedDT' => date('Y-m-d H:i:s')
+            );
+            $this->cron_model->saveTapsTotal($details);
         }
     }
 }

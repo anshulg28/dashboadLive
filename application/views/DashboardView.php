@@ -1582,6 +1582,7 @@
                                                 <th>Organiser Email</th>
                                                 <th>Organiser Phone</th>
                                                 <th>Total Amount</th>
+                                                <th>TDS</th>
                                                 <th>Actions</th>
                                             </tr>
                                             </thead>
@@ -1596,6 +1597,7 @@
                                                 <th>Organiser Email</th>
                                                 <th>Organiser Phone</th>
                                                 <th>Total Amount</th>
+                                                <th>TDS</th>
                                                 <th>Actions</th>
                                             </tr>
                                             </thead>
