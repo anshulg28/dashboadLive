@@ -239,11 +239,11 @@ class Cron_Model extends CI_Model
     public function getSingleLocFeedbacks($uptoDate)
     {
         $query = "SELECT DISTINCT (SELECT COUNT(overallRating) FROM usersfeedbackmaster 
-                 WHERE feedbackLoc = 4 AND DATE(insertedDateTime) <= '".$uptoDate."') as 'total_overall',
+                 WHERE feedbackLoc = 6 AND DATE(insertedDateTime) <= '".$uptoDate."') as 'total_overall',
                  (SELECT COUNT(overallRating) FROM usersfeedbackmaster 
-                 WHERE feedbackLoc = 4 AND overallRating >= 9 AND DATE(insertedDateTime) <= '".$uptoDate."') as 'promo_overall',
+                 WHERE feedbackLoc = 6 AND overallRating >= 9 AND DATE(insertedDateTime) <= '".$uptoDate."') as 'promo_overall',
                  (SELECT COUNT(overallRating) FROM usersfeedbackmaster 
-                 WHERE feedbackLoc = 4 AND overallRating < 7 AND DATE(insertedDateTime) <= '".$uptoDate."') as 'de_overall'";
+                 WHERE feedbackLoc = 6 AND overallRating < 7 AND DATE(insertedDateTime) <= '".$uptoDate."') as 'de_overall'";
 
         $result = $this->db->query($query)->row_array();
         return $result;

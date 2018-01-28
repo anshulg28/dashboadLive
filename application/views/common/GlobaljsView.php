@@ -28,6 +28,18 @@
         }
     ?>
     window.base_url = '<?php echo base_url(); ?>';
+    window.userTypes = {
+        '0': 'Root',
+        '1':'Admin',
+        '2': 'Community Manager',
+        '3': 'Server',
+        '5': 'Wallet',
+        '6': 'Offers',
+        '7': 'Maintenance Manager',
+        '8': 'Maintenance Approver 1',
+        '9': 'Maintenance Approver 2',
+        '10': 'Finance Approver'
+    };
 </script>
 
 <script>
@@ -370,6 +382,7 @@ $(document).on('click','.homePage .request-otp', function(){
             bootbox.alert('Email Invalid!');
             return false;
         }
+        showCustomLoader();
         var errUrl = base_url+'getOtp';
         $.ajax({
             type: 'POST',
@@ -377,43 +390,64 @@ $(document).on('click','.homePage .request-otp', function(){
             url:base_url+'getOtp',
             data: {mobEmail: $('.loginPage input[name="mobEmail"]').val()},
             success: function(data){
+                hideCustomLoader();
                 if(data.status == true)
                 {
-                    $('.loginPage .login-error-block').html('').addClass('hide');
-                    $('.loginPage .my-timer').removeClass('hide');
-                    if(typeof data.mobNum  !== 'undefined' && data.mobNum != null)
+                    if(typeof data.roles !== 'undefined')
                     {
-                        $('.loginPage #mainLoginForm').find('input[name="mobNum"]').val(data.mobNum);
+                        var roles = data.roles.split(',');
+                        var roleHtml = '<ul class="list-inline">';
+                        roleHtml += '<li>Login As: </li>'
+                        for(var i =0;i<roles.length;i++)
+                        {
+                            roleHtml += '<li><label class="radio-inline"><input type="radio" name="roleRadio" value="'+
+                                userTypes[roles[i]]+'">'+userTypes[roles[i]]+' User</label></li>';
+                        }
+                        roleHtml += '</ul>';
+                        roleHtml += '<input type="hidden" name="mobEmail" value="'+$('.loginPage input[name="mobEmail"]').val()+'"/>';
+                        roleHtml += '<button type="submit" class="btn btn-primary">Submit</button>';
+                        $('.loginPage #accountModal .modal-body #choiceOtp').html(roleHtml);
+                        $('.loginPage #accountModal').modal('show');
+
                     }
                     else
                     {
-                        var emailId = data.email;
-                        $('.loginPage #mainLoginForm').find('input[name="mobNum"]').val(emailId);
-                    }
-                    $('.loginPage .request-otp').addClass('hide');
-                    $('.loginPage .the-email-panel').addClass('hide');
-                    $('.loginPage #mainLoginForm').removeClass('hide');
-                    var min = 0;
-                    var sec = 0;
-                    var timer = setInterval(function(){
-                        sec +=1;
-                        if(sec == 60)
+                        $('.loginPage .login-error-block').html('').addClass('hide');
+                        $('.loginPage .my-timer').removeClass('hide');
+                        if(typeof data.mobNum  !== 'undefined' && data.mobNum != null)
                         {
-                            min += 1;
-                            sec = 0;
+                            $('.loginPage #mainLoginForm').find('input[name="mobNum"]').val(data.mobNum);
                         }
-                        $('.loginPage .my-timer').html('Wait(2 mins): '+min+' : '+sec);
-                        if(min >= 2)
+                        else
                         {
+                            var emailId = data.email;
+                            $('.loginPage #mainLoginForm').find('input[name="mobNum"]').val(emailId);
+                        }
+                        $('.loginPage .request-otp').addClass('hide');
+                        $('.loginPage .the-email-panel').addClass('hide');
+                        $('.loginPage #mainLoginForm').removeClass('hide');
+                        var min = 0;
+                        var sec = 0;
+                        var timer = setInterval(function(){
+                            sec +=1;
+                            if(sec == 60)
+                            {
+                                min += 1;
+                                sec = 0;
+                            }
+                            $('.loginPage .my-timer').html('Wait(2 mins): '+min+' : '+sec);
+                            if(min >= 2)
+                            {
+                                clearInterval(timer);
+                            }
+                        },1000);
+                        setTimeout(function(){
+                            $('.loginPage .request-otp').removeClass('hide');
+                            $('.loginPage .my-timer').addClass('hide');
+                            //$('#mainLoginForm').addClass('hide');
                             clearInterval(timer);
-                        }
-                    },1000);
-                    setTimeout(function(){
-                        $('.loginPage .request-otp').removeClass('hide');
-                        $('.loginPage .my-timer').addClass('hide');
-                        //$('#mainLoginForm').addClass('hide');
-                        clearInterval(timer);
-                    },(2*60*1000));
+                        },(2*60*1000));
+                    }
                 }
                 else
                 {
@@ -421,6 +455,7 @@ $(document).on('click','.homePage .request-otp', function(){
                 }
             },
             error: function(xhr, status, error){
+                hideCustomLoader();
                 bootbox.alert('Some Error Occurred!');
                 var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);

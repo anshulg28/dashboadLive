@@ -321,6 +321,10 @@ class Cron extends MY_Controller
         {
             $data[] = (int)(($promo['khar']/$total['khar'])*100 - ($de['khar']/$total['khar'])*100);
         }
+        if($total['vashi'] != 0)
+        {
+            $data[] = (int)(($promo['vashi']/$total['vashi'])*100 - ($de['vashi']/$total['vashi'])*100);
+        }
 
         $details = array(
             'locs' => implode(',',$data),

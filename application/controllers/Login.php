@@ -21,6 +21,7 @@ class Login extends MY_Controller {
         $data['globalStyle'] = $this->dataformatinghtml_library->getGlobalStyleHtml($data);
         $data['globalJs'] = $this->dataformatinghtml_library->getGlobalJsHtml($data);
         $data['headerView'] = $this->dataformatinghtml_library->getHeaderHtml($data);
+        $data['footerView'] = $this->dataformatinghtml_library->getFooterHtml($data);
 
         if(isSessionVariableSet($this->isUserSession) === true)
         {
@@ -167,6 +168,103 @@ class Login extends MY_Controller {
 
     }
 
+    function choiceOtp()
+    {
+        $data = array();
+        $post = $this->input->post();
+        $isMobile = false;
+
+        $mobEmail = $post['mobEmail'];
+
+        if(is_numeric($mobEmail))
+        {
+            $isMobile = true;
+        }
+        $userCheck = $this->login_model->checkUserByType($mobEmail,$post['roleRadio']);
+
+
+        if($userCheck['status'] == true)
+        {
+            if($userCheck['ifActive'] == NOT_ACTIVE)
+            {
+                $data['status'] = false;
+                $data['errorMsg'] = 'User is Disabled!';
+            }
+            else
+            {
+                $newOtp = mt_rand(1000,99999);
+
+                $details = array(
+                    'userOtp'=> $newOtp
+                );
+                $this->login_model->updateUserRecord($userCheck['userId'],$details);
+
+                $Mobnum = '';
+                $email = '';
+                if($isMobile)
+                {
+                    $Mobnum = $mobEmail;
+                    $email = $userCheck['emailId'];
+                }
+                else
+                {
+                    $Mobnum = $userCheck['mobNum'];
+                    $email = $mobEmail;
+                }
+
+                if(isset($Mobnum) && $Mobnum != '')
+                {
+                    $numbers = array('91'.$Mobnum);
+
+                    $postDetails = array(
+                        'apiKey' => TEXTLOCAL_API,
+                        'numbers' => implode(',', $numbers),
+                        'sender'=> urlencode('DOLALY'),
+                        'message' => rawurlencode($newOtp.' is Your OTP for login')
+                    );
+                    $smsStatus = $this->curl_library->sendCouponSMS($postDetails);
+                    if($smsStatus['status'] == 'failure')
+                    {
+                        $data['status'] = false;
+                        $details = array(
+                            'attemptTimes'=> $userCheck['attemptTimes']
+                        );
+                        $this->login_model->updateUserRecord($userCheck['userId'],$details);
+                        if(isset($smsStatus['warnings']))
+                        {
+                            $data['errorMsg'] = $smsStatus['warnings'][0]['message'];
+                        }
+                        else
+                        {
+                            $data['errorMsg'] = $smsStatus['errors'][0]['message'];
+                        }
+                    }
+                }
+
+                if(isset($email) && $email != '')
+                {
+                    $mailData = array(
+                        'emailId' => $email,
+                        'otp' =>$newOtp
+                    );
+                    $this->sendemail_library->otpSendMail($mailData);
+                    $data['email'] = $email;
+                }
+
+                $data['mobNum'] = $Mobnum;
+                $data['status'] = true;
+                /*}*/
+            }
+        }
+        else
+        {
+            $data['status'] = false;
+            $data['errorMsg'] = 'User Not Found!';
+        }
+
+        echo json_encode($data);
+    }
+
     function sendNormalOtp()
     {
         $data = array();
@@ -174,6 +272,20 @@ class Login extends MY_Controller {
         $isMobile = false;
 
         $mobEmail = $post['mobEmail'];
+
+        $totalLogins = $this->login_model->totalUserLogins($mobEmail);
+        if(isset($totalLogins) && myIsArray($totalLogins) && count($totalLogins)>1)
+        {
+            $roles = array();
+            foreach($totalLogins as $key => $row)
+            {
+                $roles[] = $row['userType'];
+            }
+            $data['status'] = true;
+            $data['roles'] = implode(',',$roles);
+            echo json_encode($data);
+            return false;
+        }
 
         if(is_numeric($mobEmail))
         {

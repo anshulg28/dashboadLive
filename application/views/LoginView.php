@@ -85,7 +85,24 @@
                 </div>
             </form>-->
         </div>
+        <div id="accountModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="<?php echo base_url();?>login/choiceOtp" method="POST" id="choiceOtp">
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </main>
+    <?php echo $footerView; ?>
 </body>
 <?php echo $globalJs; ?>
 <script>
@@ -123,6 +140,68 @@
         else if(e.keyCode == 8)
         {
             $('input[name="loginPin3"]').val('').focus();
+        }
+    });
+
+    $(document).on('submit','#choiceOtp', function(e){
+        e.preventDefault();
+
+        if($('#choiceOtp input[name="roleRadio"]:checked').val() !== 'undefined')
+        {
+            $('#accountModal').modal('hide');
+            showCustomLoader();
+            $.ajax({
+                type:'POST',
+                dataType:'json',
+                url:$(this).attr('action'),
+                data: $(this).serialize(),
+                success: function(data){
+                    hideCustomLoader();
+                    $('.loginPage .login-error-block').html('').addClass('hide');
+                    $('.loginPage .my-timer').removeClass('hide');
+                    if(typeof data.mobNum  !== 'undefined' && data.mobNum != null)
+                    {
+                        $('.loginPage #mainLoginForm').find('input[name="mobNum"]').val(data.mobNum);
+                    }
+                    else
+                    {
+                        var emailId = data.email;
+                        $('.loginPage #mainLoginForm').find('input[name="mobNum"]').val(emailId);
+                    }
+                    $('.loginPage .request-otp').addClass('hide');
+                    $('.loginPage .the-email-panel').addClass('hide');
+                    $('.loginPage #mainLoginForm').removeClass('hide');
+                    var min = 0;
+                    var sec = 0;
+                    var timer = setInterval(function(){
+                        sec +=1;
+                        if(sec == 60)
+                        {
+                            min += 1;
+                            sec = 0;
+                        }
+                        $('.loginPage .my-timer').html('Wait(2 mins): '+min+' : '+sec);
+                        if(min >= 2)
+                        {
+                            clearInterval(timer);
+                        }
+                    },1000);
+                    setTimeout(function(){
+                        $('.loginPage .request-otp').removeClass('hide');
+                        $('.loginPage .my-timer').addClass('hide');
+                        //$('#mainLoginForm').addClass('hide');
+                        clearInterval(timer);
+                    },(2*60*1000));
+
+                },
+                error: function(xhr, status, error){
+                    hideCustomLoader();
+                    bootbox.alert('Some Error Occurred!');
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                    saveErrorLog(err);
+                }
+            });
+
         }
     });
 </script>

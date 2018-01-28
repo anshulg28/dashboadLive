@@ -164,6 +164,14 @@ class Dashboard extends MY_Controller {
         {
             $data['feedbacks']['khar'] = (int)(($promo['khar']/$total['khar'])*100 - ($de['khar']/$total['khar'])*100);
         }
+        if($total['vashi'] == '0')
+        {
+            $data['feedbacks']['vashi'] = 0;
+        }
+        else
+        {
+            $data['feedbacks']['vashi'] = (int)(($promo['vashi']/$total['vashi'])*100 - ($de['vashi']/$total['vashi'])*100);
+        }
 
         $data['allFeedbacks'] = $this->dashboard_model->getFeedbackData();
         $events = $this->dashboard_model->getAllEvents();

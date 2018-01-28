@@ -57,6 +57,39 @@ class Login_Model extends CI_Model
         return $data;
     }
 
+    public function checkUserByType($mobNum,$userType)
+    {
+
+        $query = "SELECT userId,ifActive,attemptTimes,emailId "
+            ."FROM doolally_usersmaster "
+            ."where userType IN(".$userType.") AND mobNum = '".$mobNum."' OR emailId = '".$mobNum."'";
+
+        $result = $this->db->query($query)->row_array();
+
+        $data = $result;
+        if(myIsArray($result))
+        {
+            $data['status'] = true;
+        }
+        else
+        {
+            $data['status'] = false;
+        }
+
+        return $data;
+    }
+
+    public function totalUserLogins($mobNum)
+    {
+
+        $query = "SELECT userId,ifActive,attemptTimes,emailId "
+            ."FROM doolally_usersmaster "
+            ."where userType IN(0,1,2,3,5,6,7,8,9,10) AND mobNum = '".$mobNum."' OR emailId = '".$mobNum."'";
+
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+
     public function checkUserByEmail($email)
     {
 
