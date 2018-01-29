@@ -82,7 +82,7 @@ class Login_Model extends CI_Model
     public function totalUserLogins($mobNum)
     {
 
-        $query = "SELECT userId,ifActive,attemptTimes,emailId "
+        $query = "SELECT * "
             ."FROM doolally_usersmaster "
             ."where userType IN(0,1,2,3,5,6,7,8,9,10) AND mobNum = '".$mobNum."' OR emailId = '".$mobNum."'";
 
@@ -138,7 +138,7 @@ class Login_Model extends CI_Model
     {
         $query = "SELECT userId,ifActive "
             ."FROM doolally_usersmaster "
-            ."where userType IN(0,1,2,3,5,6,7,8,9,10) AND mobNum = '".$mobNum."' OR emailId = '".$mobNum."' AND userOtp = ".$otp;
+            ."where userType IN(0,1,2,3,5,6,7,8,9,10) AND (mobNum = '".$mobNum."' OR emailId = '".$mobNum."') AND userOtp = ".$otp;
 
         $result = $this->db->query($query)->row_array();
 

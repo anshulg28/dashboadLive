@@ -145,9 +145,10 @@
 
     $(document).on('submit','#choiceOtp', function(e){
         e.preventDefault();
-
-        if($('#choiceOtp input[name="roleRadio"]:checked').val() !== 'undefined')
+        if($('#choiceOtp input[name="roleRadio"]').is(':checked'))
         {
+            console.log('in');
+            var errUrl = $(this).attr('action');
             $('#accountModal').modal('hide');
             showCustomLoader();
             $.ajax({

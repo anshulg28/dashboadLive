@@ -401,7 +401,7 @@ $(document).on('click','.homePage .request-otp', function(){
                         for(var i =0;i<roles.length;i++)
                         {
                             roleHtml += '<li><label class="radio-inline"><input type="radio" name="roleRadio" value="'+
-                                userTypes[roles[i]]+'">'+userTypes[roles[i]]+' User</label></li>';
+                                roles[i]+'">'+userTypes[roles[i]]+' User</label></li>';
                         }
                         roleHtml += '</ul>';
                         roleHtml += '<input type="hidden" name="mobEmail" value="'+$('.loginPage input[name="mobEmail"]').val()+'"/>';
