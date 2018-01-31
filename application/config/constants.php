@@ -137,6 +137,9 @@ defined('EVENT_DECLINED')   OR define('EVENT_DECLINED', 2);
 /* API Feeds */
 defined('TWITTER_API') OR define('TWITTER_API','https://api.twitter.com/1.1/');
 defined('FACEBOOK_API') OR define('FACEBOOK_API','https://graph.facebook.com/v2.7/');
+defined('TRIGGER_API') OR define('TRIGGER_API','https://api.atrigger.com/v1/');
+defined('TRIGGER_KEY') OR define('TRIGGER_KEY','5442989893688992721');
+defined('TRIGGER_SECRET') OR define('TRIGGER_SECRET','1mhXJzK4geoU27VOpRSzkHfEVvWrIt');
 defined('CONSUMER_KEY') OR define('CONSUMER_KEY','vsi8yrEMdAaFfjz1vTLMOHnNe');
 defined('CONSUMER_SECRET') OR define('CONSUMER_SECRET','T5nSoTaf8rgpXYbWqiLMGSFsdajfHnZ8uXhqz5xyzXgnUaQqbi');
 defined('ACCESS_TOKEN') OR define('ACCESS_TOKEN','	15804491-FEtnxy73lcHvViNAdORSVOcH68MCnfiHfpL6hCRn0');
@@ -153,6 +156,8 @@ defined('EVENT_HIGH_KEY') OR define('EVENT_HIGH_KEY','D00la11y@ppKeyProd');
 defined('EVENT_HIGH_ACCOUNT') OR define('EVENT_HIGH_ACCOUNT','events@brewcraftsindia.com');
 defined('MEETUP_KEY') OR define('MEETUP_KEY','165c416c7672a5cc2f1a43292a2817');
 defined('MEETUP_GROUP') OR define('MEETUP_GROUP','meetup-group-XWIyWwft');
+defined('QUIKCHEX_API') OR define('QUIKCHEX_API','https://secure.quikchex.in/data/v1/');
+defined('QUIKCHEX_ACCESS_TOKEN') OR define('QUIKCHEX_ACCESS_TOKEN','80bc6de6ba5a51dd55f3f873a2285ff5');
 
 /* Image Paths for Fnb*/
 defined('FOOD_PATH_THUMB') OR define('FOOD_PATH_THUMB','uploads/food/thumb/');

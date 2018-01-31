@@ -270,4 +270,15 @@ class curl_library
         );
         return $this->getJSONDataByPost($url,$details,0,$headers);
     }
+    public function setTrigger($params)
+    {
+        $url = TRIGGER_API.'tasks/create?'.http_build_query($params);
+        return $this->getDataByGet($url, 0);
+    }
+
+    public function getQuikchexAttendance($params)
+    {
+        $url = QUIKCHEX_API.'detailed_attendance_data?'.http_build_query($params);
+        return $this->getDataByGet($url, 0);
+    }
 }

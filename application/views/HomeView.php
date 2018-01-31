@@ -134,6 +134,55 @@
                                         <?php
                                     }
 
+                                    if(myInArray('quiz',$userModules))
+                                    {
+                                        if($this->userType == SERVER_USER)
+                                        {
+                                            if(myIsArray($quizNames))
+                                            {
+                                                ?>
+                                                <li>
+                                                    <a href="<?php echo base_url() . 'quiz'; ?>">
+                                                        <div class="menuWrap">
+                                                            <i class="fa fa-question-circle-o fa-2x"></i>
+                                                            <br>
+                                                            <span>Quiz</span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <?php
+                                            }
+                                        }
+                                        else
+                                        {
+                                            ?>
+                                            <li>
+                                                <a href="<?php echo base_url() . 'quiz'; ?>">
+                                                    <div class="menuWrap">
+                                                        <i class="fa fa-question-circle-o fa-2x"></i>
+                                                        <br>
+                                                        <span>Quiz</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <?php
+                                        }
+                                    }
+                                    if(myInArray('quiz_questions',$userModules))
+                                    {
+                                        ?>
+                                        <li>
+                                            <a href="<?php echo base_url() . 'quiz/manageQuestions'; ?>">
+                                                <div class="menuWrap">
+                                                    <i class="fa fa-list-ol fa-2x"></i>
+                                                    <br>
+                                                    <span>Quiz Questions</span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <?php
+                                    }
+
                                     if($this->userType == SERVER_USER)
                                     {
                                         ?>

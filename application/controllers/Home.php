@@ -7,6 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @property locations_model $locations_model
  * @property dashboard_model $dashboard_model
  * @property mugclub_model $mugclub_model
+ * @property quiz_model $quiz_model
  * @property login_model $login_model
  */
 
@@ -18,6 +19,7 @@ class Home extends MY_Controller {
         $this->load->model('locations_model');
         $this->load->model('dashboard_model');
         $this->load->model('login_model');
+        $this->load->model('quiz_model');
     }
 
     public function index()
@@ -38,6 +40,7 @@ class Home extends MY_Controller {
             $rols = $this->login_model->getUserRoles($this->userId);
             $data['userModules'] = explode(',',$rols['modulesAssigned']);
         }
+        $data['quizNames'] = $this->quiz_model->getAllDrawnNames();
 		$data['globalStyle'] = $this->dataformatinghtml_library->getGlobalStyleHtml($data);
 		$data['globalJs'] = $this->dataformatinghtml_library->getGlobalJsHtml($data);
 		$data['headerView'] = $this->dataformatinghtml_library->getHeaderHtml($data);

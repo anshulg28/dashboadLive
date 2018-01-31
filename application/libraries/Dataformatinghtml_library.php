@@ -54,6 +54,7 @@ class Dataformatinghtml_library
     {
         $this->CI->load->model('login_model');
         $this->CI->load->model('locations_model');
+        $this->CI->load->model('quiz_model');
         if(isSessionVariableSet($this->CI->userId))
         {
             $usrData = $this->CI->login_model->getUserById($this->CI->userId);
@@ -73,7 +74,7 @@ class Dataformatinghtml_library
                 }*/
             }
         }
-
+        $data['quizNames'] = $this->CI->quiz_model->getAllDrawnNames();
         $htmlPage = $this->CI->load->view('HeaderView', $data, true);
         return $htmlPage;
     }

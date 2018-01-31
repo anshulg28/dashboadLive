@@ -29,6 +29,30 @@
                         <li><a href="<?php echo base_url();?>maintenance"><i class="fa fa-cogs"></i> Maintenance</a></li>
                         <?php
                     }
+                    if(myInArray('quiz',$userModules))
+                    {
+                        if($this->userType == SERVER_USER)
+                        {
+                            if(myIsArray($quizNames))
+                            {
+                                ?>
+                                <li><a href="<?php echo base_url();?>quiz"><i class="fa fa-question-circle-o"></i> Quiz</a></li>
+                                <?php
+                            }
+                        }
+                        else
+                        {
+                            ?>
+                            <li><a href="<?php echo base_url();?>quiz"><i class="fa fa-question-circle-o"></i> Quiz</a></li>
+                            <?php
+                        }
+                    }
+                    if(myInArray('quiz_questions',$userModules))
+                    {
+                        ?>
+                        <li><a href="<?php echo base_url();?>quiz/manageQuestions"><i class="fa fa-list-ol"></i> Quiz Questions</a></li>
+                        <?php
+                    }
                     if(myInArray('career',$userModules))
                     {
                         ?>
