@@ -1622,6 +1622,22 @@ class Dashboard_Model extends CI_Model
         $result = $this->db->query($query)->result_array();
         return $result;
     }
+
+    function getOrgCombinedEvents()
+    {
+        $query = "SELECT GROUP_CONCAT(eventId) AS 'ids', GROUP_CONCAT(eventName SEPARATOR ';') AS 'eveNames', creatorName,
+                    creatorEmail, creatorPhone, 'new' as 'type'
+                    FROM eventmaster WHERE costType != 1 AND ifActive = ".ACTIVE." AND ifApproved = ".EVENT_APPROVED." AND isEventCancel = 0 
+                    AND ifAutoCreated = 0 GROUP BY userId
+                    UNION
+                    SELECT GROUP_CONCAT(eventId) AS 'ids', GROUP_CONCAT(eventName SEPARATOR ';') AS 'eveNames', creatorName, 
+                    creatorEmail, creatorPhone, 'old' as 'type'
+                    FROM eventcompletedmaster WHERE costType != 1 AND ifActive = ".ACTIVE." AND ifApproved = ".EVENT_APPROVED." AND isEventCancel = 0 
+                    AND ifAutoCreated = 0 GROUP BY userId";
+
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
     function getEventAllRegs($eventId)
     {
         $query = "SELECT erm.quantity,
@@ -1641,6 +1657,18 @@ class Dashboard_Model extends CI_Model
                   LEFT JOIN eventcompletedmaster em ON erm.eventId = em.eventId 
                   WHERE erm.eventId = ".$eventId;
 
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+    function getAllEventRegis($eventId)
+    {
+        $query = "SELECT erm.quantity,
+                  CASE WHEN erm.regPrice IS NULL THEN
+                  (CASE WHEN em.eventId IS NULL THEN ecm.eventPrice ELSE em.eventPrice END) ELSE erm.regPrice END AS 'price' 
+                  FROM eventregistermaster erm 
+                  LEFT JOIN eventmaster em ON erm.eventId = em.eventId 
+                  LEFT JOIN eventcompletedmaster ecm ON erm.eventId = ecm.eventId
+                  WHERE erm.eventId = ".$eventId;
         $result = $this->db->query($query)->result_array();
         return $result;
     }

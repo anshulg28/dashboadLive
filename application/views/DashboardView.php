@@ -1561,7 +1561,7 @@
                             <div id="orgSum" class="tab-pane fade">
                                 <div class="row">
                                     <br>
-                                    <div class="col-xs-1"></div>
+                                    <!--<div class="col-xs-1"></div>
                                     <div class="col-xs-11">
                                         <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="acEve">
                                             <input type="radio" id="acEve" class="mdl-radio__button" name="orgEveType" value="1" checked>
@@ -1571,7 +1571,7 @@
                                             <input type="radio" id="compEve" class="mdl-radio__button" name="orgEveType" value="2">
                                             <span class="mdl-radio__label"> Show Completed Events</span>
                                         </label>
-                                    </div>
+                                    </div>-->
                                     <div class="col-sm-2 col-xs-0"></div>
                                     <div class="col-sm-8 col-xs-12" id="org-summary-new-wrapper">
                                         <br>
@@ -1588,7 +1588,7 @@
                                             </thead>
                                         </table>
                                     </div>
-                                    <div class="col-sm-8 col-xs-12 hide" id="org-summary-old-wrapper">
+                                    <!--<div class="col-sm-8 col-xs-12 hide" id="org-summary-old-wrapper">
                                         <br>
                                         <table id="org-old-table" class="table table-hover table-bordered table-striped" style="width:100%">
                                             <thead>
@@ -1602,7 +1602,7 @@
                                             </tr>
                                             </thead>
                                         </table>
-                                    </div>
+                                    </div>-->
                                     <div class="col-sm-2 col-xs-0"></div>
                                 </div>
                             </div>
@@ -5154,11 +5154,16 @@
         deferRender: true,
         ajax: base_url+'dashboard/getOrgCollection/1'
     });
+    /*var newOrgTab = $('#org-new-table').DataTable({
+        ordering: false,
+        deferRender: true,
+        ajax: base_url+'dashboard/getOrgCollection/1'
+    });
     var oldOrgTab = $('#org-old-table').DataTable({
         ordering: false,
         deferRender: true,
         ajax: base_url+'dashboard/getOrgCollection/2'
-    });
+    });*/
 
     $(document).on('change','input[name="orgEveType"]', function(){
         if($(this).val() == '1')
@@ -5177,15 +5182,27 @@
 
     $(document).on('click','#orgSum .viewDetails-icon', function(e){
         e.preventDefault();
-        var eveNames = $(this).attr('data-eveNames').split(';');
-        var eveAmts = $(this).attr('data-eveAmts').split(';');
+        var oldNames = $(this).attr('data-oldNames').split(';');
+        var oldAmts = $(this).attr('data-oldAmts').split(';');
+        var newNames = $(this).attr('data-newNames').split(';');
+        var newAmts = $(this).attr('data-newAmts').split(';');
 
-        var tempTab = '<table class="table table-responsive"><thead><tr><th>Event Name</th><th>Total collected</th></tr></thead><tbody>';
-        for(var i=0;i<eveNames.length;i++)
+        var tempTab = '<h2>Active Events</h2><table class="table table-responsive"><thead><tr><th>Event Name</th><th>Total collected</th></tr></thead><tbody>';
+        for(var i=0;i<newNames.length;i++)
         {
             tempTab += '<tr>';
-            tempTab += '<td>'+eveNames[i]+'</td>';
-            tempTab += '<td>Rs. '+eveAmts[i]+'</td>';
+            tempTab += '<td>'+newNames[i]+'</td>';
+            tempTab += '<td>Rs. '+newAmts[i]+'</td>';
+            tempTab += '</tr>';
+        }
+        tempTab += '</tbody></table>';
+
+        tempTab += '<h2>Completed Events</h2><table class="table table-responsive"><thead><tr><th>Event Name</th><th>Total collected</th></tr></thead><tbody>';
+        for(var i=0;i<oldNames.length;i++)
+        {
+            tempTab += '<tr>';
+            tempTab += '<td>'+oldNames[i]+'</td>';
+            tempTab += '<td>Rs. '+oldAmts[i]+'</td>';
             tempTab += '</tr>';
         }
         tempTab += '</tbody></table>';

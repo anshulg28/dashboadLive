@@ -125,12 +125,14 @@ class curl_library
     }
     public function getInstagramPosts()
     {
-        $url = 'https://www.juicer.io/api/feeds/24816';
+        //$url = 'https://www.juicer.io/api/feeds/24816';
+        $url = "https://www.juicer.io/api/feeds/doolally-43ee0a7a-1630-4038-8fc3-4adb40cee560?per=100&page=1";
         return $this->getDataByGet($url, 0);
     }
     public function getMoreInstaFeeds()
     {
-        $url = 'https://www.juicer.io/api/feeds/31761';
+        //$url = 'https://www.juicer.io/api/feeds/31761';
+        $url = "https://www.juicer.io/api/feeds/402256524?per=100&page=1";
         return $this->getDataByGet($url, 0);
     }
 

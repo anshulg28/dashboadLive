@@ -3801,10 +3801,39 @@ class Dashboard extends MY_Controller {
     public function getOrgCollection($isNew = 1)
     {
         $data = array();
+        $newOrgs = $this->dashboard_model->getOrgNewEvents();
+        $oldOrgs = $this->dashboard_model->getOrgOldEvents();
+
+        foreach($newOrgs as $key => $row)
+        {
+            $ifFound = false;
+            for($i=0;$i<count($oldOrgs);$i++)
+            {
+                if($row['creatorName'] == $oldOrgs[$i]['creatorName'] &&
+                    $row['creatorEmail'] == $oldOrgs[$i]['creatorEmail'] &&
+                    $row['creatorPhone'] == $oldOrgs[$i]['creatorPhone'])
+                {
+                    $ifFound = true;
+                    $oldOrgs[$i]['newids'] = $row['ids'];
+                    $oldOrgs[$i]['neweveNames'] = $row['eveNames'];
+                }
+            }
+            if(!$ifFound)
+            {
+                $oldOrgs[] = array(
+                    'newids' => $row['ids'],
+                    'neweveNames' => $row['eveNames'],
+                    'creatorName' => $row['creatorName'],
+                    'creatorEmail' => $row['creatorEmail'],
+                    'creatorPhone' => $row['creatorPhone']
+                );
+            }
+        }
+
         if($isNew == 1)
         {
             //Total for current active events
-            $newOrgs = $this->dashboard_model->getOrgNewEvents();
+            $newOrgs = $oldOrgs;// $this->dashboard_model->getOrgNewEvents();
             if(isset($newOrgs) && myIsArray($newOrgs))
             {
                 foreach($newOrgs as $key => $row)
@@ -3813,15 +3842,33 @@ class Dashboard extends MY_Controller {
                     $data['data'][$key][] = $row['creatorEmail'];
                     $data['data'][$key][] = $row['creatorPhone'];
 
-                    $totEveIds = explode(',',$row['ids']);
-                    $totEveNames = explode(';',$row['eveNames']);
-                    $total = 0;
-                    $eveNames = array();
-                    $eveAmts = array();
-                    for($i=0;$i<count($totEveIds);$i++)
+                    $oldIds = array();
+                    $newIds = array();
+                    $oldNames = array();
+                    $newNames = array();
+                    if(isset($row['ids']))
                     {
-                        $eveNames[] = $totEveNames[$i];
-                        $allRegis = $this->dashboard_model->getEventAllRegs($totEveIds[$i]);
+                        $oldIds = explode(',', $row['ids']);
+                        $oldNames = explode(';', $row['eveNames']);
+                    }
+                    if(isset($row['newids']))
+                    {
+                        $newIds = explode(',',$row['newids']);
+                        $newNames = explode(';', $row['neweveNames']);
+                    }
+                    /*$totEveIds = array_merge($oldIds,$newIds);
+                    $totEveNames = array_merge($oldNames,$newNames);*/
+                    $total = 0;
+                    $oldEveNames = array();
+                    $oldEveAmts = array();
+                    $newEveNames = array();
+                    $newEveAmts = array();
+
+                    //lopping through old Events
+                    for($i=0;$i<count($oldIds);$i++)
+                    {
+                        $oldEveNames[] = $oldNames[$i];
+                        $allRegis = $this->dashboard_model->getAllEventRegis($oldIds[$i]);
                         if(isset($allRegis) && myIsArray($allRegis))
                         {
                             $subTot = 0;
@@ -3829,27 +3876,50 @@ class Dashboard extends MY_Controller {
                             {
                                 $subTot += ((int)$regRow['quantity'] * (int)$regRow['price']);
                             }
-                            $eveAmts[] = $subTot;
+                            $oldEveAmts[] = $subTot;
                             $total += $subTot;
                         }
                         else
                         {
-                            $eveAmts[] = 0;
+                            $oldEveAmts[] = 0;
                             $total += 0;
                         }
                     }
+
+                    //lopping through new Events
+                    for($i=0;$i<count($newIds);$i++)
+                    {
+                        $newEveNames[] = $newNames[$i];
+                        $allRegis = $this->dashboard_model->getAllEventRegis($newIds[$i]);
+                        if(isset($allRegis) && myIsArray($allRegis))
+                        {
+                            $subTot = 0;
+                            foreach($allRegis as $regKey => $regRow)
+                            {
+                                $subTot += ((int)$regRow['quantity'] * (int)$regRow['price']);
+                            }
+                            $newEveAmts[] = $subTot;
+                            $total += $subTot;
+                        }
+                        else
+                        {
+                            $newEveAmts[] = 0;
+                            $total += 0;
+                        }
+                    }
+
                     $data['data'][$key][] = 'Rs. '.$total;
                     if($total>30000)
                     {
-                        $tds = ($total*10)/100;
+                        $tds = (($total-30000)*10)/100;
                         $data['data'][$key][] = 'Rs. '.$tds;
                     }
                     else
                     {
                         $data['data'][$key][] = 'NA';
                     }
-                    $data['data'][$key][] = '<a href="#" class="viewDetails-icon" data-eveNames="'.implode(';',$eveNames).'"
-                                               data-eveAmts= "'.implode(';',$eveAmts).'">
+                    $data['data'][$key][] = '<a href="#" class="viewDetails-icon" data-oldNames="'.implode(';',$oldEveNames).'" data-newNames="'.implode(';',$newEveNames).'"
+                                               data-oldAmts= "'.implode(';',$oldEveAmts).'" data-newAmts= "'.implode(';',$newEveAmts).'">
                                                 View Details</a>';
                 }
             }
