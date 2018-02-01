@@ -3816,6 +3816,7 @@ class Dashboard extends MY_Controller {
                     $ifFound = true;
                     $oldOrgs[$i]['newids'] = $row['ids'];
                     $oldOrgs[$i]['neweveNames'] = $row['eveNames'];
+                    $oldOrgs[$i]['newlocNames'] = $row['locNames'];
                 }
             }
             if(!$ifFound)
@@ -3823,6 +3824,7 @@ class Dashboard extends MY_Controller {
                 $oldOrgs[] = array(
                     'newids' => $row['ids'],
                     'neweveNames' => $row['eveNames'],
+                    'newlocNames' => $row['locNames'],
                     'creatorName' => $row['creatorName'],
                     'creatorEmail' => $row['creatorEmail'],
                     'creatorPhone' => $row['creatorPhone']
@@ -3846,23 +3848,29 @@ class Dashboard extends MY_Controller {
                     $newIds = array();
                     $oldNames = array();
                     $newNames = array();
+                    $oldLocNames = array();
+                    $newLocNames = array();
                     if(isset($row['ids']))
                     {
                         $oldIds = explode(',', $row['ids']);
                         $oldNames = explode(';', $row['eveNames']);
+                        $oldLocNames = explode(';', $row['locNames']);
                     }
                     if(isset($row['newids']))
                     {
                         $newIds = explode(',',$row['newids']);
                         $newNames = explode(';', $row['neweveNames']);
+                        $newLocNames = explode(';', $row['newlocNames']);
                     }
                     /*$totEveIds = array_merge($oldIds,$newIds);
                     $totEveNames = array_merge($oldNames,$newNames);*/
                     $total = 0;
                     $oldEveNames = array();
+                    $oldEveLocNames = array();
                     $oldEveAmts = array();
                     $oldEveTds = array();
                     $newEveNames = array();
+                    $newEveLocNames = array();
                     $newEveAmts = array();
                     $newEveTds = array();
 
@@ -3871,6 +3879,7 @@ class Dashboard extends MY_Controller {
                     for($i=0;$i<count($oldIds);$i++)
                     {
                         $oldEveNames[] = $oldNames[$i];
+                        $oldEveLocNames[] = $oldLocNames[$i];
                         $allRegis = $this->dashboard_model->getAllEventRegis($oldIds[$i]);
                         if(isset($allRegis) && myIsArray($allRegis))
                         {
@@ -3904,6 +3913,7 @@ class Dashboard extends MY_Controller {
                     for($i=0;$i<count($newIds);$i++)
                     {
                         $newEveNames[] = $newNames[$i];
+                        $newEveLocNames[] = $newLocNames[$i];
                         $allRegis = $this->dashboard_model->getAllEventRegis($newIds[$i]);
                         if(isset($allRegis) && myIsArray($allRegis))
                         {
@@ -3942,7 +3952,8 @@ class Dashboard extends MY_Controller {
                     {
                         $data['data'][$key][] = 'NA';
                     }
-                    $data['data'][$key][] = '<a href="#" class="viewDetails-icon" data-oldNames="'.implode(';',$oldEveNames).'" data-newNames="'.implode(';',$newEveNames).'"
+                    $data['data'][$key][] = '<a href="#" class="viewDetails-icon" data-oldNames="'.implode(';',$oldEveNames).'" data-oldLocNames="'.implode(';',$oldEveLocNames).'"
+                                               data-newNames="'.implode(';',$newEveNames).'" data-newLocNames="'.implode(';',$newEveLocNames).'"
                                                data-oldAmts= "'.implode(';',$oldEveAmts).'" data-newAmts= "'.implode(';',$newEveAmts).'"
                                                data-oldTds= "'.implode(';',$oldEveTds).'" data-newTds= "'.implode(';',$newEveTds).'">
                                                 View Details</a>';

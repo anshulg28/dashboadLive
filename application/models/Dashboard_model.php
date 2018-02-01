@@ -1606,20 +1606,26 @@ class Dashboard_Model extends CI_Model
 
     function getOrgNewEvents()
     {
-        $query = "SELECT GROUP_CONCAT(eventId) AS 'ids', GROUP_CONCAT(eventName SEPARATOR ';') AS 'eveNames', 
-                  GROUP_CONCAT(eventPlace SEPARATOR ';') AS 'evePlaces', creatorName, creatorEmail, creatorPhone
-                    FROM eventmaster WHERE costType != 1 AND ifActive = ".ACTIVE." AND ifApproved = ".EVENT_APPROVED." AND isEventCancel = 0 
-                    AND ifAutoCreated = 0 GROUP BY userId";
+        $query = "SELECT GROUP_CONCAT(em.eventId) AS 'ids', GROUP_CONCAT(em.eventName SEPARATOR ';') AS 'eveNames', 
+                  GROUP_CONCAT(em.eventPlace SEPARATOR ';') AS 'evePlaces', GROUP_CONCAT(lm.locName SEPARATOR ';') AS 'locNames',
+                   em.creatorName, em.creatorEmail, em.creatorPhone
+                    FROM eventmaster em
+                    LEFT JOIN locationmaster lm ON em.eventPlace = lm.id
+                    WHERE em.costType != 1 AND em.ifActive = ".ACTIVE." AND em.ifApproved = ".EVENT_APPROVED." AND em.isEventCancel = 0 
+                    AND em.ifAutoCreated = 0 GROUP BY em.userId";
 
         $result = $this->db->query($query)->result_array();
         return $result;
     }
     function getOrgOldEvents()
     {
-        $query = "SELECT GROUP_CONCAT(eventId) AS 'ids', GROUP_CONCAT(eventName SEPARATOR ';') AS 'eveNames',
-                  GROUP_CONCAT(eventPlace SEPARATOR ';') AS 'evePlaces', creatorName, creatorEmail, creatorPhone
-                    FROM eventcompletedmaster WHERE costType != 1 AND ifActive = ".ACTIVE." AND ifApproved = ".EVENT_APPROVED." AND isEventCancel = 0 
-                    AND ifAutoCreated = 0 GROUP BY userId";
+        $query = "SELECT GROUP_CONCAT(em.eventId) AS 'ids', GROUP_CONCAT(em.eventName SEPARATOR ';') AS 'eveNames',
+                  GROUP_CONCAT(em.eventPlace SEPARATOR ';') AS 'evePlaces', GROUP_CONCAT(lm.locName SEPARATOR ';') AS 'locNames',
+                   em.creatorName, em.creatorEmail, em.creatorPhone
+                    FROM eventcompletedmaster em 
+                    LEFT JOIN locationmaster lm ON em.eventPlace = lm.id
+                    WHERE em.costType != 1 AND em.ifActive = ".ACTIVE." AND em.ifApproved = ".EVENT_APPROVED." AND em.isEventCancel = 0 
+                    AND em.ifAutoCreated = 0 GROUP BY em.userId";
 
         $result = $this->db->query($query)->result_array();
         return $result;

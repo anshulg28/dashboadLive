@@ -2035,6 +2035,7 @@ class Cron extends MY_Controller
         $newOrgs = $this->dashboard_model->getOrgNewEvents();
         $oldOrgs = $this->dashboard_model->getOrgOldEvents();
 
+        $sendFirst = false;
         foreach($newOrgs as $key => $row)
         {
             $ifFound = false;
@@ -2118,6 +2119,7 @@ class Cron extends MY_Controller
                             $total += $subTot;
                             if($total > 30000)
                             {
+                                //$sendFirst = true;
                                 $isNewRequired = false;
                                 //$oldEveTds[] = (($total-(30000+$lastOldTds)) * 10)/100;
                                 $lastOldTds += $total-(30000+$lastOldTds);
@@ -2163,7 +2165,8 @@ class Cron extends MY_Controller
                                 $total += $subTot;
                                 if($total > 30000)
                                 {
-                                    //$newEveTds[] = (($total-(30000+$lastNewTds)) * 10)/100;
+                                    //$sendFirst = true;
+
                                     $lastNewTds += $total - (30000+$lastNewTds);
                                     $mailData = array(
                                         'eventPlace' => $newPlaces[$i],
@@ -2189,6 +2192,10 @@ class Cron extends MY_Controller
                     }
 
                 }
+                /*if($sendFirst)
+                {
+                    break;
+                }*/
             }
         }
 

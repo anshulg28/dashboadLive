@@ -5183,33 +5183,44 @@
     $(document).on('click','#orgSum .viewDetails-icon', function(e){
         e.preventDefault();
         var oldNames = $(this).attr('data-oldNames').split(';');
+        var oldLocNames = $(this).attr('data-oldLocNames').split(';');
         var oldAmts = $(this).attr('data-oldAmts').split(';');
         var oldTds = $(this).attr('data-oldTds').split(';');
         var newNames = $(this).attr('data-newNames').split(';');
+        var newLocNames = $(this).attr('data-newLocNames').split(';');
         var newAmts = $(this).attr('data-newAmts').split(';');
         var newTds = $(this).attr('data-newTds').split(';');
 
-        var tempTab = '<h2>Active Events</h2><table class="table table-responsive"><thead><tr><th>Event Name</th><th>Total collected</th><th>TDS</th></tr></thead><tbody>';
-        for(var i=0;i<newNames.length;i++)
+        var tempTab = '';
+        if(newNames.length>0)
         {
-            tempTab += '<tr>';
-            tempTab += '<td>'+newNames[i]+'</td>';
-            tempTab += '<td>Rs. '+newAmts[i]+'</td>';
-            tempTab += '<td>Rs. '+newTds[i]+'</td>';
-            tempTab += '</tr>';
+            tempTab = '<h2>Active Events</h2><table class="table table-responsive"><thead><tr><th>Event Name</th><th>Location</th><th>Total collected</th><th>TDS</th></tr></thead><tbody>';
+            for(var i=0;i<newNames.length;i++)
+            {
+                tempTab += '<tr>';
+                tempTab += '<td>'+newNames[i]+'</td>';
+                tempTab += '<td>'+newLocNames[i]+'</td>';
+                tempTab += '<td>Rs. '+newAmts[i]+'</td>';
+                tempTab += '<td>Rs. '+newTds[i]+'</td>';
+                tempTab += '</tr>';
+            }
+            tempTab += '</tbody></table>';
         }
-        tempTab += '</tbody></table>';
 
-        tempTab += '<h2>Completed Events</h2><table class="table table-responsive"><thead><tr><th>Event Name</th><th>Total collected</th><th>TDS</th></tr></thead><tbody>';
-        for(var i=0;i<oldNames.length;i++)
+        if(oldNames.length>0)
         {
-            tempTab += '<tr>';
-            tempTab += '<td>'+oldNames[i]+'</td>';
-            tempTab += '<td>Rs. '+oldAmts[i]+'</td>';
-            tempTab += '<td>Rs. '+oldTds[i]+'</td>';
-            tempTab += '</tr>';
+            tempTab += '<h2>Completed Events</h2><table class="table table-responsive"><thead><tr><th>Event Name</th><th>Location</th><th>Total collected</th><th>TDS</th></tr></thead><tbody>';
+            for(var i=0;i<oldNames.length;i++)
+            {
+                tempTab += '<tr>';
+                tempTab += '<td>'+oldNames[i]+'</td>';
+                tempTab += '<td>'+oldLocNames[i]+'</td>';
+                tempTab += '<td>Rs. '+oldAmts[i]+'</td>';
+                tempTab += '<td>Rs. '+oldTds[i]+'</td>';
+                tempTab += '</tr>';
+            }
+            tempTab += '</tbody></table>';
         }
-        tempTab += '</tbody></table>';
         bootbox.alert(tempTab);
     });
 </script>

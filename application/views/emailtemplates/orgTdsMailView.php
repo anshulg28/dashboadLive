@@ -16,7 +16,7 @@
         Doolally will also now begin deducting 10% TDS on your forthcoming events and issue a Form 16 to you.<br><br>
         This deduction will reflect in your dashboard or call me if you have any doubts.<br><br>
         Thanks!<br>
-        <?php echo ucfirst($mailData['senderName']); ?>, Doolally
+        <?php echo ucfirst($senderName); ?>, Doolally
     </p>
 
 </body>
