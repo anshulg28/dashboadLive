@@ -1606,7 +1606,8 @@ class Dashboard_Model extends CI_Model
 
     function getOrgNewEvents()
     {
-        $query = "SELECT GROUP_CONCAT(eventId) AS 'ids', GROUP_CONCAT(eventName SEPARATOR ';') AS 'eveNames', creatorName, creatorEmail, creatorPhone
+        $query = "SELECT GROUP_CONCAT(eventId) AS 'ids', GROUP_CONCAT(eventName SEPARATOR ';') AS 'eveNames', 
+                  GROUP_CONCAT(eventPlace SEPARATOR ';') AS 'evePlaces', creatorName, creatorEmail, creatorPhone
                     FROM eventmaster WHERE costType != 1 AND ifActive = ".ACTIVE." AND ifApproved = ".EVENT_APPROVED." AND isEventCancel = 0 
                     AND ifAutoCreated = 0 GROUP BY userId";
 
@@ -1615,7 +1616,8 @@ class Dashboard_Model extends CI_Model
     }
     function getOrgOldEvents()
     {
-        $query = "SELECT GROUP_CONCAT(eventId) AS 'ids', GROUP_CONCAT(eventName SEPARATOR ';') AS 'eveNames', creatorName, creatorEmail, creatorPhone
+        $query = "SELECT GROUP_CONCAT(eventId) AS 'ids', GROUP_CONCAT(eventName SEPARATOR ';') AS 'eveNames',
+                  GROUP_CONCAT(eventPlace SEPARATOR ';') AS 'evePlaces', creatorName, creatorEmail, creatorPhone
                     FROM eventcompletedmaster WHERE costType != 1 AND ifActive = ".ACTIVE." AND ifApproved = ".EVENT_APPROVED." AND isEventCancel = 0 
                     AND ifAutoCreated = 0 GROUP BY userId";
 

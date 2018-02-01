@@ -1134,6 +1134,63 @@ class Sendemail_library
         $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
     }
 
+    public function orgTdsMail($userData)
+    {
+        $commDetail = $this->CI->users_model->searchUserByLoc($userData['eventPlace']);
+        if($commDetail['status'] === true)
+        {
+            $data['senderName'] = ucfirst(trim($commDetail['userData']['firstName']));
+        }
+
+        $data['mailData'] = $userData;
+
+        $content = $this->CI->load->view('emailtemplates/orgTdsMailView', $data, true);
+
+        $fromEmail = DEFAULT_SENDER_EMAIL;
+        $fromPass = DEFAULT_SENDER_PASS;
+        $replyTo = $fromEmail;
+
+        if(isset($commDetail) && $commDetail['status'] === true)
+        {
+            $replyTo = $commDetail['userData']['emailId'];
+        }
+
+        $cc        = implode(',',$this->CI->config->item('ccList'));
+        $cc .= ',accountsexecutive@brewcraftsindia.com';
+        if(isset($commDetail) && $commDetail['status'] === true)
+        {
+            $cc .= ','.$commDetail['userData']['emailId'];
+        }
+        $fromName  = 'Doolally';
+        if(isset($commDetail) && $commDetail['status'] === true)
+        {
+            $fromName = ucfirst(trim($commDetail['userData']['firstName']));
+        }
+
+        $subject = 'You have crossed Rs 30,000 in earnings at Doolally';
+        $toEmail = $userData['creatorEmail'];
+
+        $logDetails = array(
+            'messageId' => null,
+            'sendTo' => $toEmail,
+            'sendFrom' => $fromEmail,
+            'sendFromName' => $fromName,
+            'ccList' => $cc,
+            'replyTo' => $replyTo,
+            'mailSubject' => $subject,
+            'mailBody' => $content,
+            'attachments' => '',
+            'sendStatus' => 'waiting',
+            'failIds' => null,
+            'isPressMail' => '0',
+            'sendDateTime' => date('Y-m-d H:i:s')
+        );
+
+        $this->CI->mailers_model->saveWaitMailLog($logDetails);
+
+        //$this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
+    }
+
     public function sendEmail($to, $cc = '', $from, $fromPass, $fromName,$replyTo, $subject, $content, $attachment = array(),$viewCC = '')
     {
         //Create the Transport

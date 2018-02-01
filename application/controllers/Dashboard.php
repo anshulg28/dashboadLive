@@ -3861,10 +3861,13 @@ class Dashboard extends MY_Controller {
                     $total = 0;
                     $oldEveNames = array();
                     $oldEveAmts = array();
+                    $oldEveTds = array();
                     $newEveNames = array();
                     $newEveAmts = array();
+                    $newEveTds = array();
 
                     //lopping through old Events
+                    $lastOldTds = 0;
                     for($i=0;$i<count($oldIds);$i++)
                     {
                         $oldEveNames[] = $oldNames[$i];
@@ -3878,14 +3881,25 @@ class Dashboard extends MY_Controller {
                             }
                             $oldEveAmts[] = $subTot;
                             $total += $subTot;
+                            if($total > 30000)
+                            {
+                                $oldEveTds[] = (($total-(30000+$lastOldTds)) * 10)/100;
+                                $lastOldTds += $total-(30000+$lastOldTds);
+                            }
+                            else
+                            {
+                                $oldEveTds[] = 0;
+                            }
                         }
                         else
                         {
                             $oldEveAmts[] = 0;
                             $total += 0;
+                            $oldEveTds[] = 0;
                         }
                     }
 
+                    $lastNewTds = $lastOldTds;
                     //lopping through new Events
                     for($i=0;$i<count($newIds);$i++)
                     {
@@ -3900,11 +3914,21 @@ class Dashboard extends MY_Controller {
                             }
                             $newEveAmts[] = $subTot;
                             $total += $subTot;
+                            if($total > 30000)
+                            {
+                                $newEveTds[] = (($total-(30000+$lastNewTds)) * 10)/100;
+                                $lastNewTds += $total - (30000+$lastNewTds);
+                            }
+                            else
+                            {
+                                $newEveTds[] = 0;
+                            }
                         }
                         else
                         {
                             $newEveAmts[] = 0;
                             $total += 0;
+                            $newEveTds[] = 0;
                         }
                     }
 
@@ -3919,7 +3943,8 @@ class Dashboard extends MY_Controller {
                         $data['data'][$key][] = 'NA';
                     }
                     $data['data'][$key][] = '<a href="#" class="viewDetails-icon" data-oldNames="'.implode(';',$oldEveNames).'" data-newNames="'.implode(';',$newEveNames).'"
-                                               data-oldAmts= "'.implode(';',$oldEveAmts).'" data-newAmts= "'.implode(';',$newEveAmts).'">
+                                               data-oldAmts= "'.implode(';',$oldEveAmts).'" data-newAmts= "'.implode(';',$newEveAmts).'"
+                                               data-oldTds= "'.implode(';',$oldEveTds).'" data-newTds= "'.implode(';',$newEveTds).'">
                                                 View Details</a>';
                 }
             }

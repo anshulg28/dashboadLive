@@ -1539,7 +1539,7 @@ class Cron extends MY_Controller
 
             $content = '<html><body><p>Instamojo Refund Data!<br>PFA</p></body></html>';
 
-            $this->sendemail_library->sendEmail('saha@brewcraftsindia.com','anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+            $this->sendemail_library->sendEmail('saha@brewcraftsindia.com','','admin@brewcraftsindia.com','ngks2009','Doolally'
                 ,'admin@brewcraftsindia.com','Instamojo Refund Data | '.date('d_M_Y'),$content,array("./uploads/refundReport_".date('d_M_Y').".csv"));
             try
             {
@@ -1812,7 +1812,7 @@ class Cron extends MY_Controller
             fclose($file1);
             $content = '<html><body><p>Monthly Employee Expenditure Report<br>PFA</p></body></html>';
 
-            $this->sendemail_library->sendEmail(array('purva@brewcraftsindia.com','hasti@brewcraftsindia.com','saha@brewcraftsindia.com','savio@brewcraftsindia.com','amit@brewcraftsindia.com','taronish@brewcraftsindia.com','finance@brewcraftsindia.com','jayant@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+            $this->sendemail_library->sendEmail(array('purva@brewcraftsindia.com','hasti@brewcraftsindia.com','saha@brewcraftsindia.com','savio@brewcraftsindia.com','suketu@brewcraftsindia.com','finance@brewcraftsindia.com','jayant@brewcraftsindia.com'),'','admin@brewcraftsindia.com','ngks2009','Doolally'
                 ,'admin@brewcraftsindia.com','Staff wallet usage report '.date('m_Y', strtotime('-1 month')),$content,array("./uploads/monthly_wallet_detail_transactions_".date('m_Y', strtotime('-1 month')).".csv",
                     "./uploads/monthly_wallet_usage_".date('m_Y', strtotime('-1 month')).".csv"));
             try
@@ -1878,7 +1878,7 @@ class Cron extends MY_Controller
             {
                 $content .= '</tbody></table>';
             }
-            $this->sendemail_library->sendEmail(array('mandar@brewcraftsindia.com','taronish@brewcraftsindia.com','anil.jadhav@brewcraftsindia.com'),'saha@brewcraftsindia.com,anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+            $this->sendemail_library->sendEmail(array('mandar@brewcraftsindia.com','suketu@brewcraftsindia.com','anil.jadhav@brewcraftsindia.com'),'saha@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
                 ,'admin@brewcraftsindia.com',$subject,$content,array());
         }
 
@@ -1893,7 +1893,7 @@ class Cron extends MY_Controller
                 $content .= 'Job #'.$row['complaintId'].'-'.$row['locName'].'<br>';
             }
             $content .= '</p></body></html>';
-            $this->sendemail_library->sendEmail(array('mandar@brewcraftsindia.com','taronish@brewcraftsindia.com'),'saha@brewcraftsindia.com,anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+            $this->sendemail_library->sendEmail(array('mandar@brewcraftsindia.com','suketu@brewcraftsindia.com'),'saha@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
                 ,'admin@brewcraftsindia.com',$subject,$content,array());
         }
 
@@ -1931,7 +1931,7 @@ class Cron extends MY_Controller
             {
                 $content .= '</tbody></table>';
             }
-            $this->sendemail_library->sendEmail(array('mandar@brewcraftsindia.com','taronish@brewcraftsindia.com','anil.jadhav@brewcraftsindia.com','suketu@brewcraftsindia.com'),'saha@brewcraftsindia.com,anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+            $this->sendemail_library->sendEmail(array('mandar@brewcraftsindia.com','anil.jadhav@brewcraftsindia.com','suketu@brewcraftsindia.com'),'saha@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
                 ,'admin@brewcraftsindia.com',$subject,$content,array());
         }
     }
@@ -1960,7 +1960,7 @@ class Cron extends MY_Controller
                 fputcsv($file,$fData);
             }
             fclose($file);
-            $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+            $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com'),'tresha@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
                 ,'admin@brewcraftsindia.com',$subject,$content,array("./uploads/musicReqReport_".date('d_M_Y',strtotime('-1 day')).".csv"));
             try
             {
@@ -1975,7 +1975,7 @@ class Cron extends MY_Controller
         {
             $subject = "No Music Request Report for ".date('Y_m_d',strtotime('-1 day'));
             $content = '<html><body><p>No Music Request Report</p>';
-            $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+            $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com'),'tresha@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
                 ,'admin@brewcraftsindia.com',$subject,$content,array());
         }
     }
@@ -2027,5 +2027,171 @@ class Cron extends MY_Controller
             );
             $this->cron_model->saveTapsTotal($details);
         }
+    }
+
+    public function checkEventFinish()
+    {
+        $data = array();
+        $newOrgs = $this->dashboard_model->getOrgNewEvents();
+        $oldOrgs = $this->dashboard_model->getOrgOldEvents();
+
+        foreach($newOrgs as $key => $row)
+        {
+            $ifFound = false;
+            for($i=0;$i<count($oldOrgs);$i++)
+            {
+                if($row['creatorName'] == $oldOrgs[$i]['creatorName'] &&
+                    $row['creatorEmail'] == $oldOrgs[$i]['creatorEmail'] &&
+                    $row['creatorPhone'] == $oldOrgs[$i]['creatorPhone'])
+                {
+                    $ifFound = true;
+                    $oldOrgs[$i]['newids'] = $row['ids'];
+                    $oldOrgs[$i]['neweveNames'] = $row['eveNames'];
+                    $oldOrgs[$i]['newevePlaces'] = $row['evePlaces'];
+                }
+            }
+            if(!$ifFound)
+            {
+                $oldOrgs[] = array(
+                    'newids' => $row['ids'],
+                    'neweveNames' => $row['eveNames'],
+                    'newevePlaces' => $row['evePlaces'],
+                    'creatorName' => $row['creatorName'],
+                    'creatorEmail' => $row['creatorEmail'],
+                    'creatorPhone' => $row['creatorPhone']
+                );
+            }
+        }
+
+        //Total for current active events
+        $newOrgs = $oldOrgs;
+        $previousOrgs = $this->cron_model->getAllOrgMails();
+
+        if(isset($newOrgs) && myIsArray($newOrgs))
+        {
+            foreach($newOrgs as $key => $row)
+            {
+                if(is_in_array($previousOrgs,'orgName',$row['creatorName']) &&
+                    is_in_array($previousOrgs,'orgEmail',$row['creatorEmail']) &&
+                    is_in_array($previousOrgs,'orgPhone',$row['creatorPhone']))
+                {
+
+                }
+                else
+                {
+
+                    $oldIds = array();
+                    $newIds = array();
+                    $oldNames = array();
+                    $oldPlaces = array();
+                    $newNames = array();
+                    $newPlaces = array();
+                    if(isset($row['ids']))
+                    {
+                        $oldIds = explode(',', $row['ids']);
+                        //$oldNames = explode(';', $row['eveNames']);
+                        $oldPlaces = explode(';', $row['evePlaces']);
+                    }
+                    if(isset($row['newids']))
+                    {
+                        $newIds = explode(',',$row['newids']);
+                        //$newNames = explode(';', $row['neweveNames']);
+                        $newPlaces = explode(';', $row['newevePlaces']);
+                    }
+                    $total = 0;
+
+                    //lopping through old Events
+                    $lastOldTds = 0;
+                    $isNewRequired = true;
+                    for($i=0;$i<count($oldIds);$i++)
+                    {
+                        //$oldEveNames[] = $oldNames[$i];
+                        $allRegis = $this->dashboard_model->getAllEventRegis($oldIds[$i]);
+                        if(isset($allRegis) && myIsArray($allRegis))
+                        {
+                            $subTot = 0;
+                            foreach($allRegis as $regKey => $regRow)
+                            {
+                                $subTot += ((int)$regRow['quantity'] * (int)$regRow['price']);
+                            }
+                            //$oldEveAmts[] = $subTot;
+                            $total += $subTot;
+                            if($total > 30000)
+                            {
+                                $isNewRequired = false;
+                                //$oldEveTds[] = (($total-(30000+$lastOldTds)) * 10)/100;
+                                $lastOldTds += $total-(30000+$lastOldTds);
+                                $mailData = array(
+                                    'eventPlace' => $oldPlaces[$i],
+                                    'creatorName' => $row['creatorName'],
+                                    'creatorEmail' => $row['creatorEmail'],
+                                    'totalAmt' => $total,
+                                    'balAmt' => $lastOldTds,
+                                    'tdsAmt' => (int)(($lastOldTds * 10)/100)
+                                );
+                                $this->sendemail_library->orgTdsMail($mailData);
+
+                                $mDetails = array(
+                                    'orgName' => $row['creatorName'],
+                                    'orgEmail' => $row['creatorEmail'],
+                                    'orgPhone' => $row['creatorPhone'],
+                                    'onEventId' => $oldIds[$i],
+                                    'mailDateTime' => date('Y-m-d H:i:s')
+                                );
+                                $this->cron_model->saveOrgTdsMail($mDetails);
+                                break;
+                            }
+                        }
+                    }
+
+                    if($isNewRequired)
+                    {
+                        $lastNewTds = 0;
+                        //lopping through new Events
+                        for($i=0;$i<count($newIds);$i++)
+                        {
+                            //$newEveNames[] = $newNames[$i];
+                            $allRegis = $this->dashboard_model->getAllEventRegis($newIds[$i]);
+                            if(isset($allRegis) && myIsArray($allRegis))
+                            {
+                                $subTot = 0;
+                                foreach($allRegis as $regKey => $regRow)
+                                {
+                                    $subTot += ((int)$regRow['quantity'] * (int)$regRow['price']);
+                                }
+                                //$newEveAmts[] = $subTot;
+                                $total += $subTot;
+                                if($total > 30000)
+                                {
+                                    //$newEveTds[] = (($total-(30000+$lastNewTds)) * 10)/100;
+                                    $lastNewTds += $total - (30000+$lastNewTds);
+                                    $mailData = array(
+                                        'eventPlace' => $newPlaces[$i],
+                                        'creatorName' => $row['creatorName'],
+                                        'creatorEmail' => $row['creatorEmail'],
+                                        'totalAmt' => $total,
+                                        'balAmt' => $lastNewTds,
+                                        'tdsAmt' => (int)(($lastNewTds * 10)/100)
+                                    );
+                                    $this->sendemail_library->orgTdsMail($mailData);
+                                    $mDetails = array(
+                                        'orgName' => $row['creatorName'],
+                                        'orgEmail' => $row['creatorEmail'],
+                                        'orgPhone' => $row['creatorPhone'],
+                                        'onEventId' => $oldIds[$i],
+                                        'mailDateTime' => date('Y-m-d H:i:s')
+                                    );
+                                    $this->cron_model->saveOrgTdsMail($mDetails);
+                                    break;
+                                }
+                            }
+                        } //For end
+                    }
+
+                }
+            }
+        }
+
+        echo 'done';
     }
 }

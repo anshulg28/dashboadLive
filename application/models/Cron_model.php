@@ -359,4 +359,34 @@ class Cron_Model extends CI_Model
         $this->db->update('locationmaster',$details);
         return true;
     }
+
+    function getAllOrgMails()
+    {
+        $query = "SELECT * FROM organisermailrecords";
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+    function findFinishEvents($sDate, $eDate)
+    {
+        $query = "SELECT GROUP_CONCAT(eventId) as 'eventIds', GROUP_CONCAT(eventPlace) as 'eventPlaces',creatorName, creatorPhone, creatorEmail, userId  
+                  FROM `eventmaster`
+                  WHERE (CONCAT(eventDate,' ',endTime) >= '".$sDate."' AND CONCAT(eventDate,' ',endTime) <= '".$eDate."') 
+                  AND ifActive = 1 AND ifApproved = 1 AND isEventCancel = 0 AND costType != 1 group by userId";
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+    function getOrgOldEventsById($userId)
+    {
+        $query = "SELECT GROUP_CONCAT(eventId) AS 'ids', GROUP_CONCAT(eventPlace SEPARATOR ';') AS 'evePlaces'
+                    FROM eventcompletedmaster WHERE costType != 1 AND ifActive = ".ACTIVE." AND ifApproved = ".EVENT_APPROVED." AND isEventCancel = 0 
+                    AND ifAutoCreated = 0 AND userId = ".$userId." GROUP BY userId";
+
+        $result = $this->db->query($query)->row_array();
+        return $result;
+    }
+    function saveOrgTdsMail($details)
+    {
+        $this->db->insert('organisermailrecords',$details);
+        return true;
+    }
 }
