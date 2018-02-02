@@ -4,6 +4,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * Class Users
  * @property Users_Model $users_model
+ * @property Locations_Model $locations_model
+ * @property Login_model $login_model
 */
 
 class Users extends MY_Controller {
@@ -12,6 +14,8 @@ class Users extends MY_Controller {
 	{
 		parent::__construct();
 		$this->load->model('users_model');
+        $this->load->model('locations_model');
+        $this->load->model('login_model');
 	}
 	public function index()
 	{
@@ -40,6 +44,8 @@ class Users extends MY_Controller {
         {
             redirect(base_url());
         }
+
+        $data['locs'] = $this->locations_model->getAllActiveLocations();
 
         $data['globalStyle'] = $this->dataformatinghtml_library->getGlobalStyleHtml($data);
         $data['globalJs'] = $this->dataformatinghtml_library->getGlobalJsHtml($data);
@@ -79,9 +85,27 @@ class Users extends MY_Controller {
 
         $params = $this->users_model->filterUserParameters($post);
 
+        if(isset($params['assignedLoc']))
+        {
+            $locUser = $this->users_model->searchUserByLoc($params['assignedLoc']);
+            if($locUser['status'] == true)
+            {
+                $this->users_model->deleteUserRecord($locUser['userData']['userId']);
+            }
+        }
+
+        $roles = $this->config->item('defaultRoles')[$params['userType']];
+
+
         if($userExists['status'] === false)
         {
-            $this->users_model->saveUserRecord($params);
+            $insertId = $this->users_model->saveUserRecord($params);
+            $roleData = array(
+                'userId' => $insertId,
+                'userType' => $params['userType'],
+                'modulesAssigned' => implode(',',$roles)
+            );
+            $this->login_model->saveModuleUser($roleData);
         }
         else
         {

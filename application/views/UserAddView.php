@@ -36,25 +36,19 @@
                                    class="form-control" id="lastName" placeholder="Eg. Doe"/>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-2"></div>
-                        <div class="col-sm-10">
-                            <div class="password-status"></div>
-                        </div>
-                    </div>
 
                     <div class="form-group">
-                        <label class="control-label col-sm-2" for="pass1">Password :</label>
+                        <label class="control-label col-sm-2" for="emailid">Email :</label>
                         <div class="col-sm-10">
-                            <input type="password" name="pass1"
-                                   class="form-control" id="pass1"/>
+                            <input type="email" name="email"
+                                   class="form-control" id="emailid" placeholder="Email (abc@doolally.in)" required/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-sm-2" for="pass2">Confirm:</label>
+                        <label class="control-label col-sm-2" for="mobNum">Mobile Number:</label>
                         <div class="col-sm-10">
-                            <input type="password"
-                                   class="form-control" id="pass2" />
+                            <input type="number" name="mobNum"
+                                   class="form-control" id="mobNum" placeholder="Mobile No. (9999999999)" required/>
                         </div>
                     </div>
 
@@ -68,7 +62,7 @@
                             <br>
                             <label for="is_executive">
                                 <input type="radio" onchange="toggleEmailField(this)" id="is_executive" name="userLevel" value="2">
-                                Executive (Back Office access only, no check-ins)
+                                Community Manager
                             </label>
                             <br>
                             <label for="is_server">
@@ -81,8 +75,19 @@
                                 Wallet Management
                             </label>
                             <br>
-                            <input type="email" name="email"
-                                   class="form-control hide" id="emailid" placeholder="Email (abc@doolally.in)" required/>
+                            <div class="locClass hide">
+                                <label for="assignedLoc">Location To Assign: </label>
+                                <select class="form-control" id="assignedLoc" name="assignedLoc">
+                                    <?php
+                                    foreach($locs as $key => $row)
+                                    {
+                                        ?>
+                                        <option value="<?php echo $row['id'];?>"><?php echo $row['locName'];?></option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -99,12 +104,12 @@
 
 <script>
 
-    $(document).ready(function(){
+    /*$(document).ready(function(){
        $('form button[type="submit"]').attr('disabled','true');
-    });
+    });*/
     var passGoodToGo = 0;
     var userVerified = 0;
-    $(document).on('keyup','#pass2',function(){
+    /*$(document).on('keyup','#pass2',function(){
         if($(this).val() != '')
         {
             if($('#pass1').val() != $(this).val())
@@ -120,7 +125,7 @@
                 $('form button[type="submit"]').removeAttr('disabled');
             }
         }
-    });
+    });*/
 
     $(document).on('focusout','#userName', function(){
         if($(this).val() != '')
@@ -160,13 +165,13 @@
 
     function toggleEmailField(ele)
     {
-        if($(ele).val() != '3')
+        if($(ele).val() == '2')
         {
-            $('#emailid').removeClass('hide');
+            $('.locClass').removeClass('hide');
         }
         else
         {
-            $('#emailid').addClass('hide');
+            $('.locClass').addClass('hide');
         }
     }
 </script>

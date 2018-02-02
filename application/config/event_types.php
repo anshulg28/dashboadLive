@@ -115,7 +115,14 @@ $config['defaultRoles'] = array(
         'maintenance_logview',
         'maintenance_workarea',
         'maintenance_worktype',
-        'maintenance_useradd'
+        'maintenance_useradd',
+        'spot_award',
+        'spot_award_add',
+        'dashboard_walletupdate',
+        'career',
+        'quiz',
+        'quiz_create',
+        'quiz_questions'
     ),
     ADMIN_USER => array(
         'mug_portal',
@@ -123,6 +130,7 @@ $config['defaultRoles'] = array(
         'mug_add',
         'mug_num_check',
         'mailers',
+        'user_mgt',
         'location_mgt',
         'offers',
         'offers_check',
@@ -141,7 +149,8 @@ $config['defaultRoles'] = array(
         'maintenance_logview',
         'maintenance_workarea',
         'maintenance_worktype',
-        'maintenance_useradd'
+        'maintenance_useradd',
+        'career'
     ),
     EXECUTIVE_USER => array(
         'mug_portal',
@@ -158,14 +167,17 @@ $config['defaultRoles'] = array(
         'dashboard_feedback',
         'dashboard_events',
         'dashboard_fnb',
-        'dashboard_beerolympics'
+        'dashboard_beerolympics',
+        'dashboard_walletupdate',
+        'wallet_check'
     ),
     SERVER_USER => array(
         'mug_club',
         'offers_check',
         'checkins',
         'wallet_check',
-        'maintenance'
+        'maintenance',
+        'quiz'
     ),
     WALLET_USER => array(
         'wallet_check',

@@ -168,7 +168,8 @@ class Users_Model extends CI_Model
         $post['ifActive'] = '1';
 
         $this->db->insert('doolally_usersmaster', $post);
-        return true;
+        $insertId = $this->db->insert_id();
+        return $insertId;
     }
     public function savePublicUser($post)
     {
