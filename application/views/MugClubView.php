@@ -179,16 +179,18 @@
                                             </td>
                                             <td><a data-toggle="tooltip" title="Edit" href="<?php echo base_url().'mugclub/edit/'.$row['mugId'];?>">
                                                     <i class="glyphicon glyphicon-edit"></i></a>&nbsp;
+                                                <a data-toggle="tooltip" class="mugDelete-icon" title="Delete" data-mugId = "<?php echo $row['mugId'];?>">
+                                                    <i class="fa fa-trash-o"></i></a>&nbsp;
                                                 <?php
                                                 if($this->userType != SERVER_USER)
                                                 {
-                                                    if($this->userType != EXECUTIVE_USER)
+                                                    /*if($this->userType != EXECUTIVE_USER)
                                                     {
-                                                        ?>
-                                                        <a data-toggle="tooltip" class="mugDelete-icon" title="Delete" data-mugId = "<?php echo $row['mugId'];?>">
+                                                        */?><!--
+                                                        <a data-toggle="tooltip" class="mugDelete-icon" title="Delete" data-mugId = "<?php /*echo $row['mugId'];*/?>">
                                                             <i class="fa fa-trash-o"></i></a>&nbsp;
-                                                        <?php
-                                                    }
+                                                        --><?php
+/*                                                    }*/
                                                     if(isset($row['membershipEnd']) && $row['membershipEnd'] <= date('Y-m-d', strtotime('+1 month')))
                                                     {
                                                         ?>

@@ -476,9 +476,14 @@ class Mugclub extends MY_Controller {
             $mugExists['mugId'] = $oldMug;
             $this->mugclub_model->saveDelRecord($mugExists);
             $this->mugclub_model->deleteMugRecord($mugId);
+            $mailData = array(
+                'senderName' => ucfirst($this->userFirstName),
+                'mugId' => $mugId
+            );
+            $this->sendemail_library->mugDelSendMail($mailData);
         }
         $logDetails = array(
-            'logMessage' => 'Function: deleteMugData, User: '.$this->userId,
+            'logMessage' => 'Function: deleteMugData, User: '.$this->userId.' Mug: '.$mugId,
             'fromWhere' => 'Dashboard',
             'insertedDT' => date('Y-m-d H:i:s')
         );

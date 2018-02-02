@@ -857,6 +857,29 @@ class Sendemail_library
         $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
     }
 
+    public function mugDelSendMail($userData)
+    {
+        $data['mailData'] = $userData;
+
+        $content = $this->CI->load->view('emailtemplates/mugDelMailView', $data, true);
+
+        $fromEmail = DEFAULT_SENDER_EMAIL;
+        $fromPass = DEFAULT_SENDER_PASS;
+        $replyTo = $fromEmail;
+
+        $cc = '';
+        $fromName  = 'Doolally';
+        if(isset($userData['senderName']) && isStringSet($userData['senderName']))
+        {
+            $fromName = ucfirst($userData['senderName']);
+        }
+
+        $subject = 'Mug Member Deleted';
+        $toEmail = 'tresha@brewcraftsindia.com';
+
+        $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
+    }
+
     public function sendCompOpenMail($userData)
     {
         $data['mailData'] = $userData;
