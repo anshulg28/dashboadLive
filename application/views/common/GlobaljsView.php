@@ -396,12 +396,22 @@ $(document).on('click','.homePage .request-otp', function(){
                     if(typeof data.roles !== 'undefined')
                     {
                         var roles = data.roles.split(',');
+                        var userIds = data.userIds.split(',');
                         var roleHtml = '<ul class="list-inline">';
-                        roleHtml += '<li>Login As: </li>'
+                        roleHtml += '<li>Login As: </li>';
                         for(var i =0;i<roles.length;i++)
                         {
-                            roleHtml += '<li><label class="radio-inline"><input type="radio" name="roleRadio" value="'+
-                                roles[i]+'">'+userTypes[roles[i]]+' User</label></li>';
+                            if(roles[i].indexOf(';') != -1)
+                            {
+                                var tempRole = roles[i].split(';');
+                                roleHtml += '<li><label class="radio-inline"><input type="radio" name="roleRadio" value="'+
+                                    userIds[i]+'">'+userTypes[tempRole[0]]+'( '+tempRole[1]+' ) User</label></li>';
+                            }
+                            else
+                            {
+                                roleHtml += '<li><label class="radio-inline"><input type="radio" name="roleRadio" value="'+
+                                    userIds[i]+'">'+userTypes[roles[i]]+' User</label></li>';
+                            }
                         }
                         roleHtml += '</ul>';
                         roleHtml += '<input type="hidden" name="mobEmail" value="'+$('.loginPage input[name="mobEmail"]').val()+'"/>';

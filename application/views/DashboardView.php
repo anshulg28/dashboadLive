@@ -5192,7 +5192,7 @@
         var newTds = $(this).attr('data-newTds').split(';');
 
         var tempTab = '';
-        if(newNames.length>0)
+        if(newNames.length>1)
         {
             tempTab = '<h2>Active Events</h2><table class="table table-responsive"><thead><tr><th>Event Name</th><th>Location</th><th>Total collected</th><th>TDS</th></tr></thead><tbody>';
             for(var i=0;i<newNames.length;i++)
@@ -5207,7 +5207,7 @@
             tempTab += '</tbody></table>';
         }
 
-        if(oldNames.length>0)
+        if(oldNames.length>1)
         {
             tempTab += '<h2>Completed Events</h2><table class="table table-responsive"><thead><tr><th>Event Name</th><th>Location</th><th>Total collected</th><th>TDS</th></tr></thead><tbody>';
             for(var i=0;i<oldNames.length;i++)

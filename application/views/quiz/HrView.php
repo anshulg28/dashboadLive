@@ -21,7 +21,8 @@
                     <div class="tab-content">
                         <div id="quizPage" class="tab-pane fade in active">
                             <?php
-                            if(myInArray('quiz_create',$userModules))
+
+
                             {
                                 if(isset($lastDrawn) && myIsArray($lastDrawn))
                                 {

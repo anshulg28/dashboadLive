@@ -217,3 +217,8 @@ $config['payTypes'] = array(
     'NEFT/RTGS',
     'Maintenance Balance'
 );
+$config['assetsStatus'] = array(
+    1 => 'In use',
+    2 => 'No in use',
+    3 => 'Under repair'
+);

@@ -5,6 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Class Login
  * @property Login_Model $login_model
  * @property Users_Model $users_model
+ * @property Locations_Model $locations_model
 */
 
 class Login extends MY_Controller {
@@ -14,6 +15,7 @@ class Login extends MY_Controller {
 		parent::__construct();
 		$this->load->model('login_model');
         $this->load->model('users_model');
+        $this->load->model('locations_model');
 	}
 	public function index()
 	{
@@ -277,12 +279,23 @@ class Login extends MY_Controller {
         if(isset($totalLogins) && myIsArray($totalLogins) && count($totalLogins)>1)
         {
             $roles = array();
+            $userIds = array();
             foreach($totalLogins as $key => $row)
             {
-                $roles[] = $row['userType'];
+                if(isset($row['assignedLoc']))
+                {
+                    $locData = $this->locations_model->getLocationDetailsById($row['assignedLoc']);
+                    $roles[] = $row['userType'].';'.$locData['locData'][0]['locName'];
+                }
+                else
+                {
+                    $roles[] = $row['userType'];
+                }
+                $userIds[] = $row['userId'];
             }
             $data['status'] = true;
             $data['roles'] = implode(',',$roles);
+            $data['userIds'] = implode(',', $userIds);
             echo json_encode($data);
             return false;
         }
