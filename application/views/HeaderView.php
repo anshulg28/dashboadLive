@@ -57,6 +57,12 @@
                                 <li><a href="<?php echo base_url();?>quiz/manageQuestions"><i class="fa fa-list-ol"></i> Quiz Questions</a></li>
                                 <?php
                             }
+                            if(myInArray('assets',$userModules))
+                            {
+                                ?>
+                                <li><a href="<?php echo base_url();?>assets"><i class="fa fa-television"></i> Assets</a></li>
+                                <?php
+                            }
                             if(myInArray('career',$userModules))
                             {
                                 ?>

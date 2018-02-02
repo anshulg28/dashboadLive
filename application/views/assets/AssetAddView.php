@@ -144,6 +144,17 @@
 <?php echo $globalJs; ?>
 
 <script>
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
     $('#purchaseDate, #warrantyTill').datetimepicker({
         format: 'YYYY-MM-DD'
     });
@@ -153,7 +164,7 @@
         {
             var pNew = new Date(purDate);
             pNew.setFullYear(pNew.getFullYear() + 1);
-            $('#warrantyTill').val(pNew);
+            $('#warrantyTill').val(formatDate(pNew));
         }
     });
     $(document).on('change','select[name="locId"]',function(){

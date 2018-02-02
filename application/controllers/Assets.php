@@ -47,11 +47,13 @@ class Assets extends MY_Controller {
             redirect(base_url());
         }
 
+        $data['locs'] = $this->locations_model->getAllActiveLocations();
+
         $data['globalStyle'] = $this->dataformatinghtml_library->getGlobalStyleHtml($data);
         $data['globalJs'] = $this->dataformatinghtml_library->getGlobalJsHtml($data);
         $data['headerView'] = $this->dataformatinghtml_library->getHeaderHtml($data);
         $data['footerView'] = $this->dataformatinghtml_library->getFooterHtml($data);
-        $this->load->view('assets/MainView', $data);
+        $this->load->view('assets/AssetAddView', $data);
     }
 
     public function saveAsset()

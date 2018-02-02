@@ -116,7 +116,8 @@
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="assignedTo">Assigned To:</label>
                         <div class="col-sm-10">
-                            <input type="text" name="assignedTo" class="form-control" id="assignedTo" required>
+                            <input type="text" name="assignedTo" class="form-control" value="<?php echo $assetData['assignedTo'];?>"
+                                   id="assignedTo" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -137,7 +138,7 @@
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="comments">Comments:</label>
                         <div class="col-sm-10">
-                            <textarea name="comments" class="form-control" id="comments">value="<?php echo $assetData['comments'];?>"</textarea>
+                            <textarea name="comments" class="form-control" id="comments">value="<?php if(isset($assetData['comments'])){echo $assetData['comments'];}?>"</textarea>
                         </div>
                     </div>
                     <div class="form-group">

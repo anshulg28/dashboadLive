@@ -182,6 +182,20 @@
                                         </li>
                                         <?php
                                     }
+                                    if(myInArray('assets',$userModules))
+                                    {
+                                        ?>
+                                        <li>
+                                            <a href="<?php echo base_url().'assets';?>">
+                                                <div class="menuWrap">
+                                                    <i class="fa fa-television fa-2x"></i>
+                                                    <br>
+                                                    <span>Assets</span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <?php
+                                    }
 
                                     if($this->userType == SERVER_USER)
                                     {

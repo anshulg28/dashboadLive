@@ -12,8 +12,7 @@
             <div class="row">
                 <h2 class="text-center">Welcome <?php echo ucfirst($this->userName); ?></h2>
                 <br>
-                <div class="col-sm-2 col-xs-0"></div>
-                <div class="col-sm-8 col-xs-12">
+                <div class="col-sm-12 col-xs-12">
                     <?php
                     if(myInArray('assets_add',$userModules))
                     {
@@ -117,7 +116,6 @@
                         <input type="hidden" name="qid" id="qid"/>
                     </form>
                 </div>
-                <div class="col-sm-2 col-xs-0"></div>
             </div>
         </div>
     </main>
@@ -125,94 +123,7 @@
 </body>
 <?php echo $globalJs; ?>
 <script>
-    $('#quizServerTab').dataTable();
-    $(document).on('click','.start-quiz', function(){
-        $(this).attr('disabled','disabled');
-        var quizId = $(this).attr('data-quizId');
-        showCustomLoader();
-        $.ajax({
-            type:'GET',
-            dataType:'json',
-            url:base_url+'quiz/startServerQuiz/'+quizId,
-            success: function(data)
-            {
-                hideCustomLoader();
-                if(data.status === true)
-                {
-                    var popupHtml = '<ul><li>You have 10 minutes for 10 questions</li>' +
-                        '<li>You have click on any one option which you think is correct, and click Submit to go to the next question</li>' +
-                        '<li>If you do not click on any option within the time limit, you will be taken to the next question automatically</li>' +
-                        '<li>There is no negative marking for wrong answers</li>' +
-                        '<li>Do NOT close the window before the quiz is completed</li>';
-                    bootbox.alert(popupHtml, function(){
-                        $('#startQuiz-form #qid').val(quizId);
-                        $('#startQuiz-form').attr('action',base_url+'quiz/quizPage/'+data.quizLvl).submit();
-                    });
-                    /*window.location.reload();*/
-                }
-                else
-                {
-                    bootbox.alert(data.errorTxt);
-                }
-            },
-            error:function(xhr, status, error)
-            {
-                hideCustomLoader();
-                bootbox.alert('Some Error Occurred, Try Again!');
-                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
-                saveErrorLog(err);
-            }
-        });
-    });
+    $('#assetsTab').dataTable();
 
-    $(document).on('click','.restart-test', function(e){
-        e.preventDefault();
-        $(this).removeClass('.restart-test');
-        var quizId = $(this).attr('data-quizId');
-        showCustomLoader();
-        $.ajax({
-            type:'GET',
-            dataType:'json',
-            url:base_url+'quiz/restartServerQuiz/'+quizId,
-            success: function(data)
-            {
-                hideCustomLoader();
-                if(data.status === true)
-                {
-                    if(typeof data.isBlocked !== 'undefined')
-                    {
-                        bootbox.alert('Max Attempts Exceeded! User is blocked!', function(){
-                            window.location.reload();
-                        });
-                    }
-                    else
-                    {
-                        var popupHtml = '<ul><li>You have 10 minutes for 10 questions</li>' +
-                            '<li>You have click on any one option which you think is correct, and click Submit to go to the next question</li>' +
-                            '<li>If you do not click on any option within the time limit, you will be taken to the next question automatically</li>' +
-                            '<li>There is no negative marking for wrong answers</li>' +
-                            '<li>Do NOT close the window before the quiz is completed</li>';
-                        bootbox.alert(popupHtml, function(){
-                            $('#startQuiz-form #qid').val(quizId);
-                            localStorageUtil.setLocal('attempNum',data.attempNum);
-                            $('#startQuiz-form').attr('action',base_url+'quiz/quizPage/'+data.quizLvl).submit();
-                        });
-                    }
-                    /*window.location.reload();*/
-                }
-                else
-                {
-                    bootbox.alert(data.errorTxt);
-                }
-            },
-            error:function(xhr, status, error)
-            {
-                hideCustomLoader();
-                bootbox.alert('Some Error Occurred, Try Again!');
-                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
-                saveErrorLog(err);
-            }
-        });
-    });
 </script>
 </html>
